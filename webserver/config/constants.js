@@ -1,0 +1,5 @@
+module.exports = {
+    loginMessageType: 'login-message',
+    wrongPassword: 'Wrong password.',
+    noUserFound: 'No user found'
+};
