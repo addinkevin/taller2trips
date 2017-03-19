@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/buscar_cercanos"
+            android:icon="@drawable/ic_search_black_24dp"
+            android:title="@string/buscar_cercanos"/>
+        <item
+            android:id="@+id/ciudades"
+            android:icon="@drawable/ic_location_city_black_24dp"
+            android:title="@string/ciudades"/>
+        <item
+            android:id="@+id/atracciones"
+            android:icon="@drawable/museum"
+            android:title="@string/atracciones"/>
+        <item
+            android:id="@+id/ubicarme"
+            android:icon="@drawable/ic_place_black_24dp"
+            android:title="@string/ubicarme"/>
+        <item
+            android:id="@+id/favoritos"
+            android:icon="@drawable/ic_favorite_black_24dp"
+            android:title="@string/favoritos"/>
+        <item
+            android:id="@+id/logout"
+            android:icon="@drawable/logout"
+            android:title="@string/logout"/>
+    </group>
+
+</menu>
