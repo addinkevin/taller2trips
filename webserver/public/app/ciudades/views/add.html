@@ -1,0 +1,36 @@
+<div ng-controller="ciudadesAddController">
+
+    <div class="col-sm-4 text-left">
+        <form ng-submit="addCiudad()">
+            <legend>Agregar ciudad</legend>
+
+            <div class="form-group large-12 columns">
+                <label>Name</label>
+                <input type="text" class="form-control" placeholder="Nombre" ng-model="ciudad.name" required>
+            </div>
+
+            <div class="form-group">
+                <label>Latitud</label>
+                <input type="number" class="form-control" ng-model="ciudad.center.lat" disabled="disabled">
+            </div>
+
+            <div class="form-group">
+                <label>Longitud</label>
+                <input type="number" class="form-control" ng-model="ciudad.center.lng" disabled="disabled">
+            </div>
+
+            <div class="form-group">
+                <label>Radio (Metros)</label>
+                <input type="number" class="form-control" placeholder="Radio" ng-model="ciudad.radio" ng-change="addChangeRadio()"required>
+            </div>
+
+            <button type="submit"  class="btn btn-default">Agregar ciudad</button>
+        </form>
+    </div>
+
+    <div class="col-sm-4 text-left">
+        <div id="map" ng-init="initMap()"></div>
+    </div>
+    <div class="col-sm-4"></div>
+
+</div>
