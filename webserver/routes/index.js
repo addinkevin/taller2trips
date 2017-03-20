@@ -1,5 +1,6 @@
 var express = require('express');
 var constants = require('../config/constants');
+var ciudadesRoute = require('./ciudadesRoute');
 
 module.exports = function(app, passport) {
     var router = express.Router();
@@ -25,7 +26,7 @@ module.exports = function(app, passport) {
     });
 
     function isLoggedIn(req, res, next) {
-        //return next(); // Uncomment to test without authentication.
+        return next(); // Uncomment to test without authentication.
 
         if (req.isAuthenticated())
             return next();
@@ -34,4 +35,5 @@ module.exports = function(app, passport) {
     }
 
     app.use('/', router);
+    app.use('/api', ciudadesRoute);
 };

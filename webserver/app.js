@@ -36,6 +36,11 @@ var configDB = require('./config/database.js');
 mongoose.connect(configDB.url);
 require('./config/initdb')('admin', '123456'); // TODO Borrar
 
+
+app.use(function(req,res,next) {
+  console.log('>',req.method, req.url);
+  next();
+});
 require('./routes/index')(app, passport);
 
 // catch 404 and forward to error handler
