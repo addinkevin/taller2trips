@@ -16,8 +16,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
 
 import com.example.pc.myapplication.services.LocationGPSListener;
 import com.google.android.gms.maps.GoogleMap;
@@ -93,7 +91,7 @@ public class MainActivity extends AppCompatActivity  implements OnMapReadyCallba
         int id = item.getItemId();
 
         if (id == R.id.ciudades) {
-            Intent i = new Intent(this, CiudadesActivity.class);
+            Intent i = new Intent(this, CiudadActivity.class);
             startActivity(i);
         } else {
 

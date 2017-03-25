@@ -4,12 +4,19 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="buscar_cercanos">Buscar atracciones cercanas</string>
-    <string name="atracciones">Atracciones</string>
-    <string name="ciudades">Ciudades</string>
-    <string name="ubicarme">Ubicarme</string>
-    <string name="favoritos">Favoritos</string>
-    <string name="logout">Salir</string>
+    <string name="buscar_cercanos">Near by</string>
+    <string name="atracciones">Attractions</string>
+    <string name="recorridos">Tours</string>
+    <string name="ciudades">Cities</string>
+    <string name="ubicarme">Where am I?</string>
+    <string name="favoritos">Favorites</string>
+    <string name="informacion">Info</string>
+    <string name="videos">Videos</string>
+    <string name="fotos">Pictures</string>
+    <string name="audio">Audios</string>
+    <string name="pais">Country:</string>
+
+    <string name="logout">Logout</string>
 
 
 </resources>
