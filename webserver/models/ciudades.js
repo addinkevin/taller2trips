@@ -1,12 +1,11 @@
 var mongoose = require('mongoose');
 
 var ciudadSchema = mongoose.Schema({
-    name: String,
-    center: {
-        lat: String,
-        lng: String
-    },
-    radio: String
+    // mongoose automaticamente agrega el campo id que corresponde al _id de mongodb
+    nombre: String,
+    descripcion: String,
+    pais: String,
+    foto: String
 });
 
 module.exports = mongoose.model('Ciudad', ciudadSchema);
