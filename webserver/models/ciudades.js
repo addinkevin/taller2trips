@@ -5,7 +5,6 @@ var ciudadSchema = mongoose.Schema({
     nombre: String,
     descripcion: String,
     pais: String,
-    foto: {type: String, default: ""}
 });
 
 module.exports = mongoose.model('Ciudad', ciudadSchema);

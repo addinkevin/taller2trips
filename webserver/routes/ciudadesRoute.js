@@ -12,7 +12,6 @@ mkdirp(constants.dirImagenesCiudad, function(err) {
         console.log(err)
     }
 });
-
 var storage = multer.diskStorage({
     destination: function(req, file, cb) {
         cb(null, constants.dirImagenesCiudad)
@@ -21,17 +20,9 @@ var storage = multer.diskStorage({
         cb(null, req.params.id_ciudad + ".png")
     }
 });
-
 var upload = multer({
     storage: storage
 });
-
-
-/*
-var upload = multer({
-   dest: constants.dirImagenesCiudad
-});
-*/
 
 router.get('/ciudad', function(req, res) {
     Ciudad.find(function (err, ciudades) {
@@ -111,5 +102,11 @@ router.delete('/ciudad/:id_ciudad', function(req,res) {
 router.post('/ciudad/:id_ciudad/imagen', upload.single("imagen"), function(req, res) {
     res.status(200).json({"msj": "exito"});
 });
+
+router.get('/ciudad/:id_ciudad/imagen', function(req, res) {
+    var file = constants.dirImagenesCiudad + req.params.id_ciudad + ".png";
+    res.download(file);
+});
+
 
 module.exports = router;
