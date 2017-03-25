@@ -3,37 +3,31 @@ var constants = require('../config/constants');
 var router = express.Router();
 var Ciudad = require('../models/ciudades');
 
-router.get('/ciudades', function(req, res) {
+router.get('/ciudad', function(req, res) {
     Ciudad.find(function (err, ciudades) {
         if (err) {
             res.send(err);
         }
-        res.json(ciudades);
+        res.status(200).json(ciudades);
     })
 });
 
-router.post('/ciudades', function(req, res) {
+router.post('/ciudad', function(req, res) {
     console.log(req.body);
 
     var ciudad = new Ciudad({
-        name: req.body.name,
-        center: req.body.center,
-        radio: req.body.radio
+        nombre: req.body.nombre,
+        descripcion: req.body.descripcion,
+        pais: req.body.pais
     });
 
-    ciudad.save(function(err) {
+    ciudad.save(function(err, ciudad) {
         if (err) {
-            res.send(err);
+            res.status(405).json({"msj": "input invalido"});
         }
-
-        Ciudad.find(function (err, ciudades) {
-            if (err) {
-                res.send(err);
-            }
-            console.log("Ciudades");
-            console.log(ciudades);
-            res.json(ciudades);
-        });
+        else {
+            res.status(201).json(ciudad);
+        }
     });
 
 });
