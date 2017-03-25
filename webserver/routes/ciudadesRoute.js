@@ -33,21 +33,15 @@ router.post('/ciudad', function(req, res) {
 });
 
 
-router.delete('/ciudades/:ciudad', function(req,res) {
-    Ciudad.remove({
-        _id : req.params.ciudad
-    }, function(err, ciudad) {
+router.delete('/ciudad/:id_ciudad', function(req,res) {
+    Ciudad.remove({_id: req.params.id_ciudad}, function (err) {
         if (err) {
-            res.send(err);
+            res.send(err)
         }
-
-        Ciudad.find(function (err, ciudades) {
-            if (err) {
-                res.send(err);
-            }
-            res.json(ciudades);
-        });
-    })
+        else {
+            res.status(200).json({"msj": "exito"});
+        }
+    });
 });
 
 module.exports = router;
