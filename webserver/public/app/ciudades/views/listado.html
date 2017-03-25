@@ -1,0 +1,15 @@
+<div class="panel-custom" ng-show="ciudades.length == 0">
+    <h3 class="subheader">No hay ciudades para mostrar</h2>
+</div>
+<div class="row-sm-4" ng-repeat="(id,ciudad) in ciudades">
+        <a href="#/ciudades/info/{{id}}">
+        Nombre: {{ ciudad.name}} <br>
+        Latitud: {{ciudad.center.lat}} <br>
+        Longitud: {{ciudad.center.lng}} <br>
+        Radio: {{ciudad.radio}}<br>
+    </a>
+    <div><a href="#/ciudades/edit/{{id}}">Editar</a></div>
+    <div> <a href="#/ciudades/remove/{{id}}">Eliminar</a></div>
+
+    <hr>
+</div>

@@ -1,0 +1,29 @@
+<form>
+    <fieldset>
+        <legend>{{ textButton }}</legend>
+
+        <div class="row">
+            <div class="large-12 columns">
+                <label>Nombre</label>
+                <input type="text" placeholder="Nombre" ng-model="ciudad.nombre" required>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="large-12 columns">
+                <label>Latitud</label>
+                <input type="text" placeholder="Nombre" ng-model="ciudad.center.latitud" required>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="large-12 columns">
+                <label>Longitud</label>
+                <input type="text" placeholder="Nombre" ng-model="ciudad.longitud" required>
+            </div>
+        </div>
+
+        <button type="submit"  class="button large-12">{{ textButton }}</button>
+        <a href="#/ciudades" class="button large-12 success">Volver al inicio</a>
+    </fieldset>
+</form>
