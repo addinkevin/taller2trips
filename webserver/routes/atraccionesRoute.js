@@ -110,6 +110,7 @@ router.delete('/atraccion/:id_atraccion', function(req,res) {
 almacen.crearDirectorioPlanosAtracciones();
 almacen.crearDirectorioVideosAtracciones();
 almacen.crearDirectorioAudiosAtracciones();
+almacen.crearDirectorioImagenesAtracciones();
 
 router.post('/atraccion/:id_atraccion/plano', almacen.uploadPlanosAtracciones.single("plano"), function(req, res) {
     res.status(200).json({"msj": "exito"});
@@ -148,6 +149,27 @@ router.post('/atraccion/:id_atraccion/audio', almacen.uploadAudiosAtracciones.si
 
 router.get('/atraccion/:id_atraccion/audio', function(req, res) {
     var file = constants.dirAudiosAtracciones + req.params.id_atraccion + "_audio_" + req.query.idioma + ".mp4";
+    res.download(file);
+});
+
+router.post('/atraccion/:id_atraccion/imagen', almacen.uploadImagenesAtracciones.single("imagen"), function(req, res) {
+    Atraccion.findById(req.params.id_atraccion, function(err, atraccion) {
+        if (err) {
+            res.send(err)
+        }
+        else if (atraccion === null) {
+            res.status(404).json({"msj": "atraccion no encontrada"})
+        }
+        else {
+            atraccion.imagenes.push(req.file.filename);
+            atraccion.save();
+            res.status(200).json({"msj": "exito"});
+        }
+    });
+});
+
+router.get('/atraccion/:id_atraccion/imagen', function(req, res) {
+    var file = constants.dirImagenesAtracciones + req.query.filename;
     res.download(file);
 });
 

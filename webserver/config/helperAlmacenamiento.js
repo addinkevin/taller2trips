@@ -26,6 +26,14 @@ exports.crearDirectorioAudiosAtracciones = function() {
     });
 };
 
+exports.crearDirectorioImagenesAtracciones = function() {
+    mkdirp(constants.dirImagenesAtracciones, function(err) {
+        if (err) {
+            console.log(err);
+        }
+    });
+};
+
 var storagePlanosAtracciones = multer.diskStorage({
     destination: function(req, file, cb) {
         cb(null, constants.dirPlanosAtracciones)
@@ -54,6 +62,16 @@ var storageAudiosAtracciones = multer.diskStorage({
     }
 });
 
+var storageImagenesAtracciones = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null, constants.dirImagenesAtracciones)
+    },
+    filename: function(req, file, cb) {
+        console.log(req.body);
+        cb(null, req.params.id_atraccion + "_imagen_" + Date.now() + ".png")
+    }
+});
+
 exports.uploadPlanosAtracciones = multer({
     storage: storagePlanosAtracciones
 });
@@ -66,3 +84,6 @@ exports.uploadAudiosAtracciones = multer({
     storage: storageAudiosAtracciones
 });
 
+exports.uploadImagenesAtracciones = multer({
+    storage: storageImagenesAtracciones
+});
