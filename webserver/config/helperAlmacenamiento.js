@@ -58,7 +58,7 @@ var storageAudiosAtracciones = multer.diskStorage({
     },
     filename: function(req, file, cb) {
         console.log(req.body);
-        cb(null, req.params.id_atraccion + "_audio_" + req.body.idioma + ".mp4")
+        cb(null, req.params.id_atraccion + "_audio_" + req.body.idioma + ".mp3")
     }
 });
 
