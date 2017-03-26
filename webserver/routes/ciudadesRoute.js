@@ -6,7 +6,7 @@ var mkdirp = require('mkdirp');
 var Ciudad = require('../models/ciudades');
 
 // Configuracion para upload de imagenes
-
+// TODO: Pasarlo al helper y limpiar codigo
 mkdirp(constants.dirImagenesCiudad, function(err) {
     if (err) {
         console.log(err)

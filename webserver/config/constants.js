@@ -4,5 +4,7 @@ module.exports = {
     noUserFound: 'No user found',
     dirImagenesCiudad: "./contenido/imagenesCiudad/",
     dirPlanosAtracciones: "./contenido/planosAtracciones/",
-    dirVideosAtracciones: "./contenido/videosAtracciones/"
+    dirVideosAtracciones: "./contenido/videosAtracciones/",
+    dirAudiosAtracciones: "./contenido/audiosAtracciones/",
+    dirImagenesAtracciones: "./contenido/imagenesAtracciones/"
 };

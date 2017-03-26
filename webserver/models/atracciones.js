@@ -19,7 +19,8 @@ var atraccionSchema = mongoose.Schema({
     duracion: Number,
     clasificacion: String,
     latitud: Number,
-    longitud: Number
+    longitud: Number,
+    idiomas_audio: [String]
 });
 
 module.exports = mongoose.model('Atraccion', atraccionSchema);
