@@ -3,6 +3,7 @@ var constants = require('../config/constants');
 var router = express.Router();
 var Atraccion = require('../models/atracciones');
 var almacen = require('../config/helperAlmacenamiento');
+var haversine = require('../utils/haversine');
 
 router.get('/atraccion', function(req, res) {
     //TODO: Ver como arreglar este horror de codigo
@@ -29,6 +30,26 @@ router.get('/atraccion', function(req, res) {
         })
     }
 });
+
+router.get('/atraccion/cercania', function(req, res) {
+    Atraccion.find(function (err, atracciones) {
+        if (err) {
+            res.send(err);
+        }
+        else {
+           var atraccionesCercanas = [];
+           for (var i = 0; i < atracciones.length; i++) {
+               distanciaAtraccionUsuario = haversine.calcularDistancia(req.query.latitud, req.query.longitud, 
+                                                                       atracciones[i].latitud, atracciones[i].longitud);
+               if (distanciaAtraccionUsuario <= req.query.radio) {
+                   atraccionesCercanas.push(atracciones[i]);
+               }
+           }
+           res.status(200).json(atraccionesCercanas);
+        }
+    });
+});
+
 
 router.get('/atraccion/:id_atraccion', function(req, res) {
     Atraccion.findById(req.params.id_atraccion, function(err, atraccion) {
