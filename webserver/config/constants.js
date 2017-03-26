@@ -3,5 +3,6 @@ module.exports = {
     wrongPassword: 'Wrong password.',
     noUserFound: 'No user found',
     dirImagenesCiudad: "./contenido/imagenesCiudad/",
-    dirPlanosAtracciones: "./contenido/planosAtracciones/"
+    dirPlanosAtracciones: "./contenido/planosAtracciones/",
+    dirVideosAtracciones: "./contenido/videosAtracciones/"
 };

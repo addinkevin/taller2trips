@@ -108,6 +108,7 @@ router.delete('/atraccion/:id_atraccion', function(req,res) {
 
 //TODO: poner todo esto en iniciazacion de aplicacion
 almacen.crearDirectorioPlanosAtracciones();
+almacen.crearDirectorioVideosAtracciones();
 
 router.post('/atraccion/:id_atraccion/plano', almacen.uploadPlanosAtracciones.single("plano"), function(req, res) {
     res.status(200).json({"msj": "exito"});
@@ -118,7 +119,14 @@ router.get('/atraccion/:id_atraccion/plano', function(req, res) {
     res.download(file);
 });
 
+router.post('/atraccion/:id_atraccion/video', almacen.uploadVideosAtracciones.single("video"), function(req, res) {
+    res.status(200).json({"msj": "exito"});
+});
 
+router.get('/atraccion/:id_atraccion/video', function(req, res) {
+    var file = constants.dirVideosAtracciones + req.params.id_atraccion + "_video.mp4";
+    res.download(file);
+});
 
 
 module.exports = router;
