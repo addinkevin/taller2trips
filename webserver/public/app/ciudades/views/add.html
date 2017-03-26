@@ -37,8 +37,7 @@
                 <div class="col-sm-10">
                     <label class="btn btn-primary" for="imagenCiudadInput">
                         <input type="file" id="imagenCiudadInput" accept="image/png"
-                               style="display:none;" custom-on-change="updateImageClick"
-                               onchange="document.getElementById('imagenCiudadPreview').src = window.URL.createObjectURL(this.files[0])">
+                               style="display:none;" custom-on-change="updateImageClick">
                         Subir imagen
                         <span class='label label-info' id="upload-file-info"></span>
                     </label>
@@ -50,10 +49,7 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-xs-6 col-md-3">
-                            <img id="imagenCiudadPreview" class="img-responsive"/>
-                            <!-- Version alternativa.
                             <img ng-src="{{ciudad.imgSrc}}" class="img-responsive"/>
-                            -->
                         </div>
                         <div class="col-xs-6 col-md-9">
                             <h3>{{ciudad.name}}</h3>

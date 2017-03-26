@@ -38,6 +38,7 @@ code {
     font-size: 80%;
 }
 
+
 .previewDeImagenes {
     margin-top:10px;
     overflow-x:auto;
@@ -56,31 +57,6 @@ code {
     white-space:normal;
 }
 
-/*
-.previewDeImagenes {
-  margin-top: 10px;
-  overflow-x:auto;
-  white-space: nowrap;
-}
-
-.imagenPreview {
-  width:300px;
-  height:260px;
-  position:relative;
-  display:inline-block;
-  overflow:hidden;
-}
-
-.imagenPreview > .imagePreviewItem {
-  position:absolute;
-  top:50%;
-  left:50%;
-  min-height:100%;
-  display:block;
-  -webkit-transform: translate(-50%, -50%);
-  min-width:100%;
-}
-*/
 
 .previewDeVideos {
     margin-top:10px;
@@ -93,11 +69,16 @@ code {
     *display: inline;/*For IE7*/
     *zoom:1;/*For IE7*/
     width:320px;
-    height:260px;
+    height:300px;
     position:relative;
     vertical-align:top;
     margin-right:10px;
     white-space:normal;
+}
+
+.previewDeVideos .videoPreview video {
+    width:320px;
+    height:260px;
 }
 
 .previewDeAudios {

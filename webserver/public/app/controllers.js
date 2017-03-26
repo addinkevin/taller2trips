@@ -2,7 +2,7 @@ angular.module('tripsApp').controller('tripsAppController', [ '$scope', function
     $scope.menuItems = [
         { url: '#/home', description: 'Home' },
         { url: '#/ciudades', description: 'Ciudades' },
-        { url: '#/Atracciones', description: 'Atracciones' }
+        { url: '#/atracciones', description: 'Atracciones' }
     ];
 
     $scope.activeMenu = $scope.menuItems[0];
