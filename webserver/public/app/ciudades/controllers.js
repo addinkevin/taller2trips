@@ -3,7 +3,7 @@ var ciudadesApp = angular.module('tripsApp.ciudades');
 ciudadesApp.controller('ciudadesController', [ '$scope', function ciudadesController( $scope ) {
 }]);
 
-ciudadesApp.controller('ciudadesAddController',
+ciudadesApp.controller('OLDciudadesAddController',
     [ '$scope', 'GoogleMaps', 'CiudadesService', '$location', '$http',
         function ciudadesAddControler($scope, GoogleMaps, CiudadesService, $location, $http) {
             $scope.ciudad = {
@@ -37,7 +37,6 @@ ciudadesApp.controller('ciudadesAddController',
                     radius: city.radio
                 });
             };
-
 
             $scope.initMap = function initMap() {
                 var properties = {
@@ -75,21 +74,36 @@ ciudadesApp.controller('ciudadesAddController',
 
 }]);
 
+
+ciudadesApp.controller('ciudadesAddController',
+    [ '$scope', 'CiudadesService', '$location', '$http',
+        function ciudadesAddControler($scope, CiudadesService, $location, $http) {
+            console.log("AngularJs Controller: ciudadesAddController");
+
+            $scope.form = {
+                ciudad: {}
+            };
+
+            $scope.updateImageClick = function(event) {
+                $scope.form.ciudad.imgSrc = window.URL.createObjectURL(event.target.files[0]);
+                console.log($scope.form.ciudad.imgSrc);
+                $scope.$digest();
+            }
+
+            $scope.submitAddCiudad = function() {
+                console.log("Agregado la ciudad:", $scope.form.ciudad);
+                CiudadesService.addCiudad($scope.form.ciudad);
+                $location.url('/ciudades/');
+            }
+        }
+        ]
+);
 ciudadesApp.controller('ciudadesListadoController',
     [ '$scope' , 'CiudadesService', '$http',
     function($scope, CiudadesService, $http) {
-        $scope.ciudades = [
-            {
-                name:"CABA",
-                description:"Ciudad de mierda",
-                imgSrc:'http://www.buenosaires.travel/wp-content/buenosaires_uploads/obelisco.jpg',
-                pais:'Argentina'
-            },
-            {
-                name:"Rosario",
-                description:"Ciudad de mierda",
-                imgSrc:'http://www.buenosaires.travel/wp-content/buenosaires_uploads/obelisco.jpg',
-                pais:'Argentina'
-            }
-        ];
+        $scope.deleteCiudad = function(ciudadId) {
+            // TODO
+        };
+
+        $scope.ciudades = CiudadesService.getCiudades();
 }]);

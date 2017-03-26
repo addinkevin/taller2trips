@@ -11,6 +11,4 @@ angular.module('tripsApp').controller('tripsAppController', [ '$scope', function
         $scope.activeMenu = menuItem;
     };
 
-
-
 }]);
