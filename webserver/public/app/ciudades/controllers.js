@@ -1,6 +1,11 @@
 var ciudadesApp = angular.module('tripsApp.ciudades');
 
 ciudadesApp.controller('ciudadesController', [ '$scope', function ciudadesController( $scope ) {
+    $scope.updateImageClick = function(event) {
+        $scope.ciudad.imgSrc = window.URL.createObjectURL(event.target.files[0]);
+        console.log($scope.ciudad.imgSrc);
+        $scope.$digest();
+    }
 }]);
 
 ciudadesApp.controller('OLDciudadesAddController',
@@ -77,32 +82,52 @@ ciudadesApp.controller('OLDciudadesAddController',
 
 ciudadesApp.controller('ciudadesAddController',
     [ '$scope', 'CiudadesService', '$location', '$http',
-        function ciudadesAddControler($scope, CiudadesService, $location, $http) {
+        function ($scope, CiudadesService, $location, $http) {
             console.log("AngularJs Controller: ciudadesAddController");
 
-            $scope.form = {
-                ciudad: {}
-            };
+            $scope.ciudad = {};
 
             $scope.updateImageClick = function(event) {
-                $scope.form.ciudad.imgSrc = window.URL.createObjectURL(event.target.files[0]);
-                console.log($scope.form.ciudad.imgSrc);
+                $scope.ciudad.imgSrc = window.URL.createObjectURL(event.target.files[0]);
+                console.log($scope.ciudad.imgSrc);
                 $scope.$digest();
-            }
+            };
 
             $scope.submitAddCiudad = function() {
-                console.log("Agregado la ciudad:", $scope.form.ciudad);
-                CiudadesService.addCiudad($scope.form.ciudad);
+                console.log("Agregado la ciudad:", $scope.ciudad);
+                CiudadesService.addCiudad($scope.ciudad);
                 $location.url('/ciudades/');
+            };
+        }
+        ]
+);
+
+ciudadesApp.controller('ciudadesEditController',
+    [ '$scope', 'CiudadesService', '$location', '$http', '$routeParams',
+        function ($scope, CiudadesService, $location, $http, $routeParams) {
+            $scope.ciudad = CiudadesService.getCiudad($routeParams.id);
+
+            $scope.updateImageClick = function(event) {
+                $scope.ciudad.imgSrc = window.URL.createObjectURL(event.target.files[0]);
+                console.log($scope.ciudad.imgSrc);
+                $scope.$digest();
+            };
+
+            $scope.submitEditCiudad = function() {
+                console.log("Editando ciudad:", $scope.ciudad);
+                CiudadesService.updateCiudad($routeParams.id, $scope.ciudad);
+                $location.url('/ciudades');
             }
         }
         ]
 );
+
 ciudadesApp.controller('ciudadesListadoController',
-    [ '$scope' , 'CiudadesService', '$http',
-    function($scope, CiudadesService, $http) {
+    [ '$scope' , 'CiudadesService', '$http', '$location',
+    function($scope, CiudadesService, $http, $location) {
         $scope.deleteCiudad = function(ciudadId) {
-            // TODO
+            CiudadesService.removeCiudad($scope.ciudades[ciudadId]);
+            $location.url('/ciudades/');
         };
 
         $scope.ciudades = CiudadesService.getCiudades();

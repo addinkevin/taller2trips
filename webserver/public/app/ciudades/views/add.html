@@ -14,21 +14,21 @@
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Nombre de ciudad</label>
                 <div class="col-sm-10">
-                    <input type="text" ng-model="form.ciudad.name" class="form-control" placeholder="Nombre de la ciudad">
+                    <input type="text" ng-model="ciudad.name" class="form-control" placeholder="Nombre de la ciudad">
                 </div>
             </div>
 
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">País de la ciudad</label>
                 <div class="col-sm-10">
-                    <input type="text" ng-model="form.ciudad.pais" class="form-control" placeholder="País de la ciudad">
+                    <input type="text" ng-model="ciudad.pais" class="form-control" placeholder="País de la ciudad">
                 </div>
             </div>
 
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Descripción de la ciudad</label>
                 <div class="col-sm-10">
-                    <textarea class="form-control" ng-model="form.ciudad.description" rows="5" style="resize: none;" id="descripcionCiudad" placeholder="Descripción de la ciudad"></textarea>
+                    <textarea class="form-control" ng-model="ciudad.description" rows="5" style="resize: none;" id="descripcionCiudad" placeholder="Descripción de la ciudad"></textarea>
                 </div>
             </div>
 
@@ -36,7 +36,7 @@
                 <label class="col-sm-2 col-form-label">Imagen de la ciudad</label>
                 <div class="col-sm-10">
                     <label class="btn btn-primary" for="imagenCiudadInput">
-                        <input type="file" id="imagenCiudadInput" accept="image/gif, image/jpeg, image/png"
+                        <input type="file" id="imagenCiudadInput" accept="image/png"
                                style="display:none;" custom-on-change="updateImageClick"
                                onchange="document.getElementById('imagenCiudadPreview').src = window.URL.createObjectURL(this.files[0])">
                         Subir imagen
@@ -52,21 +52,21 @@
                         <div class="col-xs-6 col-md-3">
                             <img id="imagenCiudadPreview" class="img-responsive"/>
                             <!-- Version alternativa.
-                            <img ng-src="{{form.ciudad.imgSrc}}" class="img-responsive"/>
+                            <img ng-src="{{ciudad.imgSrc}}" class="img-responsive"/>
                             -->
                         </div>
                         <div class="col-xs-6 col-md-9">
-                            <h3>{{form.ciudad.name}}</h3>
+                            <h3>{{ciudad.name}}</h3>
                             <div class="row">
                                 <label class="col-sm-2 col-form-label">País</label>
                                 <div class="col-sm-10">
-                                    {{form.ciudad.pais}}
+                                    {{ciudad.pais}}
                                 </div>
                             </div>
                             <div class="row">
                                 <label class="col-sm-2 col-form-label">Descripción</label>
                                 <div class="col-sm-10">
-                                    {{form.ciudad.description}}
+                                    {{ciudad.description}}
                                 </div>
                             </div>
                         </div>
