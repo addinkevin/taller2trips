@@ -21,3 +21,7 @@ tripsApp.service('GoogleMaps', function() {
     };
 
 });
+
+tripsApp.service('HTTPService', function() {
+   //this ..// TODO
+});

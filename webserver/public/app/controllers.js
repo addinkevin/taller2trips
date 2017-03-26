@@ -1,13 +1,8 @@
 angular.module('tripsApp').controller('tripsAppController', [ '$scope', function tripsAppController( $scope ) {
     $scope.menuItems = [
-        { url: '#/home', description: 'Home', subItems: [
-
-        ]},
-        { url: '#/ciudades', description: 'Ciudades', subItems: [
-            {url: '#/ciudades/listado', description: 'Ver listado'},
-            {url: '#/ciudades/add', description: 'Agregar ciudad'},
-            {url: '#/ciudades/remove', description: 'Borrar ciudad'}
-        ]}
+        { url: '#/home', description: 'Home' },
+        { url: '#/ciudades', description: 'Ciudades' },
+        { url: '#/Atracciones', description: 'Atracciones' }
     ];
 
     $scope.activeMenu = $scope.menuItems[0];

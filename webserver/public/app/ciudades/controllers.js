@@ -78,13 +78,18 @@ ciudadesApp.controller('ciudadesAddController',
 ciudadesApp.controller('ciudadesListadoController',
     [ '$scope' , 'CiudadesService', '$http',
     function($scope, CiudadesService, $http) {
-        $scope.ciudades = {};
-        $http.get('/api/ciudades')
-            .then(function(data) {
-                console.log(data.data);
-                $scope.ciudades = data.data;
-            }, function(data) {
-                console.log('Err:' + data);
-            });
-
+        $scope.ciudades = [
+            {
+                name:"CABA",
+                description:"Ciudad de mierda",
+                imgSrc:'http://www.buenosaires.travel/wp-content/buenosaires_uploads/obelisco.jpg',
+                pais:'Argentina'
+            },
+            {
+                name:"Rosario",
+                description:"Ciudad de mierda",
+                imgSrc:'http://www.buenosaires.travel/wp-content/buenosaires_uploads/obelisco.jpg',
+                pais:'Argentina'
+            }
+        ];
 }]);

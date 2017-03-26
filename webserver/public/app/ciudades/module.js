@@ -2,13 +2,13 @@ var ciudades = angular.module('tripsApp.ciudades', ['ngRoute']);
 
 ciudades.config(['$routeProvider', function config($routeProvider) {
     $routeProvider
+        .when('/ciudades', {
+            templateUrl: 'app/ciudades/views/listado.html',
+            controller: 'ciudadesListadoController'
+        })
         .when('/ciudades/add', {
             templateUrl: 'app/ciudades/views/add.html',
             controller: 'ciudadesAddController'
-        })
-        .when('/ciudades/listado', {
-            templateUrl: 'app/ciudades/views/listado.html',
-            controller: 'ciudadesListadoController'
         })
         .when('/ciudades/remove', {
             template: '<p> borrado </p>'

@@ -1,15 +1,59 @@
-<div class="panel-custom" ng-show="ciudades.length == 0">
-    <h3 class="subheader">No hay ciudades para mostrar</h2>
-</div>
-<div class="row-sm-4" ng-repeat="(id,ciudad) in ciudades">
-        <a href="#/ciudades/info/{{id}}">
-        Nombre: {{ ciudad.name}} <br>
-        Latitud: {{ciudad.center.lat}} <br>
-        Longitud: {{ciudad.center.lng}} <br>
-        Radio: {{ciudad.radio}}<br>
-    </a>
-    <div><a href="#/ciudades/edit/{{id}}">Editar</a></div>
-    <div> <a href="#/ciudades/remove/{{id}}">Eliminar</a></div>
+<!-- Begin page content -->
+<div>
+    <!-- Header -->
+    <div class='page-header'>
+        <div class='btn-toolbar pull-right'>
+            <div class='btn-group'>
+                <a href="#/ciudades/add" class="btn btn-primary" role="button">Agregar ciudad</a>
+            </div>
+        </div>
+        <h1>Listado de ciudades</h1>
+    </div>
 
-    <hr>
+    <!-- Buscador -->
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <input ng-model="search.name" type="text" class="form-control formularioBuscar" placeholder="Buscar...">
+
+        </div>
+    </div>
+
+    <div class="panel-custom" ng-show="ciudades.length == 0">
+        <h3 class="subheader">No hay ciudades para mostrar</h3>
+    </div>
+
+    <div class="panel panel-default" ng-show="ciudades.length > 0" ng-repeat="(id,ciudad) in ciudades | filter:search">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-xs-6 col-md-3">
+                    <a href="#/ciudades/info/{{id}}" class="thumbnail">
+                        <img ng-src="{{ciudad.imgSrc}}" alt="" class="img-responsive"/>
+                    </a>
+                </div>
+                <div class="col-xs-6 col-md-9">
+                    <h3>{{ciudad.name}}</h3>
+                    <div class="row">
+                        <label class="col-sm-2 col-form-label">País</label>
+                        <div class="col-sm-10">
+                            {{ciudad.pais}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-2 col-form-label">Descripción</label>
+                        <div class="col-sm-10">
+                            {{ciudad.description}}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <div class="btn-group" role="group" aria-label="edit-remove">
+                <a href="#/ciudades/info/{{id}}" class="btn btn-default" role="button">Edit</a>
+                <button type="button" class="btn btn-default" ng-click="ciudadDelete({{id}})">Remove</button>
+            </div>
+        </div>
+    </div>
+
 </div>
