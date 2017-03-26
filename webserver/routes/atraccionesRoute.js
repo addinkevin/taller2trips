@@ -1,9 +1,8 @@
 var express = require('express');
-var multer = require('multer');
 var constants = require('../config/constants');
 var router = express.Router();
-var mkdirp = require('mkdirp'); 
 var Atraccion = require('../models/atracciones');
+var almacen = require('../config/helperAlmacenamiento');
 
 router.get('/atraccion', function(req, res) {
     //TODO: Ver como arreglar este horror de codigo
@@ -106,5 +105,20 @@ router.delete('/atraccion/:id_atraccion', function(req,res) {
         }
     });
 });
+
+//TODO: poner todo esto en iniciazacion de aplicacion
+almacen.crearDirectorioPlanosAtracciones();
+
+router.post('/atraccion/:id_atraccion/plano', almacen.uploadPlanosAtracciones.single("plano"), function(req, res) {
+    res.status(200).json({"msj": "exito"});
+});
+
+router.get('/atraccion/:id_atraccion/plano', function(req, res) {
+    var file = constants.dirPlanosAtracciones + req.params.id_atraccion + "_plano.png";
+    res.download(file);
+});
+
+
+
 
 module.exports = router;
