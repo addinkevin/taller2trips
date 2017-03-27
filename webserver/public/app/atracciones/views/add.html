@@ -50,7 +50,16 @@
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Costo</label>
                     <div class="col-sm-10">
-                        <input required step="any" type="number" ng-model="atraccion.monedaCosto" class="form-control" placeholder="Costo de la atracción">
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon1">
+                                <input ng-model="monedaCosto" list="monedas">
+                                    <datalist id="monedas">
+                                        <option value="{{moneda}}" ng-repeat="moneda in monedas">
+                                    </datalist>
+                            </span>
+                            <input required step="any" min="0" type="number" ng-model="atraccion.monedaCosto" class="form-control" placeholder="Costo de la atracción">
+                        </div>
+
                         <!--
                         <div class="input-group">
                             <span class="input-group-addon" id="basic-addon1">
