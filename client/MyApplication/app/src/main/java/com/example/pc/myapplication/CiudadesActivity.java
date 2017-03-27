@@ -5,10 +5,17 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 
+import com.example.pc.myapplication.InternetTools.InfoClient;
 import com.example.pc.myapplication.InternetTools.InternetClient;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnCiudades;
+import com.example.pc.myapplication.ciudadesTools.Ciudad;
 import com.example.pc.myapplication.commonfunctions.Consts;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CiudadesActivity extends AppCompatActivity {
 
@@ -20,12 +27,24 @@ public class CiudadesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ciudades);
         View view  = findViewById(R.id.ciudadesV);
 
+
+        AutoCompleteTextView autoTxtV = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
+        List<Ciudad> ciudades = new ArrayList<>();
+        onCiudades = new ReceiverOnCiudades(getApplicationContext(),autoTxtV,ciudades);
+
+        InternetClient client = new InfoClient(getApplicationContext(), view,
+                Consts.GET_CITY_NAME, Consts.SERVER_URL + Consts.CIUDAD, null, Consts.GET, null, true);
+        client.runInBackground();
+    }
+
+    public void onStart() {
+        super.onStart();
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(onCiudades,
                 new IntentFilter(Consts.GET_CITY_NAME));
+    }
 
-        InternetClient client = new InternetClient(getApplicationContext(), view,
-                Consts.GET_CITY_NAME, Consts.SERVER_URL, null, Consts.GET, null, true);
-        client.runInBackground();
-
+    public void onStop() {
+        super.onStop();
+        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(onCiudades);
     }
 }

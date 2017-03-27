@@ -19,16 +19,16 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
 
-public class InternetClient {
+public abstract class InternetClient {
 
     private static final int timeOUT_R = 20000;
     private static final int timeOUT_C = 25000;
-    private final Context context;
+    protected final Context context;
     private final View view;
     private final String toCall;
 
-    private InputStream is;
-    private HttpURLConnection connection;
+    protected InputStream is;
+    protected HttpURLConnection connection;
     private String nURL;
 
     private String jsonBody;
@@ -43,7 +43,7 @@ public class InternetClient {
         this.context = context;
         this.view = view;
         this.toCall = toCall;
-        nURL = "http://192.168.0.11:4567" + path;
+        nURL = path;
         requestMethod = rMethod;
         jsonBody = jBody;
         headers = headerM;
@@ -88,8 +88,7 @@ public class InternetClient {
 
             if ( responseCode < 300 && responseCode >= 200 ) {
                 if (expectResponse) {
-                    String jsonResponse =  readIt();
-                    activityMsg.putExtra(Consts.JSON_OUT, jsonResponse);
+                    readMedia(activityMsg);
                 }
                 activityMsg.putExtra(Consts.SUCESS, true);
             }else {
@@ -101,7 +100,9 @@ public class InternetClient {
         }
     }
 
-    private void closeConnection() throws IOException {
+    protected abstract void readMedia(Intent activityMsg) throws IOException;
+
+    protected void closeConnection() throws IOException {
         if (connection != null) {
             connection.disconnect();
         }
@@ -111,16 +112,7 @@ public class InternetClient {
         }
     }
 
-    private String readIt() throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-        StringBuilder sb = new StringBuilder();
-        String line;
-        while ((line = br.readLine()) != null) {
-            sb.append(line);
-        }
-        br.close();
-        return sb.toString();
-    }
+    protected abstract String readIt() throws IOException;
 
     public void runInBackground() {
         ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);

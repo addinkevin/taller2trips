@@ -1,5 +1,6 @@
 package com.example.pc.myapplication.carruselTools;
 
+import android.graphics.Bitmap;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -9,15 +10,19 @@ import android.view.View;
 import com.example.pc.myapplication.AtraccionActivity;
 import com.example.pc.myapplication.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CarruselPagerAdapter extends FragmentPagerAdapter implements ViewPager.PageTransformer {
     public final static float BIG_SCALE = 1.0f;
-    public final static float SMALL_SCALE = 0.7f;
+    public final static float SMALL_SCALE = 0.5f;
     public final static float DIFF_SCALE = BIG_SCALE - SMALL_SCALE;
 
     private CarruselLinearLayout cur = null;
     private CarruselLinearLayout next = null;
     private AtraccionActivity context;
     private FragmentManager fm;
+    private List<Bitmap> imagenes = new ArrayList<>();
     private float scale;
 
     public CarruselPagerAdapter(AtraccionActivity context, FragmentManager fm) {
@@ -26,21 +31,39 @@ public class CarruselPagerAdapter extends FragmentPagerAdapter implements ViewPa
         this.context = context;
     }
 
+    public int getSize() {
+        return imagenes.size();
+    }
+
+
+    public void addImage(Bitmap img) {
+        imagenes.add(img);
+        List<Bitmap> aux = new ArrayList<>(imagenes);
+        imagenes.clear();
+        imagenes.addAll(aux);
+        notifyDataSetChanged();
+    }
+
     @Override
     public Fragment getItem(int position) {
         // make the first pager bigger than others
-        if (position == AtraccionActivity.FIRST_PAGE)
+        if (position == context.FIRST_PAGE)
             scale = BIG_SCALE;
         else
             scale = SMALL_SCALE;
 
-        position = position % AtraccionActivity.PAGES;
-        return CarruselFragment.newInstance(context, position, scale);
+        position = position % context.PAGES;
+        Bitmap imagen = null;
+        if (imagenes.size() > position) {
+            imagen = imagenes.get(position);
+        }
+
+        return CarruselFragment.newInstance(context, position, scale, imagen);
     }
 
     @Override
     public int getCount() {
-        return AtraccionActivity.PAGES * AtraccionActivity.LOOPS;
+        return context.PAGES * AtraccionActivity.LOOPS;
     }
 
     @Override

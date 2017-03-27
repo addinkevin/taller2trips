@@ -11,15 +11,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.pc.myapplication.R;
+import com.example.pc.myapplication.ciudadesTools.Atraccion;
 
 import java.util.List;
 
 public class AtraccionesListAdp extends BaseAdapter {
 
     private final Fragment context;
-    List<AtraccionItem> atraccionItems; /**< Lista de todos los items del ChatList*/
+    List<Atraccion> atraccionItems; /**< Lista de todos los items del ChatList*/
 
-    public AtraccionesListAdp(Fragment context, List<AtraccionItem> atraccionItems) {
+    public AtraccionesListAdp(Fragment context, List<Atraccion> atraccionItems) {
         this.context = context;
         this.atraccionItems = atraccionItems;
 
@@ -55,9 +56,11 @@ public class AtraccionesListAdp extends BaseAdapter {
             holder.atraccionName = (TextView) view.findViewById(R.id.textView2);
             holder.atraccionPic = (ImageView) view.findViewById(R.id.imageView);
             view.setTag(holder);
-            AtraccionItem rowPos = atraccionItems.get(position);
-            holder.atraccionPic.setImageBitmap(rowPos.atraccionPic);
-            holder.atraccionName.setText(rowPos.atraccionName);
+            Atraccion rowPos = atraccionItems.get(position);
+            if (!rowPos.fotosBitmap.isEmpty()) {
+                holder.atraccionPic.setImageBitmap(rowPos.fotosBitmap.get(0));
+            }
+            holder.atraccionName.setText(rowPos.nombre);
         } else {
             holder = (ViewHolder) view.getTag();
         }

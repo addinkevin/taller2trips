@@ -1,16 +1,26 @@
 package com.example.pc.myapplication;
 
+import android.content.IntentFilter;
+import android.media.Image;
+import android.media.MediaPlayer;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.example.pc.myapplication.InternetTools.InfoClient;
+import com.example.pc.myapplication.InternetTools.InternetClient;
+import com.example.pc.myapplication.InternetTools.VideoClient;
+import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAtraccion;
+import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAtraccionImgs;
+import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAtraccionVid;
 import com.example.pc.myapplication.carruselTools.CarruselPagerAdapter;
+import com.example.pc.myapplication.ciudadesTools.Atraccion;
+import com.example.pc.myapplication.commonfunctions.Consts;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -18,21 +28,27 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+import java.io.IOException;
 
-public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCallback{
+public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener {
 
     private Toolbar toolbar;
+    private ReceiverOnAtraccion onAtraccion;
+    private ReceiverOnAtraccionImgs onAtraccionImgs;
+    private ReceiverOnAtraccionVid onAtraccionVid;
 
-    public final static int PAGES = 5;
+    public int PAGES = 1;
     // You can choose a bigger number for LOOPS, but you know, nobody will fling
     // more than 1000 times just in order to test your "infinite" ViewPager :D
     public final static int LOOPS = 1000;
-    public final static int FIRST_PAGE = PAGES * LOOPS / 2;
+    public int FIRST_PAGE = PAGES * LOOPS / 2;
 
     public CarruselPagerAdapter adapter;
     public ViewPager pager;
+    private Atraccion atraccion;
+    private GoogleMap map;
+    private View view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,33 +58,28 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
         toolbar.setTitle(getString(R.string.ciudades));
         setSupportActionBar(toolbar);
 
+        view = findViewById(R.id.vertScrollView);
+        String _id = getIntent().getStringExtra(Consts._ID);
+
+        adapter = new CarruselPagerAdapter(this, this.getSupportFragmentManager());
+
+        onAtraccion = new ReceiverOnAtraccion(this, view);
+        onAtraccionImgs = new ReceiverOnAtraccionImgs(this, view, adapter);
+        onAtraccionVid = new ReceiverOnAtraccionVid(this);
+
+        String url = Consts.SERVER_URL + Consts.ATRACC + "/" + _id;
+
+        InternetClient client = new InfoClient(getApplicationContext(), view,
+                Consts.GET_ATR, url, null, Consts.GET, null, true);
+        client.runInBackground();
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map2);
         mapFragment.getMapAsync(this);
 
-        pager = (ViewPager) findViewById(R.id.myviewpager);
-
-        adapter = new CarruselPagerAdapter(this, this.getSupportFragmentManager());
-        pager.setAdapter(adapter);
-        pager.setPageTransformer(false, adapter);
-
-        // Set current item to the middle page so we can fling to both
-        // directions left and right
-        pager.setCurrentItem(FIRST_PAGE);
-
-        // Necessary or the pager will only have one extra page to show
-        // make this at least however many pages you can see
-        pager.setOffscreenPageLimit(3);
-
-        // Set margin for pages as a negative number, so a part of next and
-        // previous pages will be showed
-        pager.setPageMargin(-200);
 
 
-       /* ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_dropdown_item_1line, COUNTRIES);
-        AutoCompleteTextView textView = (AutoCompleteTextView)
-                findViewById(R.id.autoCompleteTextView);
-        textView.setAdapter(adapter);/*/
+        ///////////////////////////////////
+        /*
 
         LinearLayout linlaIMG = (LinearLayout) findViewById(R.id.linlaIMG);
         LinearLayout linlaVIDEO = (LinearLayout) findViewById(R.id.linlaVIDEO);
@@ -88,104 +99,6 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
         float densityMargin = getResources().getDisplayMetrics().density;
         int finalDimensMargin = (int) (dimensMargin * densityMargin);
 
-        ImageView img1 = new ImageView(this);
-        img1.setImageResource(R.drawable.buenosairesoriginal);
-        ImageView img2 = new ImageView(this);
-        img2.setImageResource(R.drawable.ba6);
-        ImageView img3 = new ImageView(this);
-        img3.setImageResource(R.drawable.puente_madero_noche_980_as);
-        ImageView img4 = new ImageView(this);
-        img4.setImageResource(R.drawable.buenosairesoriginal2);
-        ImageView img5 = new ImageView(this);
-        img5.setImageResource(R.drawable.buenosairesoriginal3);
-        ImageView img6 = new ImageView(this);
-        img6.setImageResource(R.drawable.buenosairesoriginal4);
-        ImageView img7 = new ImageView(this);
-        img7.setImageResource(R.drawable.buenosairesoriginal5);
-        ImageView img8 = new ImageView(this);
-        img8.setImageResource(R.drawable.buenosairesoriginal6);
-        ImageView img9 = new ImageView(this);
-        img9.setImageResource(R.drawable.buenosairesoriginal7);
-        ImageView img10 = new ImageView(this);
-        img10.setImageResource(R.drawable.buenosairesoriginal8);
-
-        List<ImageView> list = new ArrayList<>(3);
-        list.add(img1);
-        list.add(img2);
-        list.add(img3);
-        list.add(img4);
-        list.add(img5);
-        list.add(img6);
-        list.add(img7);
-        list.add(img8);
-        list.add(img9);
-        list.add(img10);
-
-        ImageView imgA1 = new ImageView(this);
-        imgA1.setImageResource(R.drawable.buenosairesoriginal);
-        ImageView imgA2 = new ImageView(this);
-        imgA2.setImageResource(R.drawable.ba6);
-        ImageView imgA3 = new ImageView(this);
-        imgA3.setImageResource(R.drawable.puente_madero_noche_980_as);
-        ImageView imgA4 = new ImageView(this);
-        imgA4.setImageResource(R.drawable.buenosairesoriginal2);
-        ImageView imgA5 = new ImageView(this);
-        imgA5.setImageResource(R.drawable.buenosairesoriginal3);
-        ImageView imgA6 = new ImageView(this);
-        imgA6.setImageResource(R.drawable.buenosairesoriginal4);
-        ImageView imgA7 = new ImageView(this);
-        imgA7.setImageResource(R.drawable.buenosairesoriginal5);
-        ImageView imgA8 = new ImageView(this);
-        imgA8.setImageResource(R.drawable.buenosairesoriginal6);
-        ImageView imgA9 = new ImageView(this);
-        imgA9.setImageResource(R.drawable.buenosairesoriginal7);
-        ImageView imgA10 = new ImageView(this);
-        imgA10.setImageResource(R.drawable.buenosairesoriginal8);
-
-        List<ImageView> listA = new ArrayList<>(3);
-        listA.add(imgA1);
-        listA.add(imgA2);
-        listA.add(imgA3);
-        listA.add(imgA4);
-        listA.add(imgA5);
-        listA.add(imgA6);
-        listA.add(imgA7);
-        listA.add(imgA8);
-        listA.add(imgA9);
-        listA.add(imgA10);
-
-        ImageView imgV1 = new ImageView(this);
-        imgV1.setImageResource(R.drawable.buenosairesoriginal);
-        ImageView imgV2 = new ImageView(this);
-        imgV2.setImageResource(R.drawable.ba6);
-        ImageView imgV3 = new ImageView(this);
-        imgV3.setImageResource(R.drawable.puente_madero_noche_980_as);
-        ImageView imgV4 = new ImageView(this);
-        imgV4.setImageResource(R.drawable.buenosairesoriginal2);
-        ImageView imgV5 = new ImageView(this);
-        imgV5.setImageResource(R.drawable.buenosairesoriginal3);
-        ImageView imgV6 = new ImageView(this);
-        imgV6.setImageResource(R.drawable.buenosairesoriginal4);
-        ImageView imgV7 = new ImageView(this);
-        imgV7.setImageResource(R.drawable.buenosairesoriginal5);
-        ImageView imgV8 = new ImageView(this);
-        imgV8.setImageResource(R.drawable.buenosairesoriginal6);
-        ImageView imgV9 = new ImageView(this);
-        imgV9.setImageResource(R.drawable.buenosairesoriginal7);
-        ImageView imgV10 = new ImageView(this);
-        imgV10.setImageResource(R.drawable.buenosairesoriginal8);
-
-        List<ImageView> listV = new ArrayList<>(3);
-        listV.add(imgV1);
-        listV.add(imgV2);
-        listV.add(imgV3);
-        listV.add(imgV4);
-        listV.add(imgV5);
-        listV.add(imgV6);
-        listV.add(imgV7);
-        listV.add(imgV8);
-        listV.add(imgV9);
-        listV.add(imgV10);
 
         for (int i = 0; i < list.size(); i++) {
             ImageView imgUsers = list.get(i);
@@ -254,16 +167,87 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
                     System.out.println(v.getId());
                 }
             });
-        }
+        }*/
 
     }
 
     @Override
     public void onMapReady(GoogleMap map) {
-        LatLng latLng = new LatLng(-34.603089,-58.381618);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));
-        map.addMarker(new MarkerOptions().position(latLng).flat(true));
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,12.0f));
+        this.map = map;
+        if (atraccion != null) {
+           setMapContent();
+        }
     }
 
+    private void setMapContent() {
+        LatLng latLng = new LatLng(atraccion.latitud, atraccion.longitud);
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));
+        map.addMarker(new MarkerOptions().position(latLng).flat(true));
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12.0f));
+    }
+
+    public void onStart() {
+        super.onStart();
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(onAtraccion,
+                new IntentFilter(Consts.GET_ATR));
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(onAtraccionImgs,
+                new IntentFilter(Consts.GET_ATR_IMG_S));
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(onAtraccionVid,
+                new IntentFilter(Consts.GET_ATR_VID));
+
+    }
+
+    public void onStop() {
+        super.onStop();
+        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(onAtraccion);
+        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(onAtraccionImgs);
+        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(onAtraccionVid);
+
+    }
+
+    public void attachAtraccion(Atraccion atraccion) {
+        this.atraccion = atraccion;
+        if (map != null) {
+            setMapContent();
+        }
+
+        PAGES = atraccion.fotosPath.size();
+        //adapter.notifyDataSetChanged();
+
+        TextView atrName = (TextView) findViewById(R.id.nombreAtr);
+        atrName.setText(atraccion.nombre);
+
+        TextView atrInfo = (TextView) findViewById(R.id.infoText);
+        atrInfo.setText(atraccion.descripcion);
+
+        ImageView video = (ImageView) findViewById(R.id.videoIMG);
+        video.setOnClickListener(this);
+    }
+
+    public Atraccion getAtraccion() {
+        return  atraccion;
+    }
+
+    @Override
+    public void onClick(View v) {
+        String file = getCacheDir().getAbsolutePath() + "/" + atraccion._id + Consts.EXT;
+        File videoFile = new File( file);
+
+        if (!videoFile.exists()) {
+            String url = Consts.SERVER_URL + Consts.ATRACC + "/" + atraccion._id + Consts.VIDEO;
+
+            InternetClient client = new VideoClient(getApplicationContext(), view,
+                    Consts.GET_ATR_VID, url, null, Consts.GET, null, true, atraccion._id);
+            client.runInBackground();
+        } else {
+            MediaPlayer mp = new MediaPlayer();
+            try {
+                mp.setDataSource(file);
+                mp.prepare();
+                mp.start();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

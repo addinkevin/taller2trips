@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.example.pc.myapplication.R;
+import com.example.pc.myapplication.ciudadesTools.Ciudad;
 
 public class TabsAdapter extends FragmentPagerAdapter {
 
@@ -14,12 +15,17 @@ public class TabsAdapter extends FragmentPagerAdapter {
     private Fragment pagesLayout[] = new Fragment[3];
     private Context context;
 
-    public TabsAdapter(FragmentManager fm, Context context) {
+    public TabsAdapter(FragmentManager fm, Context context, Ciudad ciudad) {
         super(fm);
         this.context = context;
+
         pagesLayout[0] = new MainFragment();
+        ((MainFragment)pagesLayout[0]).setCiudad(ciudad);
         pagesLayout[1] = new AtraccionesFragment();
+        ((AtraccionesFragment)pagesLayout[1]).setCiudad(ciudad);
         pagesLayout[2] = new RecorridosFragment();
+        ((RecorridosFragment)pagesLayout[2]).setCiudad(ciudad);
+
         String info = context.getResources().getString(R.string.informacion);
         String tours = context.getResources().getString(R.string.recorridos);
         String atracciones = context.getResources().getString(R.string.atracciones);

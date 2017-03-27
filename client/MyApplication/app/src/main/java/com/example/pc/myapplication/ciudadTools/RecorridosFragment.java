@@ -7,8 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.pc.myapplication.R;
+import com.example.pc.myapplication.ciudadesTools.Ciudad;
 
 public class RecorridosFragment extends Fragment {
+
+    private Ciudad ciudad;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -17,4 +20,7 @@ public class RecorridosFragment extends Fragment {
         return myFragmentView;
     }
 
+    public void setCiudad(Ciudad ciudad) {
+        this.ciudad = ciudad;
+    }
 }

@@ -29,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ba6" />
+                android:src="@drawable/df_image" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -46,7 +46,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="1dp"
-                    android:text="Buenos Aires"
                     android:textAlignment="center"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     android:textColor="@color/white"
@@ -58,7 +57,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="1dp"
-                    android:text="Argentina"
                     android:textAlignment="center"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="@color/white"
@@ -72,7 +70,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Buenos Aires es la capital de la República Argentina  y se llama desde 1994, Ciudad Autónoma de Buenos Aires. Es la ciudad más importante del país y una de las más grandes de América Latina, con 3 millones de habitantes, los que contando el área metropolitana, llegan a 10 millones. Es uno de los 10 centros urbanos más poblados del mundo."
             android:id="@+id/infoText"
             android:layout_marginLeft="5dp"
             android:layout_marginStart="5dp"

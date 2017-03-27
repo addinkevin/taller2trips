@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity  implements OnMapReadyCallba
         int id = item.getItemId();
 
         if (id == R.id.ciudades) {
-            Intent i = new Intent(this, CiudadActivity.class);
+            Intent i = new Intent(this, CiudadesActivity.class);
             startActivity(i);
         } else {
 
