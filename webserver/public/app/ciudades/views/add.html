@@ -14,7 +14,7 @@
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Nombre de ciudad</label>
                 <div class="col-sm-10">
-                    <input type="text" ng-model="ciudad.name" class="form-control" placeholder="Nombre de la ciudad">
+                    <input type="text" ng-model="ciudad.nombre" class="form-control" placeholder="Nombre de la ciudad">
                 </div>
             </div>
 
@@ -28,7 +28,7 @@
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Descripción de la ciudad</label>
                 <div class="col-sm-10">
-                    <textarea class="form-control" ng-model="ciudad.description" rows="5" style="resize: none;" id="descripcionCiudad" placeholder="Descripción de la ciudad"></textarea>
+                    <textarea class="form-control" ng-model="ciudad.descripcion" rows="5" style="resize: none;" id="descripcionCiudad" placeholder="Descripción de la ciudad"></textarea>
                 </div>
             </div>
 
@@ -52,7 +52,7 @@
                             <img ng-src="{{ciudad.imgSrc}}" class="img-responsive"/>
                         </div>
                         <div class="col-xs-6 col-md-9">
-                            <h3>{{ciudad.name}}</h3>
+                            <h3>{{ciudad.nombre}}</h3>
                             <div class="row">
                                 <label class="col-sm-2 col-form-label">País</label>
                                 <div class="col-sm-10">
@@ -62,7 +62,7 @@
                             <div class="row">
                                 <label class="col-sm-2 col-form-label">Descripción</label>
                                 <div class="col-sm-10">
-                                    {{ciudad.description}}
+                                    {{ciudad.descripcion}}
                                 </div>
                             </div>
                         </div>

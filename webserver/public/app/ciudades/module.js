@@ -20,8 +20,8 @@ ciudades.config(['$routeProvider', function config($routeProvider) {
         });
 }]);
 
-ciudades.service('CiudadesService', function() {
-    this.loadCiudades = function() {
+ciudades.service('CiudadesService', ['$http', function($http) {
+    this.getCiudades = function(observer) {
         return [
             {
                 name:"CABA",
@@ -38,18 +38,16 @@ ciudades.service('CiudadesService', function() {
         ];
     };
 
-    this.ciudades = this.loadCiudades();
+
+    this.ciudades = [];
+    this.getCiudades();
 
     this.setCiudades = function(ciudades) {
         this.ciudades = ciudades;
     };
 
     this.addCiudad = function(ciudad) {
-        this.ciudades.push(ciudad);
-    };
-
-    this.getCiudades = function() {
-        return this.ciudades;
+        //this.ciudades.push(ciudad);
     };
 
     this.getCiudad = function (ciudadId) {
@@ -67,5 +65,9 @@ ciudades.service('CiudadesService', function() {
             this.ciudades.splice(index, 1);
         }
     }
-});
+
+    this.transformCiudad = function(ciudad) {
+        return {nombre:ciudad.name, descripcion:ciudad.description, _id:ciudad._id, pais:ciudad.pais }
+    }
+}]);
 

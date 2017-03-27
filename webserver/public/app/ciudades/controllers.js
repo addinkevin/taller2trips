@@ -1,11 +1,6 @@
 var ciudadesApp = angular.module('tripsApp.ciudades');
 
 ciudadesApp.controller('ciudadesController', [ '$scope', function ciudadesController( $scope ) {
-    $scope.updateImageClick = function(event) {
-        $scope.ciudad.imgSrc = window.URL.createObjectURL(event.target.files[0]);
-        console.log($scope.ciudad.imgSrc);
-        $scope.$digest();
-    }
 }]);
 
 ciudadesApp.controller('OLDciudadesAddController',
@@ -83,21 +78,59 @@ ciudadesApp.controller('OLDciudadesAddController',
 ciudadesApp.controller('ciudadesAddController',
     [ '$scope', 'CiudadesService', '$location', '$http',
         function ($scope, CiudadesService, $location, $http) {
-            console.log("AngularJs Controller: ciudadesAddController");
-
             $scope.ciudad = {};
 
             $scope.updateImageClick = function(event) {
-                $scope.ciudad.imgSrc = window.URL.createObjectURL(event.target.files[0]);
+                $scope.ciudad.imgSrc = event.target.files[0];
                 console.log($scope.ciudad.imgSrc);
                 $scope.$digest();
             };
 
             $scope.submitAddCiudad = function() {
-                console.log("Agregado la ciudad:", $scope.ciudad);
-                CiudadesService.addCiudad($scope.ciudad);
+                $scope.addCiudad($scope.ciudad);
                 $location.url('/ciudades/');
             };
+
+            $scope.addCiudad = function(ciudad) {
+                $http({
+                    method: 'POST',
+                    url : '/api/ciudad',
+                    data: ciudad
+                })
+                    .then(function sucess(res) {
+                        ciudad._id = res.data._id;
+                        var url = '/api/ciudad/' + ciudad._id + '/imagen';
+                        $http({
+                            method: 'POST',
+                            url: url,
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            },
+                            data: {
+                                upload: ciudad.imgSrc
+                            },
+                            transformRequest: function (data, headersGetter) {
+                                var formData = new FormData();
+                                angular.forEach(data, function (value, key) {
+                                    formData.append(key, value);
+                                });
+
+                                var headers = headersGetter();
+                                delete headers['Content-Type'];
+
+                                return formData;
+                            }
+                        })
+                            .then(function success(res) {
+
+                            }, function error(res) {
+
+                            });
+
+                    }, function error(res) {
+
+                    });
+            }
         }
         ]
 );
@@ -108,7 +141,8 @@ ciudadesApp.controller('ciudadesEditController',
             $scope.ciudad = CiudadesService.getCiudad($routeParams.id);
 
             $scope.updateImageClick = function(event) {
-                $scope.ciudad.imgSrc = window.URL.createObjectURL(event.target.files[0]);
+                //$scope.ciudad.imgSrc = window.URL.createObjectURL(event.target.files[0]);
+                $scope.ciudad.imgSrc = event.target.files[0];
                 console.log($scope.ciudad.imgSrc);
                 $scope.$digest();
             };
@@ -125,10 +159,36 @@ ciudadesApp.controller('ciudadesEditController',
 ciudadesApp.controller('ciudadesListadoController',
     [ '$scope' , 'CiudadesService', '$http', '$location',
     function($scope, CiudadesService, $http, $location) {
+
+        $scope.ciudades = [];
+
         $scope.deleteCiudad = function(ciudadId) {
             CiudadesService.removeCiudad($scope.ciudades[ciudadId]);
             $location.url('/ciudades/');
         };
 
-        $scope.ciudades = CiudadesService.getCiudades();
+
+        $scope.getCiudades = function() {
+            $http.get('/api/ciudad').then( function successCallback(response) {
+                console.log('GET /api/ciudad', response);
+                $scope.ciudades = response.data;
+                for (var i = 0; i < $scope.ciudades.length; i ++) {
+                    var _ciudad = $scope.ciudades[i];
+                    $http({
+                        url: '/api/ciudad/'+_ciudad._id+'/imagen/',
+                        method: 'GET',
+                        headers: { 'Content-Type': undefined},
+                        transformRequest: angular.identity
+                    }).then(function success(res) {
+                        console.log('GET OK /api/ciudad/'+_ciudad._id+'/imagen/', res);
+                        _ciudad.imgSrc = res.data;
+                    }, function fail(res) {
+                        console.log('GET FAIL /api/ciudad/'+_ciudad._id+'/imagen/', res);
+                    });
+                }
+            });
+        };
+
+        $scope.getCiudades();
+
 }]);
