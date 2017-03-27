@@ -13,7 +13,7 @@
     <!-- Buscador -->
     <div class="panel panel-default">
         <div class="panel-body">
-            <input ng-model="search.name" type="text" class="form-control formularioBuscar" placeholder="Buscar...">
+            <input ng-model="search.nombre" type="text" class="form-control formularioBuscar" placeholder="Buscar...">
         </div>
     </div>
 
@@ -25,7 +25,7 @@
         <div class="panel-body">
             <div class="row">
                 <div class="col-xs-6 col-md-3">
-                    <a href="#/ciudades/info/{{id}}" class="thumbnail">
+                    <a href="#/ciudades/edit/{{ciudad._id}}" class="thumbnail">
                         <img ng-src="/api/ciudad/{{ciudad._id}}/imagen" alt="" class="img-responsive"/>
                     </a>
                 </div>
@@ -49,7 +49,7 @@
         </div>
         <div class="panel-footer">
             <div class="btn-group" role="group" aria-label="edit-remove">
-                <a href="#/ciudades/edit/{{id}}" class="btn btn-default" role="button">Edit</a>
+                <a href="#/ciudades/edit/{{ciudad._id}}" class="btn btn-default" role="button">Edit</a>
                 <button type="button" class="btn btn-default" ng-click="deleteCiudad(id)">Remove</button>
             </div>
         </div>
