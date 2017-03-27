@@ -22,7 +22,7 @@ tripsApp.service('GoogleMaps', function() {
 
 });
 
-tripsApp.service('HTTPService', function() {
+tripsApp.service('Common', function() {
    //this ..// TODO
 });
 

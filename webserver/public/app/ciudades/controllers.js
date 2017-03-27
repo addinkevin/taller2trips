@@ -231,8 +231,14 @@ ciudadesApp.controller('ciudadesListadoController',
         $scope.ciudades = [];
 
         $scope.deleteCiudad = function(ciudadId) {
-            CiudadesService.removeCiudad($scope.ciudades[ciudadId]);
-            $location.url('/ciudades/');
+            $http.delete('/api/ciudad/'+ciudadId).then(
+                function success(res) {
+                    $location.url('/ciudades/');
+                },
+                function error(res) {
+                    $location.url('/ciudades/');
+                }
+            )
         };
 
 

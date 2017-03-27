@@ -1,14 +1,41 @@
 var atraccionesApp = angular.module('tripsApp.atracciones');
 
 atraccionesApp.controller('atraccionesListadoController',
-    [ '$scope' , 'AtraccionesService', '$http', '$location',
-        function($scope, AtraccionesService, $http, $location) {
+    [ '$scope' , 'AtraccionesService', '$http', '$location', '$timeout',
+        function($scope, AtraccionesService, $http, $location, $timeout) {
             $scope.deleteAtraccion = function(atraccionId) {
                 AtraccionesService.removeAtraccion($scope.atracciones[atraccionId]);
                 $location.url('/atracciones');
             };
 
-            $scope.atracciones = AtraccionesService.getAtracciones();
+            $scope.atracciones = [];
+
+            $scope.getNombreCiudad = function(idCiudad) {
+                return $scope.mapCiudades[idCiudad].nombre;
+            }
+
+            $scope.getAtracciones = function() {
+                $http.get('/api/ciudad/')
+                    .then(function success(res) {
+                        console.log("GET OK /api/ciudad");
+                        $scope.ciudades = res.data;
+                        $scope.mapCiudades = {}
+                        for (var i = 0; i < $scope.ciudades.length; i++) {
+                            $scope.mapCiudades[$scope.ciudades[i]._id] = $scope.ciudades[i];
+                        }
+                        $http.get('/api/atraccion')
+                            .then(function sucess(res) {
+                                console.log("GET OK /api/atraccion");
+                                $scope.atracciones = res.data;
+                            }, function error(res) {
+
+                            });
+                    }, function error(res) {
+
+                    });
+            };
+
+            $scope.getAtracciones();
         }]);
 
 atraccionesApp.controller('atraccionesAddController',
@@ -16,7 +43,7 @@ atraccionesApp.controller('atraccionesAddController',
         function ($scope, AtraccionesService, $location, $http) {
             console.log("AngularJs Controller: atraccionesAddController");
 
-            $scope.atraccion = {lat:35, lng:-95};
+            $scope.atraccion = {lat:-35, lng:-58 };
             $scope.idiomas = ['es','en','fr','kr','jp'];
             $scope.monedas = [ 'u$s', '$', 'R$', '€' ];
             $scope.monedaCosto = "u$s";
@@ -40,6 +67,7 @@ atraccionesApp.controller('atraccionesAddController',
                 "Spas"
             ];
             $scope.clasificacionSelected = $scope.clasificaciones[0];
+            $scope.ciudadSelected = "";
             $scope.imagenes = [];
             $scope.audios = [];
             $scope.videos = [];
@@ -52,9 +80,9 @@ atraccionesApp.controller('atraccionesAddController',
             };
 
             $scope.submitAddAtraccion = function() {
-                console.log("Agregado la ciudad:", $scope.atraccion);
-                AtraccionesService.addAtraccion($scope.atraccion);
-                $location.url('/atracciones/');
+                //console.log("Agregado la ciudad:", $scope.atraccion);
+                $scope.addAtraccion($scope.atraccion);
+                //$location.url('/atracciones/');
             };
 
             $scope.createMap = function() {
@@ -104,6 +132,49 @@ atraccionesApp.controller('atraccionesAddController',
 
 
             $scope.createMap();
+
+            $scope.loadCiudades = function() {
+                $http({
+                    method: 'GET',
+                    url : '/api/ciudad'
+                })
+                    .then(function sucess(res) {
+                        console.log("GET OK /api/ciudad");
+                        $scope.ciudades = res.data;
+                        $scope.ciudadSelected = $scope.ciudades[0];
+
+                    }, function error(res) {
+
+                    });
+            };
+            $scope.loadCiudades();
+
+            $scope.addAtraccion = function(atraccion) {
+                var data = {
+                    "nombre": atraccion.nombre,
+                    "descripcion": atraccion.descripcion,
+                    "costo": atraccion.costo,
+                    "hora_apertura": atraccion.horaApertura,
+                    "hora_cierre": atraccion.horaCierre,
+                    "duracion": atraccion.duracion,
+                    "clasificacion": $scope.clasificacionSelected,
+                    "id_ciudad": $scope.ciudadSelected._id,
+                    "latitud": atraccion.lat,
+                    "longitud": atraccion.lng
+                };
+
+                $http({
+                    method: 'POST',
+                    url : '/api/atraccion',
+                    data: data
+                })
+                    .then(function sucess(res) {
+                        atraccion._id = res.data._id;
+                        $location.url('/atracciones');
+                    }, function error(res) {
+
+                    });
+            }
 
         }
     ]

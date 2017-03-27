@@ -10,27 +10,32 @@
 
     </div>
 
-    <div class="panel panel-default">
+    <div class="panel-custom" ng-show="ciudades.length == 0">
+        <h3 class="subheader">No hay ciudades agregadas. Agrega una ciudad primero.</h3>
+    </div>
+
+    <div class="panel panel-default" ng-show="ciudades.length > 0">
         <div class="panel-body">
-            <form>
+            <form ng-submit="submitAddAtraccion()">
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Nombre de atracción</label>
                     <div class="col-sm-10">
-                        <input type="text" ng-model="atraccion.name" class="form-control" placeholder="Nombre de la atracción">
+                        <input required type="text" ng-model="atraccion.nombre" class="form-control" placeholder="Nombre de la atracción">
                     </div>
                 </div>
 
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Ciudad de la atracción</label>
                     <div class="col-sm-10">
-                        <input type="text" ng-model="atraccion.ciudad" class="form-control" placeholder="Ciudad de la atracción">
+                        <select required ng-model="ciudadSelected" ng-options="ciudad.nombre for ciudad in ciudades">
+                        </select>
                     </div>
                 </div>
 
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Descripción de la atracción</label>
                     <div class="col-sm-10">
-                        <textarea class="form-control" ng-model="atraccion.description" rows="5" style="resize: none;" id="descripcionAtraccion" placeholder="Descripción de la atracción"></textarea>
+                        <textarea required class="form-control" ng-model="atraccion.descripcion" rows="5" style="resize: none;" id="descripcionAtraccion" placeholder="Descripción de la atracción"></textarea>
                     </div>
                 </div>
 
@@ -43,99 +48,10 @@
                 </div>
 
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Imagenes</label>
-                    <div class="col-sm-10">
-                        <label class="btn btn-primary">
-                            <input type="file" custom-on-change="uploadImageClick" style="display:none;" multiple="multiple">
-                            Subir imagen
-                        </label>
-
-                        <div class="previewDeImagenes">
-                            <div class="imagenPreview" ng-repeat="(id,atraccionImagen) in imagenes">
-                                <div class="imagePreviewItem">
-                                    <img ng-src="{{atraccionImagen.imgSrc}}" class="img-responsive"/>
-                                    <button class="btn btn-default btn-block">Borrar imagen</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Videos -->
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Videos</label>
-                    <div class="col-sm-10">
-                        <label class="btn btn-primary">
-                            <input type="file" custom-on-change="uploadVideoClick" style="display:none;" multiple="multiple">
-                            Subir video
-                        </label>
-
-                        <div class="previewDeVideos">
-                            <div class="videoPreview" ng-repeat="(id,atraccionVideo) in videos">
-                                <div class="videoPreviewItem">
-                                    <video controls>
-                                        <source ng-src="{{atraccionVideo.vidSrc}}" type="video/mp4">
-                                        Your browser does not support the video tag.
-                                    </video>
-                                    <button class="btn btn-default btn-block">Borrar video</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Audios -->
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Audios</label>
-                    <div class="col-sm-10">
-                        <span>
-                            <input ng-model="idiomaAudio" list="idiomas">
-                            <datalist id="idiomas">
-                                <option value="{{idioma}}" ng-repeat="idioma in idiomas">
-                            </datalist>
-                        </span>
-                        <label class="btn btn-primary" >
-                            <input type="file" custom-on-change="uploadAudioClick" style="display:none;" multiple="multiple">
-                            Subir audio
-                        </label>
-
-                        <div class="previewDeAudios">
-                            <div class="audioPreview" ng-repeat="(id,atraccionAudio) in audios">
-                                <span class="label label-info">{{atraccionAudio.idiomaAudio}}</span>
-                                <audio class="media-middle" controls>
-                                    <source ng-src="{{atraccionAudio.audSrc}}">
-                                    Your browser does not support the audio element.
-                                </audio>
-                                <button class="btn btn-default">Borrar audio</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Planos -->
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Planos</label>
-                    <div class="col-sm-10">
-                        <label class="btn btn-primary">
-                            <input type="file" custom-on-change="uploadPlanoClick" style="display:none;" multiple="multiple">
-                            Subir plano
-                        </label>
-
-                        <div class="previewDeImagenes">
-                            <div class="imagenPreview" ng-repeat="(id,atraccionPlano) in planos">
-                                <div class="imagePreviewItem">
-                                    <img ng-src="{{atraccionPlano.imgSrc}}" class="img-responsive"/>
-                                    <button class="btn btn-default btn-block">Borrar plano</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Costo</label>
                     <div class="col-sm-10">
+                        <input required step="any" type="number" ng-model="atraccion.monedaCosto" class="form-control" placeholder="Costo de la atracción">
+                        <!--
                         <div class="input-group">
                             <span class="input-group-addon" id="basic-addon1">
                                 <input ng-model="monedaCosto" list="monedas">
@@ -143,23 +59,23 @@
                                         <option value="{{moneda}}" ng-repeat="moneda in monedas">
                                     </datalist>
                             </span>
-                            <input type="text" class="form-control" placeholder="Costo de la atracción" aria-describedby="basic-addon1">
+                            <input type="text" class="form-control" placeholder="Costo de la atracción"> aria-describedby="basic-addon1">
                         </div>
+                        -->
                     </div>
                 </div>
-
 
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Hora de apertura</label>
                     <div class="col-sm-10">
-                        <input type="time" class="form-control" name="atraccion.horaApertura">
+                        <input required type="time" class="form-control" ng-model="atraccion.horaApertura">
                     </div>
                 </div>
 
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Hora de cierre</label>
                     <div class="col-sm-10">
-                        <input type="time" class="form-control" name="atraccion.horaCierre">
+                        <input required type="time" class="form-control" ng-model="atraccion.horaCierre">
                     </div>
                 </div>
 
@@ -167,7 +83,7 @@
                     <label class="col-sm-2 col-form-label">Duración promedio</label>
                     <div class="col-sm-10">
                         <div class="input-group">
-                            <input type="number" min="1" class="form-control" placeholder="Duración promedio de la atracción">
+                            <input required type="number" min="1" class="form-control" placeholder="Duración promedio de la atracción">
                             <span class="input-group-addon" id="basic-addon2">minutos</span>
                         </div>
                     </div>
@@ -180,7 +96,6 @@
                         </select>
                     </div>
                 </div>
-
 
                 <div class="form-group row">
                     <button type="submit" class="btn btn-primary center-block">Agregar atracción</button>

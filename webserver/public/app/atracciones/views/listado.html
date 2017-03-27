@@ -14,7 +14,7 @@
     <div class="panel panel-default">
         <div class="panel-body">
             <form class="buscadorAtracciones">
-                <input ng-model="search.name" type="text" class="form-control formularioBuscar" placeholder="Buscar...">
+                <input ng-model="search.nombre" type="text" class="form-control formularioBuscar" placeholder="Buscar...">
             </form>
         </div>
     </div>
@@ -27,28 +27,26 @@
         <div class="panel-body">
             <div class="row">
                 <div class="col-xs-6 col-md-3">
-                    <a href="#" class="thumbnail">
-                        <img ng-src="{{atraccion.imgSrc}}" alt="" class="img-responsive"/>
-                    </a>
+                    <img ng-src="{{'/api/ciudad/'+atraccion.id_ciudad+'/imagen'}}" alt="" class="img-responsive"/>
                 </div>
                 <div class="col-xs-6 col-md-9">
-                    <h3>{{atraccion.name}}</h3>
+                    <h3>{{atraccion.nombre}}</h3>
                     <div class="row">
                         <label class="col-sm-2 col-form-label">Ubicación</label>
                         <div class="col-sm-10">
-                            {{atraccion.lat}},{{atraccion.lng}}
+                            {{atraccion.latitud}},{{atraccion.longitud}}
                         </div>
                     </div>
                     <div class="row">
                         <label class="col-sm-2 col-form-label">Ciudad</label>
                         <div class="col-sm-10">
-                            {{atraccion.ciudad}}
+                            {{getNombreCiudad(atraccion.id_ciudad)}}
                         </div>
                     </div>
                     <div class="row">
                         <label class="col-sm-2 col-form-label">Descripción</label>
                         <div class="col-sm-10">
-                            {{atraccion.description}}
+                            {{atraccion.descripcion}}
                         </div>
                     </div>
                 </div>
@@ -56,8 +54,8 @@
         </div>
         <div class="panel-footer">
             <div class="btn-group" role="group" aria-label="edit-remove">
-                <a href="#/atracciones/edit/{{id}}" class="btn btn-default" role="button">Edit</a>
-                <button type="button" class="btn btn-default" ng-click="deleteAtraccion(id)">Remove</button>
+                <a disabled href="#/atracciones/edit/{{id}}" class="btn btn-default" role="button">Edit</a>
+                <button disabled type="button" class="btn btn-default" ng-click="deleteAtraccion(id)">Remove</button>
             </div>
         </div>
     </div>
