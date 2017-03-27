@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Toast;
 
 import com.example.pc.myapplication.AtraccionActivity;
 import com.example.pc.myapplication.CiudadActivity;
@@ -75,7 +76,11 @@ public class ReceiverOnCiudades extends BroadcastReceiver {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+            } else {
+                Toast.makeText(context,"Error json vacio", Toast.LENGTH_LONG).show();
             }
+        } else {
+            Toast.makeText(context,"Error Conexion", Toast.LENGTH_LONG).show();
         }
     }
 }

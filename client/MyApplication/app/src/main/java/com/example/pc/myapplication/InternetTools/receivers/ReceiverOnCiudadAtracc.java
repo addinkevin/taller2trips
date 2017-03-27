@@ -5,10 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.JsonReader;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.pc.myapplication.InternetTools.ImageClient;
 import com.example.pc.myapplication.InternetTools.InfoClient;
 import com.example.pc.myapplication.InternetTools.InternetClient;
+import com.example.pc.myapplication.application.MyApplication;
 import com.example.pc.myapplication.ciudadTools.AtraccionesFragment;
 import com.example.pc.myapplication.ciudadesTools.Atraccion;
 import com.example.pc.myapplication.commonfunctions.Consts;
@@ -50,7 +52,7 @@ public class ReceiverOnCiudadAtracc extends BroadcastReceiver {
 
                         if (!atraccion.fotosPath.isEmpty()) {
                             String firstImg = atraccion.fotosPath.get(0); //primer imagen para mostrar
-                            String url = Consts.SERVER_URL + Consts.ATRACC + "/" + atraccion._id +
+                            String url = ((MyApplication)atraccionesFragment.getActivity().getApplication()).getUrl() + Consts.ATRACC + "/" + atraccion._id +
                                     Consts.IMAGEN + "?" + Consts.FILENAME + "=" + firstImg;
 
                             InternetClient client = new ImageClient(atraccionesFragment.getContext(), myFragmentView,
@@ -60,9 +62,14 @@ public class ReceiverOnCiudadAtracc extends BroadcastReceiver {
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    Toast.makeText(context,"Error JSON", Toast.LENGTH_LONG).show();
                 }
 
+            } else {
+                Toast.makeText(context,"Error json vacio", Toast.LENGTH_LONG).show();
             }
+        } else {
+            Toast.makeText(context,"Error Conexión", Toast.LENGTH_LONG).show();
         }
 
     }

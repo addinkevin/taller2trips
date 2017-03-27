@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.widget.Toast;
 
 import com.example.pc.myapplication.atraccionesTools.AtraccionesListAdp;
 import com.example.pc.myapplication.ciudadesTools.Atraccion;
@@ -29,7 +30,11 @@ public class ReceiverOnAtraccImg extends BroadcastReceiver{
             if (imageAtracc != null && imgID >= 0) {
                 atraccionItems.get(imgID).fotosBitmap.add(imageAtracc);
                 atraccionesAdp.notifyDataSetChanged();
+            } else {
+                Toast.makeText(context,"Error Bitmap", Toast.LENGTH_LONG).show();
             }
+        } else {
+            Toast.makeText(context,"Falló la conexión", Toast.LENGTH_LONG).show();
         }
     }
 }

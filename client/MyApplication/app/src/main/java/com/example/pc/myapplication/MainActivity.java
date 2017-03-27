@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.example.pc.myapplication.commonfunctions.Consts;
 import com.example.pc.myapplication.services.LocationGPSListener;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -92,9 +93,12 @@ public class MainActivity extends AppCompatActivity  implements OnMapReadyCallba
 
         if (id == R.id.ciudades) {
             Intent i = new Intent(this, CiudadesActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
-        } else {
-
+        } else if (id == R.id.config) {
+            Intent config = new Intent(this, ConfigActivity.class);
+            config.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(config);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

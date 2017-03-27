@@ -11,6 +11,7 @@ import android.widget.AutoCompleteTextView;
 import com.example.pc.myapplication.InternetTools.InfoClient;
 import com.example.pc.myapplication.InternetTools.InternetClient;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnCiudades;
+import com.example.pc.myapplication.application.MyApplication;
 import com.example.pc.myapplication.ciudadesTools.Ciudad;
 import com.example.pc.myapplication.commonfunctions.Consts;
 
@@ -33,7 +34,7 @@ public class CiudadesActivity extends AppCompatActivity {
         onCiudades = new ReceiverOnCiudades(getApplicationContext(),autoTxtV,ciudades);
 
         InternetClient client = new InfoClient(getApplicationContext(), view,
-                Consts.GET_CITY_NAME, Consts.SERVER_URL + Consts.CIUDAD, null, Consts.GET, null, true);
+                Consts.GET_CITY_NAME, ((MyApplication)getApplication()).getUrl() + Consts.CIUDAD, null, Consts.GET, null, true);
         client.runInBackground();
     }
 

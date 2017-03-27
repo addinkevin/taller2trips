@@ -22,6 +22,7 @@ import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAtraccImg;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnCiudadAtracc;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnCiudadImage;
 import com.example.pc.myapplication.R;
+import com.example.pc.myapplication.application.MyApplication;
 import com.example.pc.myapplication.atraccionesTools.AtraccionItem;
 import com.example.pc.myapplication.atraccionesTools.AtraccionesListAdp;
 import com.example.pc.myapplication.ciudadesTools.Atraccion;
@@ -51,7 +52,7 @@ public class AtraccionesFragment extends Fragment implements AdapterView.OnItemC
             onCiudadAtracc = new ReceiverOnCiudadAtracc(this, myFragmentView, atraccionItems);
             onAtraccImg = new ReceiverOnAtraccImg(atraccionItems,atraccionesAdp);
 
-            String url = Consts.SERVER_URL + Consts.ATRACC + "?" + Consts.ID_CIUDAD + "=" + ciudad._id;
+            String url = ((MyApplication)getActivity().getApplication()).getUrl() + Consts.ATRACC + "?" + Consts.ID_CIUDAD + "=" + ciudad._id;
 
             InternetClient client = new InfoClient(getContext(), myFragmentView,
                     Consts.GET_CITY_ATR, url, null, Consts.GET, null, true);

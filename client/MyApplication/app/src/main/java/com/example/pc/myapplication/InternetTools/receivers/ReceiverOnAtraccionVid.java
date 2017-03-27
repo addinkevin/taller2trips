@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.webkit.MimeTypeMap;
+import android.widget.Toast;
 
 import com.example.pc.myapplication.AtraccionActivity;
 import com.example.pc.myapplication.commonfunctions.Consts;
@@ -40,7 +41,11 @@ public class ReceiverOnAtraccionVid extends BroadcastReceiver {
                 atraccionActivity.startActivity(mediaIntent);
 
 
+            } else {
+                Toast.makeText(context,"Error path", Toast.LENGTH_LONG).show();
             }
+        } else {
+            Toast.makeText(context,"Error conexión", Toast.LENGTH_LONG).show();
         }
     }
 }

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.pc.myapplication.AtraccionActivity;
 import com.example.pc.myapplication.R;
@@ -52,7 +53,11 @@ public class ReceiverOnAtraccionImgs extends BroadcastReceiver {
                     // previous pages will be showed
                     pager.setPageMargin(-200);
                 }
+            } else {
+                Toast.makeText(context,"Error Bitmap", Toast.LENGTH_LONG).show();
             }
+        } else {
+            Toast.makeText(context,"Error Conexión", Toast.LENGTH_LONG).show();
         }
     }
 }

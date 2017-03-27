@@ -16,6 +16,7 @@
     <string name="audio">Audios</string>
     <string name="pais">País:</string>
     <string name="logout">Salir</string>
+    <string name="config">Configuración</string>
 
 
 </resources>

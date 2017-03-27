@@ -15,6 +15,7 @@ import com.example.pc.myapplication.InternetTools.ImageClient;
 import com.example.pc.myapplication.InternetTools.InternetClient;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnCiudadImage;
 import com.example.pc.myapplication.R;
+import com.example.pc.myapplication.application.MyApplication;
 import com.example.pc.myapplication.ciudadesTools.Ciudad;
 import com.example.pc.myapplication.commonfunctions.Consts;
 
@@ -30,7 +31,7 @@ public class MainFragment extends Fragment {
         if ( onCiudadImage == null || ciudad.imagen == null) {
             onCiudadImage = new ReceiverOnCiudadImage(ciudad, myFragmentView);
 
-            String url = Consts.SERVER_URL + Consts.CIUDAD + "/" + ciudad._id + Consts.IMAGEN;
+            String url = ((MyApplication)getActivity().getApplication()).getUrl() + Consts.CIUDAD + "/" + ciudad._id + Consts.IMAGEN;
 
             InternetClient client = new ImageClient(getContext(), myFragmentView,
                     Consts.GET_CITY_IMG, url, null, Consts.GET, null, true, -1);

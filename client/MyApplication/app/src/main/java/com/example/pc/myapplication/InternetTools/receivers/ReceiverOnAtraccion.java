@@ -4,10 +4,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.pc.myapplication.AtraccionActivity;
 import com.example.pc.myapplication.InternetTools.ImageClient;
 import com.example.pc.myapplication.InternetTools.InternetClient;
+import com.example.pc.myapplication.application.MyApplication;
 import com.example.pc.myapplication.ciudadesTools.Atraccion;
 import com.example.pc.myapplication.commonfunctions.Consts;
 
@@ -41,7 +43,7 @@ public class ReceiverOnAtraccion extends BroadcastReceiver {
                     atraccionActivity.attachAtraccion(atraccion);
                     List fotos = atraccion.fotosPath;
                     for(int i = 0; i < fotos.size(); i++) {
-                        String url = Consts.SERVER_URL + Consts.ATRACC + "/" + atraccion._id
+                        String url = ((MyApplication)atraccionActivity.getApplication()).getUrl() + Consts.ATRACC + "/" + atraccion._id
                                 + Consts.IMAGEN + "?" + Consts.FILENAME + "=" + fotos.get(i);
 
                         InternetClient client = new ImageClient(atraccionActivity, view,
@@ -51,9 +53,14 @@ public class ReceiverOnAtraccion extends BroadcastReceiver {
 
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    Toast.makeText(context,"Error JSON", Toast.LENGTH_LONG).show();
                 }
 
+            } else {
+                Toast.makeText(context,"Error JSon vacio", Toast.LENGTH_LONG).show();
             }
+        } else {
+            Toast.makeText(context,"Error Conexión", Toast.LENGTH_LONG).show();
         }
     }
 }

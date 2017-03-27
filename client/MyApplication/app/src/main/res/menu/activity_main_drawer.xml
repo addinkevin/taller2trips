@@ -26,6 +26,10 @@
             android:id="@+id/logout"
             android:icon="@drawable/logout"
             android:title="@string/logout"/>
+        <item
+            android:id="@+id/config"
+            android:icon="@drawable/logout"
+            android:title="@string/config"/>
     </group>
 
 </menu>

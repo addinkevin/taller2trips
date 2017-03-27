@@ -17,6 +17,7 @@
     <string name="pais">Country:</string>
 
     <string name="logout">Logout</string>
+    <string name="config">Configuration</string>
 
 
 </resources>

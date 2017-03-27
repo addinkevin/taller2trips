@@ -18,6 +18,7 @@ import com.example.pc.myapplication.InternetTools.VideoClient;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAtraccion;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAtraccionImgs;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAtraccionVid;
+import com.example.pc.myapplication.application.MyApplication;
 import com.example.pc.myapplication.carruselTools.CarruselPagerAdapter;
 import com.example.pc.myapplication.ciudadesTools.Atraccion;
 import com.example.pc.myapplication.commonfunctions.Consts;
@@ -67,7 +68,7 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
         onAtraccionImgs = new ReceiverOnAtraccionImgs(this, view, adapter);
         onAtraccionVid = new ReceiverOnAtraccionVid(this);
 
-        String url = Consts.SERVER_URL + Consts.ATRACC + "/" + _id;
+        String url = ((MyApplication)getApplication()).getUrl() + Consts.ATRACC + "/" + _id;
 
         InternetClient client = new InfoClient(getApplicationContext(), view,
                 Consts.GET_ATR, url, null, Consts.GET, null, true);
@@ -234,7 +235,7 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
         File videoFile = new File( file);
 
         if (!videoFile.exists()) {
-            String url = Consts.SERVER_URL + Consts.ATRACC + "/" + atraccion._id + Consts.VIDEO;
+            String url = ((MyApplication)getApplication()).getUrl() + Consts.ATRACC + "/" + atraccion._id + Consts.VIDEO;
 
             InternetClient client = new VideoClient(getApplicationContext(), view,
                     Consts.GET_ATR_VID, url, null, Consts.GET, null, true, atraccion._id);

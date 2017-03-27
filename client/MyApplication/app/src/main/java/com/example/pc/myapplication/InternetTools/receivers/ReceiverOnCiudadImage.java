@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.pc.myapplication.R;
 import com.example.pc.myapplication.ciudadTools.MainFragment;
@@ -31,7 +32,11 @@ public class ReceiverOnCiudadImage extends BroadcastReceiver {
                 ImageView img = (ImageView) view.findViewById(R.id.imageTitle);
                 img.setImageBitmap(imageCiudad);
                 ciudad.imagen = imageCiudad;
+            } else {
+                Toast.makeText(context,"Error Bitmap", Toast.LENGTH_LONG).show();
             }
+        } else {
+            Toast.makeText(context,"Error conexión", Toast.LENGTH_LONG).show();
         }
     }
 }
