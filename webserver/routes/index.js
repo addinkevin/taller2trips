@@ -27,7 +27,7 @@ module.exports = function(app, passport) {
     });
 
     function isLoggedIn(req, res, next) {
-        //return next(); // Uncomment to test without authentication.
+        return next(); // Uncomment to test without authentication.
 
         if (req.isAuthenticated())
             return next();

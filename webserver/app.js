@@ -40,7 +40,10 @@ require('./config/initdb')('admin', '123456'); // TODO Borrar
 
 
 app.use(function(req,res,next) {
-  console.log('>',req.method, req.url);
+  if (req.method=='POST') {
+    console.log('>',req.method, req.body);
+  }
+
   next();
 });
 require('./routes/index')(app, passport);

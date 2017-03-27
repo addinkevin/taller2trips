@@ -1,0 +1,65 @@
+<div>
+    <div class='page-header'>
+        <div class='btn-toolbar pull-right'>
+            <div class='btn-group'>
+                <a href="#/atracciones/add" class="btn btn-primary" role="button">Agregar atraccion</a>
+            </div>
+        </div>
+        <h1>Listado de atracciones</h1>
+
+    </div>
+
+
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <form class="buscadorAtracciones">
+                <input ng-model="search.name" type="text" class="form-control formularioBuscar" placeholder="Buscar...">
+            </form>
+        </div>
+    </div>
+
+    <div class="panel-custom" ng-show="atracciones.length == 0">
+        <h3 class="subheader">No hay atracciones para mostrar</h3>
+    </div>
+
+    <div class="panel panel-default" ng-show="atracciones.length > 0" ng-repeat="(id,atraccion) in atracciones | filter:search">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-xs-6 col-md-3">
+                    <a href="#" class="thumbnail">
+                        <img ng-src="{{atraccion.imgSrc}}" alt="" class="img-responsive"/>
+                    </a>
+                </div>
+                <div class="col-xs-6 col-md-9">
+                    <h3>{{atraccion.name}}</h3>
+                    <div class="row">
+                        <label class="col-sm-2 col-form-label">Ubicación</label>
+                        <div class="col-sm-10">
+                            {{atraccion.lat}},{{atraccion.lng}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-2 col-form-label">Ciudad</label>
+                        <div class="col-sm-10">
+                            {{atraccion.ciudad}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-2 col-form-label">Descripción</label>
+                        <div class="col-sm-10">
+                            {{atraccion.description}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <div class="btn-group" role="group" aria-label="edit-remove">
+                <a href="#/atracciones/edit/{{id}}" class="btn btn-default" role="button">Edit</a>
+                <button type="button" class="btn btn-default" ng-click="deleteAtraccion(id)">Remove</button>
+            </div>
+        </div>
+    </div>
+
+</div>

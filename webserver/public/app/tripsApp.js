@@ -1,4 +1,4 @@
-var tripsApp = angular.module('tripsApp', ["ngRoute", 'tripsApp.ciudades']);
+var tripsApp = angular.module('tripsApp', ["ngRoute", 'tripsApp.ciudades', 'tripsApp.atracciones']);
 
 tripsApp.config(function config($routeProvider, $locationProvider) {
     $routeProvider.when('/home', {
@@ -20,4 +20,18 @@ tripsApp.service('GoogleMaps', function() {
         return this.maps[mapId];
     };
 
+});
+
+tripsApp.service('HTTPService', function() {
+   //this ..// TODO
+});
+
+tripsApp.directive('customOnChange', function() {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+            var onChangeFunc = scope.$eval(attrs.customOnChange);
+            element.bind('change', onChangeFunc);
+        }
+    };
 });

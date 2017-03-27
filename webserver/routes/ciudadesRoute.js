@@ -29,7 +29,7 @@ router.get('/ciudad', function(req, res) {
         if (err) {
             res.send(err);
         }
-        else {   
+        else {
             res.status(200).json(ciudades);
         }
     })
@@ -48,7 +48,7 @@ router.get('/ciudad/:id_ciudad', function(req, res) {
         }
     });
 });
-        
+
 
 router.post('/ciudad', function(req, res) {
     console.log(req.body);

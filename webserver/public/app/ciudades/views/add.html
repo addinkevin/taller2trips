@@ -1,36 +1,78 @@
-<div ng-controller="ciudadesAddController">
+<div class='page-header'>
+    <div class='btn-toolbar pull-right'>
+        <div class='btn-group'>
+            <a href="#/ciudades" class="btn btn-primary" role="button">Volver al listado de ciudades</a>
+        </div>
+    </div>
+    <h1>Agregar ciudad</h1>
 
-    <div class="col-sm-4 text-left">
-        <form ng-submit="addCiudad()">
-            <legend>Agregar ciudad</legend>
+</div>
 
-            <div class="form-group large-12 columns">
-                <label>Name</label>
-                <input type="text" class="form-control" placeholder="Nombre" ng-model="ciudad.name" required>
+<div class="panel panel-default">
+    <div class="panel-body">
+        <form ng-submit="submitAddCiudad()">
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Nombre de ciudad</label>
+                <div class="col-sm-10">
+                    <input type="text" ng-model="ciudad.nombre" class="form-control" placeholder="Nombre de la ciudad">
+                </div>
             </div>
 
-            <div class="form-group">
-                <label>Latitud</label>
-                <input type="number" class="form-control" ng-model="ciudad.center.lat" disabled="disabled">
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">País de la ciudad</label>
+                <div class="col-sm-10">
+                    <input type="text" ng-model="ciudad.pais" class="form-control" placeholder="País de la ciudad">
+                </div>
             </div>
 
-            <div class="form-group">
-                <label>Longitud</label>
-                <input type="number" class="form-control" ng-model="ciudad.center.lng" disabled="disabled">
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Descripción de la ciudad</label>
+                <div class="col-sm-10">
+                    <textarea class="form-control" ng-model="ciudad.descripcion" rows="5" style="resize: none;" id="descripcionCiudad" placeholder="Descripción de la ciudad"></textarea>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label>Radio (Metros)</label>
-                <input type="number" class="form-control" placeholder="Radio" ng-model="ciudad.radio" ng-change="addChangeRadio()"required>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Imagen de la ciudad</label>
+                <div class="col-sm-10">
+                    <label class="btn btn-primary" for="imagenCiudadInput">
+                        <input type="file" id="imagenCiudadInput" accept="image/png"
+                               style="display:none;" custom-on-change="updateImageClick">
+                        Subir imagen
+                        <span class='label label-info' id="upload-file-info"></span>
+                    </label>
+                </div>
             </div>
 
-            <button type="submit"  class="btn btn-default">Agregar ciudad</button>
+            <label>Preview</label>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xs-6 col-md-3">
+                            <img ng-src="{{ciudad.imgSrc}}" class="img-responsive"/>
+                        </div>
+                        <div class="col-xs-6 col-md-9">
+                            <h3>{{ciudad.nombre}}</h3>
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label">País</label>
+                                <div class="col-sm-10">
+                                    {{ciudad.pais}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label">Descripción</label>
+                                <div class="col-sm-10">
+                                    {{ciudad.descripcion}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <button type="submit" class="btn btn-primary center-block">Agregar ciudad</button>
+            </div>
         </form>
     </div>
-
-    <div class="col-sm-4 text-left">
-        <div id="map" ng-init="initMap()"></div>
-    </div>
-    <div class="col-sm-4"></div>
-
 </div>
