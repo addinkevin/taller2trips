@@ -104,19 +104,17 @@ ciudadesApp.controller('ciudadesAddController',
                             method: 'POST',
                             url: url,
                             headers: {
-                                'Content-Type': 'multipart/form-data'
+                                //'Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW'
+                                'Content-Type': undefined
                             },
                             data: {
-                                upload: ciudad.imgSrc
+                                imagen: ciudad.imgSrc
                             },
                             transformRequest: function (data, headersGetter) {
                                 var formData = new FormData();
                                 angular.forEach(data, function (value, key) {
                                     formData.append(key, value);
                                 });
-
-                                var headers = headersGetter();
-                                delete headers['Content-Type'];
 
                                 return formData;
                             }

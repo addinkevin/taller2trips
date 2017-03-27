@@ -49,7 +49,7 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-xs-6 col-md-3">
-                            <img ng-src="{{ciudad.imgSrc}}" class="img-responsive"/>
+                            <img ng-src="window.URL.createObjectURL({{ciudad.imgSrc}})" class="img-responsive"/>
                         </div>
                         <div class="col-xs-6 col-md-9">
                             <h3>{{ciudad.nombre}}</h3>
