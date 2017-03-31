@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.pc.myapplication.atraccionesTools.AtraccionesListAdp;
@@ -28,7 +29,7 @@ public class ReceiverOnAtraccImg extends BroadcastReceiver{
             Bitmap imageAtracc = intent.getParcelableExtra(Consts.IMG_OUT);
             int imgID = intent.getIntExtra(Consts.IMG_ID, -1);
             if (imageAtracc != null && imgID >= 0) {
-                atraccionItems.get(imgID).fotosBitmap.add(imageAtracc);
+                atraccionesAdp.addImg(imageAtracc, imgID);
                 atraccionesAdp.notifyDataSetChanged();
             } else {
                 Toast.makeText(context,"Error Bitmap", Toast.LENGTH_LONG).show();

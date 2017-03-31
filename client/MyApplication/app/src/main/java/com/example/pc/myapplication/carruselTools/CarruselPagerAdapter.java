@@ -4,7 +4,9 @@ import android.graphics.Bitmap;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 
 import com.example.pc.myapplication.AtraccionActivity;
@@ -13,7 +15,7 @@ import com.example.pc.myapplication.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CarruselPagerAdapter extends FragmentPagerAdapter implements ViewPager.PageTransformer {
+public class CarruselPagerAdapter extends FragmentStatePagerAdapter implements ViewPager.PageTransformer {
     public final static float BIG_SCALE = 1.0f;
     public final static float SMALL_SCALE = 0.5f;
     public final static float DIFF_SCALE = BIG_SCALE - SMALL_SCALE;
@@ -38,6 +40,7 @@ public class CarruselPagerAdapter extends FragmentPagerAdapter implements ViewPa
 
     public void addImage(Bitmap img) {
         imagenes.add(img);
+        Log.i("IMGConn", "agrega imagen " + imagenes.size());
         List<Bitmap> aux = new ArrayList<>(imagenes);
         imagenes.clear();
         imagenes.addAll(aux);
@@ -54,11 +57,13 @@ public class CarruselPagerAdapter extends FragmentPagerAdapter implements ViewPa
 
         position = position % context.PAGES;
         Bitmap imagen = null;
+        Log.i("IMGConn", "Dibuja get " + position);
         if (imagenes.size() > position) {
+            Log.i("IMGConn", "Tiene imagen " + position);
             imagen = imagenes.get(position);
         }
 
-        return CarruselFragment.newInstance(context, position, scale, imagen);
+        return new CarruselFragment().newInstance(context, position, scale, imagen);
     }
 
     @Override

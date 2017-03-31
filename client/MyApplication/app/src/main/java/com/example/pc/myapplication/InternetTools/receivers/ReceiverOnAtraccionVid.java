@@ -1,5 +1,6 @@
 package com.example.pc.myapplication.InternetTools.receivers;
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +20,7 @@ import java.io.IOException;
 public class ReceiverOnAtraccionVid extends BroadcastReceiver {
 
     private AtraccionActivity atraccionActivity;
+    private ProgressDialog progress;
 
     public ReceiverOnAtraccionVid(AtraccionActivity atraccionActivity) {
         this.atraccionActivity = atraccionActivity;
@@ -47,5 +49,12 @@ public class ReceiverOnAtraccionVid extends BroadcastReceiver {
         } else {
             Toast.makeText(context,"Error conexión", Toast.LENGTH_LONG).show();
         }
+
+        progress.dismiss();
+
+    }
+
+    public void setProgress(ProgressDialog progress) {
+        this.progress = progress;
     }
 }

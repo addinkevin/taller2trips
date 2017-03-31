@@ -3,23 +3,19 @@ package com.example.pc.myapplication.InternetTools.receivers;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.JsonReader;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.example.pc.myapplication.InternetTools.ImageClient;
-import com.example.pc.myapplication.InternetTools.InfoClient;
 import com.example.pc.myapplication.InternetTools.InternetClient;
-import com.example.pc.myapplication.application.MyApplication;
+import com.example.pc.myapplication.application.TripTP;
 import com.example.pc.myapplication.ciudadTools.AtraccionesFragment;
 import com.example.pc.myapplication.ciudadesTools.Atraccion;
 import com.example.pc.myapplication.commonfunctions.Consts;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONStringer;
-import org.json.JSONTokener;
 
 import java.util.List;
 
@@ -52,8 +48,10 @@ public class ReceiverOnCiudadAtracc extends BroadcastReceiver {
 
                         if (!atraccion.fotosPath.isEmpty()) {
                             String firstImg = atraccion.fotosPath.get(0); //primer imagen para mostrar
-                            String url = ((MyApplication)atraccionesFragment.getActivity().getApplication()).getUrl() + Consts.ATRACC + "/" + atraccion._id +
+                            String url = ((TripTP)atraccionesFragment.getActivity().getApplication()).getUrl() + Consts.ATRACC + "/" + atraccion._id +
                                     Consts.IMAGEN + "?" + Consts.FILENAME + "=" + firstImg;
+
+                            Log.i("IMGConnect", "Comienzo la descarga Imagen " + i);
 
                             InternetClient client = new ImageClient(atraccionesFragment.getContext(), myFragmentView,
                                     Consts.GET_ATR_IMG, url, null, Consts.GET, null, true, i);

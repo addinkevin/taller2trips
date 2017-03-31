@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.example.pc.myapplication.application.MyApplication;
+import com.example.pc.myapplication.application.TripTP;
 
 public class ConfigActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -19,16 +19,13 @@ public class ConfigActivity extends AppCompatActivity implements View.OnClickLis
         Button btn = (Button) findViewById(R.id.button2);
         btn.setOnClickListener(this);
         editText = (EditText) findViewById(R.id.editText);
+        editText.setText(((TripTP)getApplication()).getUrl());
     }
 
     @Override
     public void onClick(View v) {
         String ip = editText.getText().toString();
-
-        if (ip.isEmpty()) {
-            ip = "";
-        }
-
-        ((MyApplication) getApplication()).setUrl(ip);
+        ((TripTP) getApplication()).setUrl(ip);
+        this.finish();
     }
 }

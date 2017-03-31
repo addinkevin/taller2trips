@@ -37,8 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_gravity="center"
-            android:overScrollMode="never"
-            android:background="@android:color/darker_gray"/>
+            android:overScrollMode="never" />
 
         <TextView
             android:id="@+id/info"
@@ -86,13 +85,25 @@
             android:layout_marginLeft="5dp"
             android:layout_marginStart="5dp"/>
 
-        <ImageView
-            android:id="@+id/videoIMG"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:src="@drawable/df_video"
-            android:layout_weight="0.43" />
+            android:layout_height="250dp">
+
+            <ImageView
+                android:id="@+id/videoIMG"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:background="@color/black" />
+
+            <ImageView
+                android:id="@+id/plBtn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="center"
+                android:src="@drawable/play_btn" />
+
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/imagen"

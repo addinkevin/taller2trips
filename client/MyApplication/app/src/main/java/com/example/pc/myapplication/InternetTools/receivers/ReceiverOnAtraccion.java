@@ -3,13 +3,19 @@ package com.example.pc.myapplication.InternetTools.receivers;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.media.Image;
+import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.pc.myapplication.AtraccionActivity;
 import com.example.pc.myapplication.InternetTools.ImageClient;
 import com.example.pc.myapplication.InternetTools.InternetClient;
-import com.example.pc.myapplication.application.MyApplication;
+import com.example.pc.myapplication.InternetTools.ThumbnailRetriever;
+import com.example.pc.myapplication.R;
+import com.example.pc.myapplication.application.TripTP;
 import com.example.pc.myapplication.ciudadesTools.Atraccion;
 import com.example.pc.myapplication.commonfunctions.Consts;
 
@@ -24,11 +30,11 @@ import java.util.List;
 
 public class ReceiverOnAtraccion extends BroadcastReceiver {
 
-    private AtraccionActivity atraccionActivity;
+    private AtraccionActivity atrAct;
     private View view;
 
     public ReceiverOnAtraccion(AtraccionActivity atraccionActivity, View view) {
-        this.atraccionActivity = atraccionActivity;
+        this.atrAct = atraccionActivity;
         this.view = view;
     }
 
@@ -40,22 +46,24 @@ public class ReceiverOnAtraccion extends BroadcastReceiver {
             if (jsonOut != null) {
                 try {
                     Atraccion atraccion = new Atraccion(new JSONObject(jsonOut));
-                    atraccionActivity.attachAtraccion(atraccion);
+                    atrAct.attachAtraccion(atraccion);
                     List fotos = atraccion.fotosPath;
+                    TripTP app = ((TripTP) atrAct.getApplication());
                     for(int i = 0; i < fotos.size(); i++) {
-                        String url = ((MyApplication)atraccionActivity.getApplication()).getUrl() + Consts.ATRACC + "/" + atraccion._id
+                        String url = app.getUrl() + Consts.ATRACC + "/" + atraccion._id
                                 + Consts.IMAGEN + "?" + Consts.FILENAME + "=" + fotos.get(i);
-
-                        InternetClient client = new ImageClient(atraccionActivity, view,
+                        Log.i("IMGConn", "Comienza descarga imagen " + i);
+                        InternetClient client = new ImageClient(atrAct, view,
                                 Consts.GET_ATR_IMG_S, url, null, Consts.GET, null, true, -1);
                         client.runInBackground();
                     }
+                    String url = app.getUrl() + Consts.ATRACC + "/" + atraccion._id + Consts.VIDEO;
+                    new ThumbnailRetriever(Consts.GET_VID_THU, atrAct).execute(url);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Toast.makeText(context,"Error JSON", Toast.LENGTH_LONG).show();
                 }
-
             } else {
                 Toast.makeText(context,"Error JSon vacio", Toast.LENGTH_LONG).show();
             }

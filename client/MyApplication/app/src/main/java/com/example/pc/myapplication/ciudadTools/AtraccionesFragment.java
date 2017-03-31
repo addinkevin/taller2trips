@@ -2,8 +2,6 @@ package com.example.pc.myapplication.ciudadTools;
 
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
         import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
@@ -11,19 +9,15 @@ import android.view.LayoutInflater;
         import android.view.View;
         import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.example.pc.myapplication.AtraccionActivity;
-import com.example.pc.myapplication.InternetTools.ImageClient;
 import com.example.pc.myapplication.InternetTools.InfoClient;
 import com.example.pc.myapplication.InternetTools.InternetClient;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAtraccImg;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnCiudadAtracc;
-import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnCiudadImage;
 import com.example.pc.myapplication.R;
-import com.example.pc.myapplication.application.MyApplication;
-import com.example.pc.myapplication.atraccionesTools.AtraccionItem;
+import com.example.pc.myapplication.application.TripTP;
 import com.example.pc.myapplication.atraccionesTools.AtraccionesListAdp;
 import com.example.pc.myapplication.ciudadesTools.Atraccion;
 import com.example.pc.myapplication.ciudadesTools.Ciudad;
@@ -52,7 +46,7 @@ public class AtraccionesFragment extends Fragment implements AdapterView.OnItemC
             onCiudadAtracc = new ReceiverOnCiudadAtracc(this, myFragmentView, atraccionItems);
             onAtraccImg = new ReceiverOnAtraccImg(atraccionItems,atraccionesAdp);
 
-            String url = ((MyApplication)getActivity().getApplication()).getUrl() + Consts.ATRACC + "?" + Consts.ID_CIUDAD + "=" + ciudad._id;
+            String url = ((TripTP)getActivity().getApplication()).getUrl() + Consts.ATRACC + "?" + Consts.ID_CIUDAD + "=" + ciudad._id;
 
             InternetClient client = new InfoClient(getContext(), myFragmentView,
                     Consts.GET_CITY_ATR, url, null, Consts.GET, null, true);
