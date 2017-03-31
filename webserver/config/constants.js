@@ -1,5 +1,10 @@
 module.exports = {
     loginMessageType: 'login-message',
     wrongPassword: 'Wrong password.',
-    noUserFound: 'No user found'
+    noUserFound: 'No user found',
+    dirImagenesCiudad: "./contenido/imagenesCiudad/",
+    dirPlanosAtracciones: "./contenido/planosAtracciones/",
+    dirVideosAtracciones: "./contenido/videosAtracciones/",
+    dirAudiosAtracciones: "./contenido/audiosAtracciones/",
+    dirImagenesAtracciones: "./contenido/imagenesAtracciones/"
 };

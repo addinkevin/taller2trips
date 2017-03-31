@@ -1,0 +1,92 @@
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+    position: relative;
+    min-height: 100%;
+}
+body {
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+}
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    height: 60px;
+    background-color: #f5f5f5;
+}
+
+
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+
+body > .container {
+    padding: 60px 15px 60px;
+}
+.container .text-muted {
+    margin: 20px 0;
+}
+
+.footer > .container {
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+code {
+    font-size: 80%;
+}
+
+
+.previewDeImagenes {
+    margin-top:10px;
+    overflow-x:auto;
+    white-space:nowrap;
+}
+
+.previewDeImagenes .imagenPreview {
+    display: inline-block;
+    *display: inline;/*For IE7*/
+    *zoom:1;/*For IE7*/
+    width:300px;
+    height:260px;
+    position:relative;
+    vertical-align:top;
+    margin-right:10px;
+    white-space:normal;
+}
+
+
+.previewDeVideos {
+    margin-top:10px;
+    overflow-x:auto;
+    white-space:nowrap;
+}
+
+.previewDeVideos .videoPreview {
+    display: inline-block;
+    *display: inline;/*For IE7*/
+    *zoom:1;/*For IE7*/
+    width:320px;
+    height:300px;
+    position:relative;
+    vertical-align:top;
+    margin-right:10px;
+    white-space:normal;
+}
+
+.previewDeVideos .videoPreview video {
+    width:320px;
+    height:260px;
+}
+
+.previewDeAudios {
+    position:relative;
+    margin-top: 10px;
+}
+
+.vcenter {
+    vertical-align: middle;
+}
+

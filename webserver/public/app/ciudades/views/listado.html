@@ -1,0 +1,58 @@
+<!-- Begin page content -->
+<div>
+    <!-- Header -->
+    <div class='page-header'>
+        <div class='btn-toolbar pull-right'>
+            <div class='btn-group'>
+                <a href="#/ciudades/add" class="btn btn-primary" role="button">Agregar ciudad</a>
+            </div>
+        </div>
+        <h1>Listado de ciudades</h1>
+    </div>
+
+    <!-- Buscador -->
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <input ng-model="search.nombre" type="text" class="form-control formularioBuscar" placeholder="Buscar...">
+        </div>
+    </div>
+
+    <div class="panel-custom" ng-show="ciudades.length == 0">
+        <h3 class="subheader">No hay ciudades para mostrar</h3>
+    </div>
+
+    <div class="panel panel-default" ng-show="ciudades.length > 0" ng-repeat="(id,ciudad) in ciudades | filter:search">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-xs-6 col-md-3">
+                    <a href="#/ciudades/edit/{{ciudad._id}}" class="thumbnail">
+                        <img ng-src="/api/ciudad/{{ciudad._id}}/imagen" alt="" class="img-responsive"/>
+                    </a>
+                </div>
+                <div class="col-xs-6 col-md-9">
+                    <h3>{{ciudad.nombre}}</h3>
+                    <div class="row">
+                        <label class="col-sm-2 col-form-label">País</label>
+                        <div class="col-sm-10">
+                            {{ciudad.pais}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-2 col-form-label">Descripción</label>
+                        <div class="col-sm-10">
+                            {{ciudad.descripcion}}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <div class="btn-group" role="group" aria-label="edit-remove">
+                <a href="#/ciudades/edit/{{ciudad._id}}" class="btn btn-default" role="button">Edit</a>
+                <button type="button" class="btn btn-default" ng-click="deleteCiudad(ciudad._id)">Remove</button>
+            </div>
+        </div>
+    </div>
+
+</div>

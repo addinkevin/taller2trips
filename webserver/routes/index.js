@@ -1,5 +1,7 @@
 var express = require('express');
 var constants = require('../config/constants');
+var ciudadesRoute = require('./ciudadesRoute');
+var atraccionesRoute = require('./atraccionesRoute');
 
 module.exports = function(app, passport) {
     var router = express.Router();
@@ -34,4 +36,6 @@ module.exports = function(app, passport) {
     }
 
     app.use('/', router);
+    app.use('/api', ciudadesRoute);
+    app.use('/api', atraccionesRoute);
 };
