@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">My Application</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="buscar_cercanos">Buscar atracciones cercanas</string>
+    <string name="atracciones">Atracciones</string>
+    <string name="recorridos">Recorridos</string>
+    <string name="ciudades">Ciudades</string>
+    <string name="ubicarme">Ubicarme</string>
+    <string name="favoritos">Favoritos</string>
+    <string name="informacion">Información</string>
+    <string name="videos">Videos</string>
+    <string name="fotos">Imágenes</string>
+    <string name="audio">Audios</string>
+    <string name="pais">País:</string>
+    <string name="logout">Salir</string>
+    <string name="config">Configuración</string>
+
+
+</resources>
