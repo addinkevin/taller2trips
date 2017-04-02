@@ -27,6 +27,10 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View myFragmentView = inflater.inflate(R.layout.fragment_ciudad, container, false);
 
+        if (savedInstanceState != null && savedInstanceState.containsKey(Consts.CITY)) {
+            ciudad = savedInstanceState.getParcelable(Consts.CITY);
+        }
+
         if ( onCiudadImage == null || ciudad.imagen == null) {
             onCiudadImage = new ReceiverOnCiudadImage(ciudad, myFragmentView);
 
@@ -50,6 +54,13 @@ public class MainFragment extends Fragment {
             descripTxt.setText(ciudad.descripcion);
 
         return myFragmentView;
+    }
+
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        if (ciudad != null) {
+            savedInstanceState.putParcelable(Consts.CITY, ciudad);
+        }
+        super.onSaveInstanceState(savedInstanceState);
     }
 
     public void onStart() {
