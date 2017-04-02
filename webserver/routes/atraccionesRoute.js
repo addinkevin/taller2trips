@@ -8,7 +8,6 @@ var haversine = require('../utils/haversine');
 router.get('/atraccion', function(req, res) {
     //TODO: Ver como arreglar este horror de codigo
     var id_ciudad = req.query.id_ciudad;
-    console.log(id_ciudad);
     if (id_ciudad !== undefined) {
         Atraccion.find({id_ciudad: req.query.id_ciudad}, function (err, atracciones) {
             if (err) {

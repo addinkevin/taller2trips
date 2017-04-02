@@ -1,28 +1,8 @@
 var express = require('express');
-var multer = require('multer');
 var constants = require('../config/constants');
 var router = express.Router();
-var mkdirp = require('mkdirp'); 
 var Ciudad = require('../models/ciudades');
-
-// Configuracion para upload de imagenes
-// TODO: Pasarlo al helper y limpiar codigo
-mkdirp(constants.dirImagenesCiudad, function(err) {
-    if (err) {
-        console.log(err)
-    }
-});
-var storage = multer.diskStorage({
-    destination: function(req, file, cb) {
-        cb(null, constants.dirImagenesCiudad)
-    },
-    filename: function(req, file, cb) {
-        cb(null, req.params.id_ciudad + ".png")
-    }
-});
-var upload = multer({
-    storage: storage
-});
+var almacen = require('../config/helperAlmacenamiento');
 
 router.get('/ciudad', function(req, res) {
     Ciudad.find(function (err, ciudades) {
@@ -99,7 +79,10 @@ router.delete('/ciudad/:id_ciudad', function(req,res) {
     });
 });
 
-router.post('/ciudad/:id_ciudad/imagen', upload.single("imagen"), function(req, res) {
+//TODO: poner en inicializacion de aplicacion
+almacen.crearDirectorioImagenesCiudad();
+
+router.post('/ciudad/:id_ciudad/imagen', almacen.uploadImagenesCiudad.single("imagen"), function(req, res) {
     res.status(200).json({"msj": "exito"});
 });
 
