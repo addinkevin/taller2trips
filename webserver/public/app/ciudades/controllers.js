@@ -23,7 +23,7 @@ ciudadesApp.controller('ciudadesAddController',
                         $scope.ciudad.imgSrc = e.target.result;
                         $scope.$digest();
 
-                    }
+                    };
 
                     reader.readAsDataURL(event.target.files[0]);
                 } else {
@@ -51,10 +51,11 @@ ciudadesApp.controller('ciudadesAddController',
                     return false;
                 }
 
-                if (!ciudad.file) {
+                if (!ciudad.imgFile) {
                     $scope.alert.msg = "Debes subir una imagen!";
                     return false;
                 }
+
                 return true;
             };
 
@@ -89,6 +90,8 @@ ciudadesApp.controller('ciudadesEditController',
         function ($scope, $location, $http, $routeParams, ServerService) {
             $scope.ciudad = {};
 
+            $scope.alert = { class: 'hide', msg: '' };
+
             $scope.getCiudad = function(idCiudad) {
                 ServerService.getCiudad(idCiudad, function(data, error) {
                     if (error) {
@@ -112,11 +115,42 @@ ciudadesApp.controller('ciudadesEditController',
                     };
 
                     reader.readAsDataURL(event.target.files[0]);
+                } else {
+                    $scope.ciudad.imgSrc = "/api/ciudad/"+$scope.ciudad._id+"/imagen";
+                    $scope.$digest();
                 }
+            };
+
+            $scope.validateCiudad = function(ciudad) {
+                var ok = true;
+
+                if (!ciudad.nombre) {
+                    $scope.alert.msg = "Debes especificar el nombre de la ciudad!";
+                    return false;
+                }
+
+                if (!ciudad.pais) {
+                    $scope.alert.msg = "Debes especificar el país de la ciudad";
+                    return false;
+                }
+
+                if (!ciudad.descripcion) {
+                    $scope.alert.msg = "Debes especificar la descripción de la ciudad";
+                    return false;
+                }
+
+                return true;
+
             };
 
             $scope.submitEditCiudad = function() {
                 var ciudadObject = $scope.ciudad;
+
+                if (!$scope.validateCiudad(ciudadObject)) {
+                    $scope.alert.class = '';
+                    return;
+                }
+
                 ServerService.updateCiudadInfo(ciudadObject, function (data, error) {
                     if (error) {
                         console.log(error);
