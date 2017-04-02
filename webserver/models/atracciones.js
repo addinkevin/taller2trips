@@ -5,7 +5,8 @@ var atraccionSchema = mongoose.Schema({
     nombre: String,
     descripcion: String,
     id_ciudad: String,
-    costo: Number,
+    costo_monto: Number,
+    costo_moneda: String,
     rating: {
         type: Number,
         default: 0
