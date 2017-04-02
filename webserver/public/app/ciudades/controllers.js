@@ -8,6 +8,12 @@ ciudadesApp.controller('ciudadesAddController',
         function ($scope, $location, $http, ServerService) {
             $scope.ciudad = {};
 
+            $scope.alert = {
+                class : 'hide',
+                msg: ''
+            };
+
+
             $scope.updateImageClick = function(event) {
                 $scope.ciudad.imgFile = event.target.files[0];
                 if (event.target.files && event.target.files[0]) {
@@ -20,11 +26,43 @@ ciudadesApp.controller('ciudadesAddController',
                     }
 
                     reader.readAsDataURL(event.target.files[0]);
+                } else {
+                    $scope.ciudad.imgSrc = "";
+                    $scope.$digest();
                 }
 
             };
 
+            $scope.validateCiudad = function(ciudad) {
+                var ok = true;
+
+                if (!ciudad.nombre) {
+                    $scope.alert.msg = "Debes especificar el nombre de la ciudad!";
+                    return false;
+                }
+
+                if (!ciudad.pais) {
+                    $scope.alert.msg = "Debes especificar el país de la ciudad";
+                    return false;
+                }
+
+                if (!ciudad.descripcion) {
+                    $scope.alert.msg = "Debes especificar la descripción de la ciudad";
+                    return false;
+                }
+
+                if (!ciudad.file) {
+                    $scope.alert.msg = "Debes subir una imagen!";
+                    return false;
+                }
+                return true;
+            };
+
             $scope.submitAddCiudad = function() {
+                if (!$scope.validateCiudad($scope.ciudad)) {
+                    $scope.alert.class = '';
+                    return;
+                }
                 ServerService.addCiudad($scope.ciudad, function (data, error) {
                     if (error) {
                         console.log(error.msg);
