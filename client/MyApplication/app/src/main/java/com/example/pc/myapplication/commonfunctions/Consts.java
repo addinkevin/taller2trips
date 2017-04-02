@@ -71,6 +71,9 @@ public class Consts {
     //sharedPreferences keys
     public static final String URL = "url";
 
+    //savedIntance tags
+    public static final String CITY = "ciudad";
+
 
 
 

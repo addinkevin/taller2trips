@@ -9,7 +9,6 @@
 *.class
 
 # Generated files
-bin/
 gen/
 out/
 
@@ -38,3 +37,6 @@ captures/
 
 # Keystore files
 *.jks
+
+# Archivos Mac
+*.DS_Store

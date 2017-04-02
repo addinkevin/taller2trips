@@ -1,17 +1,22 @@
 package com.example.pc.myapplication;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,6 +31,7 @@ import com.example.pc.myapplication.application.TripTP;
 import com.example.pc.myapplication.carruselTools.CarruselPagerAdapter;
 import com.example.pc.myapplication.ciudadesTools.Atraccion;
 import com.example.pc.myapplication.commonfunctions.Consts;
+import com.example.pc.myapplication.singletons.ImagesSingleton;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -71,9 +77,10 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
         adapter = new CarruselPagerAdapter(this, this.getSupportFragmentManager());
 
         ImageView img = (ImageView) findViewById(R.id.videoIMG) ;
+        pager = (ViewPager) findViewById(R.id.myviewpager);
 
         onAtraccion = new ReceiverOnAtraccion(this, view);
-        onAtraccionImgs = new ReceiverOnAtraccionImgs(this, view, adapter);
+        onAtraccionImgs = new ReceiverOnAtraccionImgs(this, view, adapter, pager);
         onAtraccionVid = new ReceiverOnAtraccionVid(this);
         onAtrVidThumb = new ReceiverOnVidThumbnail(img,this);
 
@@ -85,23 +92,6 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map2);
         mapFragment.getMapAsync(this);
-
-        ViewPager pager = (ViewPager) findViewById(R.id.myviewpager);
-
-        pager.setAdapter(adapter);
-        pager.setPageTransformer(false, adapter);
-
-        // Set current item to the middle page so we can fling to both
-        // directions left and right
-        pager.setCurrentItem(FIRST_PAGE);
-
-        // Necessary or the pager will only have one extra page to show
-        // make this at least however many pages you can see
-        pager.setOffscreenPageLimit(3);
-
-        // Set margin for pages as a negative number, so a part of next and
-        // previous pages will be showed
-        pager.setPageMargin(-200);
 
 
 
@@ -235,14 +225,49 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
 
     }
 
+    @Override
+    public void onResume() {
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                pager.setCurrentItem(ImagesSingleton.getInstance().getCurrentPosition()*LOOPS / 2);
+            }
+        });
+
+        super.onResume();
+    }
+
+    @Override
+    public void onBackPressed() {
+        ImagesSingleton.getInstance().clear();
+        super.onBackPressed();
+    }
+
     public void attachAtraccion(Atraccion atraccion) {
         this.atraccion = atraccion;
         if (map != null) {
             setMapContent();
         }
-
+        Log.i("IMGConn", "Set pagges");
         PAGES = atraccion.fotosPath.size();
+        Log.i("IMGConn", "notify pages");
         adapter.notifyDataSetChanged();
+
+        pager.setAdapter(adapter);
+        pager.setPageTransformer(false, adapter);
+
+        // Set current item to the middle page so we can fling to both
+        // directions left and right
+        FIRST_PAGE = PAGES * LOOPS / 2;
+        pager.setCurrentItem(FIRST_PAGE);
+
+        // Necessary or the pager will only have one extra page to show
+        // make this at least however many pages you can see
+        pager.setOffscreenPageLimit(3);
+
+        // Set margin for pages as a negative number, so a part of next and
+        // previous pages will be showed
+        pager.setPageMargin(-200);
 
         TextView atrName = (TextView) findViewById(R.id.nombreAtr);
         atrName.setText(atraccion.nombre);
@@ -254,10 +279,6 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
         video.setOnClickListener(this);
     }
 
-    public Atraccion getAtraccion() {
-        return  atraccion;
-    }
-
     @Override
     public void onClick(View v) {
         String file = getCacheDir().getAbsolutePath() + "/" + atraccion._id + Consts.EXT;
@@ -266,17 +287,22 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
         if (!videoFile.exists()) {
             String url = ((TripTP)getApplication()).getUrl() + Consts.ATRACC + "/" + atraccion._id + Consts.VIDEO;
 
-            InternetClient client = new VideoClient(getApplicationContext(), view,
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setPackage("org.videolan.vlc"); // Use org.videolan.vlc for nightly builds
+            intent.setDataAndType(Uri.parse(url), "application/mp4");
+            startActivity(intent);
+
+        /*   InternetClient client = new VideoClient(getApplicationContext(), view,
                     Consts.GET_ATR_VID, url, null, Consts.GET, null, true, atraccion._id);
             client.runInBackground();
 
             ProgressDialog progress = new ProgressDialog(this);
             progress.setTitle("Cargando video");
             progress.setMessage("Por favor espere...");
-            progress.setCancelable(false); // disable dismiss by tapping outside of the dialog
+            progress.setCancelable(true); // disable dismiss by tapping outside of the dialog
             progress.show();
 
-            onAtraccionVid.setProgress(progress);
+            onAtraccionVid.setProgress(progress);*/
 
         } else {
             MediaPlayer mp = new MediaPlayer();

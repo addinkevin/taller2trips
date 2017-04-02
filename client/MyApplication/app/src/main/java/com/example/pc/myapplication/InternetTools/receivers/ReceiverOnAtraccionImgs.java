@@ -19,11 +19,13 @@ public class ReceiverOnAtraccionImgs extends BroadcastReceiver {
     private final AtraccionActivity atraccionActivity;
     private final View view;
     private CarruselPagerAdapter adapter;
+    private ViewPager pager;
 
-    public ReceiverOnAtraccionImgs(AtraccionActivity atraccionActivity, View view, CarruselPagerAdapter adapter) {
+    public ReceiverOnAtraccionImgs(AtraccionActivity atraccionActivity, View view, CarruselPagerAdapter adapter, ViewPager pager) {
         this.atraccionActivity = atraccionActivity;
         this.view = view;
         this.adapter = adapter;
+        this.pager = pager;
     }
 
     @Override
@@ -34,7 +36,7 @@ public class ReceiverOnAtraccionImgs extends BroadcastReceiver {
             Bitmap imageAtracc = intent.getParcelableExtra(Consts.IMG_OUT);
             if (imageAtracc != null) {
                 adapter.addImage(imageAtracc);
-                //adapter.notifyDataSetChanged();
+
             } else {
                 Toast.makeText(context,"Error Bitmap", Toast.LENGTH_LONG).show();
             }

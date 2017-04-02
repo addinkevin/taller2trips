@@ -1,0 +1,116 @@
+<!-- Begin page content -->
+<div class="container">
+    <div class='page-header'>
+        <div class='btn-toolbar pull-right'>
+            <div class='btn-group'>
+                <a href="#/atracciones" class="btn btn-primary" role="button">Volver al listado de atracciones</a>
+            </div>
+        </div>
+        <h1>Agregar atracción</h1>
+
+    </div>
+
+    <div class="panel-custom" ng-show="ciudades.length == 0">
+        <h3 class="subheader">No hay ciudades agregadas. Agrega una ciudad primero.</h3>
+    </div>
+
+    <div class="panel panel-default" ng-show="ciudades.length > 0">
+        <div class="panel-body">
+            <form ng-submit="submitAddAtraccion()">
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Nombre de atracción</label>
+                    <div class="col-sm-10">
+                        <input required type="text" ng-model="atraccion.nombre" class="form-control" placeholder="Nombre de la atracción">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Ciudad de la atracción</label>
+                    <div class="col-sm-10">
+                        <select required ng-model="ciudadSelected" ng-options="ciudad.nombre for ciudad in ciudades">
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Descripción de la atracción</label>
+                    <div class="col-sm-10">
+                        <textarea required class="form-control" ng-model="atraccion.descripcion" rows="5" style="resize: none;" id="descripcionAtraccion" placeholder="Descripción de la atracción"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Ubicación</label>
+                    <div class="col-sm-10">
+                        {{atraccion.lat}}, {{atraccion.lng}}
+                        <div id="map" style="width: 100%; height: 500px; position: relative; overflow: hidden;">Error al cargar el mapa</div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Costo</label>
+                    <div class="col-sm-10">
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon1">
+                                <input ng-model="monedaCosto" list="monedas">
+                                    <datalist id="monedas">
+                                        <option value="{{moneda}}" ng-repeat="moneda in monedas">
+                                    </datalist>
+                            </span>
+                            <input required step="any" min="0" type="number" ng-model="atraccion.monedaCosto" class="form-control" placeholder="Costo de la atracción">
+                        </div>
+
+                        <!--
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon1">
+                                <input ng-model="monedaCosto" list="monedas">
+                                    <datalist id="monedas">
+                                        <option value="{{moneda}}" ng-repeat="moneda in monedas">
+                                    </datalist>
+                            </span>
+                            <input type="text" class="form-control" placeholder="Costo de la atracción"> aria-describedby="basic-addon1">
+                        </div>
+                        -->
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Hora de apertura</label>
+                    <div class="col-sm-10">
+                        <input required type="time" class="form-control" ng-model="atraccion.horaApertura">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Hora de cierre</label>
+                    <div class="col-sm-10">
+                        <input required type="time" class="form-control" ng-model="atraccion.horaCierre">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Duración promedio</label>
+                    <div class="col-sm-10">
+                        <div class="input-group">
+                            <input required type="number" min="1" class="form-control" placeholder="Duración promedio de la atracción">
+                            <span class="input-group-addon" id="basic-addon2">minutos</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Clasificación</label>
+                    <div class="col-sm-10">
+                        <select ng-model="clasificacionSelected" ng-options="clasificacion for clasificacion in clasificaciones">
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <button type="submit" class="btn btn-primary center-block">Agregar atracción</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

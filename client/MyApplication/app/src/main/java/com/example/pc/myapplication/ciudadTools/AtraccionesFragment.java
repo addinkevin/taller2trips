@@ -39,6 +39,10 @@ public class AtraccionesFragment extends Fragment implements AdapterView.OnItemC
                              Bundle savedInstanceState) {
         View myFragmentView = inflater.inflate(R.layout.fragment_atracciones, container, false);
 
+        if (savedInstanceState != null && savedInstanceState.containsKey(Consts.CITY)) {
+            ciudad = savedInstanceState.getParcelable(Consts.CITY);
+        }
+
         if ( onCiudadAtracc == null) {
             atraccionItems = new ArrayList<>();
             atraccionesAdp = new AtraccionesListAdp(this,atraccionItems);
@@ -58,6 +62,13 @@ public class AtraccionesFragment extends Fragment implements AdapterView.OnItemC
         atraccList.setAdapter(atraccionesAdp);
         atraccList.setOnItemClickListener(this);
         return myFragmentView;
+    }
+
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        if (ciudad != null) {
+            savedInstanceState.putParcelable(Consts.CITY, ciudad);
+        }
+        super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override
