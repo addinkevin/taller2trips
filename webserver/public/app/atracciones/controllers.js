@@ -138,9 +138,19 @@ atraccionesApp.controller('atraccionesAddEditController',
                 });
             };
 
+            $scope.editAtraccion = function(atraccion) {
+                ServerService.editAtraccion(atraccion, function(data, err) {
+                    if (err) {
+                        console.log(err.msg);
+                    } else {
+                        $location.url('/atracciones/');
+                    }
+                });
+            };
+
             $scope.submitEditAtraccion = function() {
                 console.log("Edit submit atraccion");
-                $scope.loadAtraccion();
+                $scope.editAtraccion($scope.atraccion);
             };
 
             $scope.submitAtraccion = function() {
@@ -216,7 +226,7 @@ atraccionesApp.controller('atraccionesAddEditController',
                     } else {
                         $location.url('/atracciones');
                     }
-                })
+                });
             };
 
             $scope.inicializar = function() {

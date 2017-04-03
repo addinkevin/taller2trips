@@ -159,6 +159,35 @@ tripsApp.service('ServerService', [ '$http', function($http) {
 
     };
 
+    this.editAtraccion = function (atraccion, callback) {
+        var data = {
+            "_id": atraccion._id,
+            "nombre": atraccion.nombre,
+            "descripcion": atraccion.descripcion,
+            "costo_monto": atraccion.montoCosto,
+            "costo_moneda": atraccion.monedaCosto,
+            "hora_apertura": atraccion.horaApertura,
+            "hora_cierre": atraccion.horaCierre,
+            "duracion": atraccion.duracion,
+            "clasificacion": atraccion.clasificacionSelected,
+            "id_ciudad": atraccion.ciudadSelected._id,
+            "latitud": atraccion.lat,
+            "longitud": atraccion.lng
+        };
+
+        $http({
+            method: 'PUT',
+            url : '/api/atraccion',
+            data: data
+        })
+            .then(function success(res) {
+                callback(res.data, null);
+            }, function error(res) {
+                callback(null, {msg: "Error al modificar la atracción" });
+            });
+    };
+
+
     this.deleteAtraccion = function(atraccionId, callback) {
         var url = '/api/atraccion/' + atraccionId;
         $http.delete(url).then(
