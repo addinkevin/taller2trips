@@ -159,4 +159,17 @@ tripsApp.service('ServerService', [ '$http', function($http) {
 
     };
 
+    this.deleteAtraccion = function(atraccionId, callback) {
+        var url = '/api/atraccion/' + atraccionId;
+        $http.delete(url).then(
+            function success() {
+                callback(null, null);
+            },
+            function error() {
+                callback(null, {msg:"No se pudo borrar la atracción" });
+            }
+        );
+
+    };
+
 }]);

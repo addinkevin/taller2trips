@@ -4,9 +4,9 @@ atraccionesApp.controller('atraccionesListadoController',
     [ '$scope', '$http', '$location', 'ServerService',
         function($scope, $http, $location, ServerService) {
             $scope.deleteAtraccion = function(atraccionId) {
-                ServerService.deleteAtraccion()
-                AtraccionesService.removeAtraccion($scope.atracciones[atraccionId]);
-                $location.url('/atracciones');
+                ServerService.deleteAtraccion(atraccionId, function(data, err) {
+                    $location.url('/atracciones/');
+                });
             };
 
             $scope.atracciones = [];
