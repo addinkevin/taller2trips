@@ -71,7 +71,7 @@ router.post('/atraccion', function(req, res) {
         descripcion: req.body.descripcion,
         id_ciudad: req.body.id_ciudad,
         costo_monto: req.body.costo_monto,
-        costo_moneda: req.body.costo_moneda
+        costo_moneda: req.body.costo_moneda,
         hora_apertura: req.body.hora_apertura,
         hora_cierre: req.body.hora_cierre,
         duracion: req.body.duracion,
