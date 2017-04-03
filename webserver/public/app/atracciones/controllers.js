@@ -1,9 +1,10 @@
 var atraccionesApp = angular.module('tripsApp.atracciones');
 
 atraccionesApp.controller('atraccionesListadoController',
-    [ '$scope' , 'AtraccionesService', '$http', '$location', '$timeout',
-        function($scope, AtraccionesService, $http, $location, $timeout) {
+    [ '$scope', '$http', '$location', 'ServerService',
+        function($scope, $http, $location, ServerService) {
             $scope.deleteAtraccion = function(atraccionId) {
+                ServerService.deleteAtraccion()
                 AtraccionesService.removeAtraccion($scope.atracciones[atraccionId]);
                 $location.url('/atracciones');
             };
@@ -38,51 +39,77 @@ atraccionesApp.controller('atraccionesListadoController',
             $scope.getAtracciones();
         }]);
 
-atraccionesApp.controller('atraccionesAddController',
-    [ '$scope', 'AtraccionesService', '$location', '$http',
-        function ($scope, AtraccionesService, $location, $http) {
-            console.log("AngularJs Controller: atraccionesAddController");
+function Atraccion() {
+    this.lat = -35;
+    this.lng = -58;
+    this.clasificaciones = [
+        "Atracciones y lugares de interés",
+        "Compras",
+        "Museos",
+        "Niños",
+        "Conciertos y espectáculos",
+        "Naturaleza y parques",
+        "Vida nocturna",
+        "Actividades al aire libre",
+        "Clases y talleres",
+        "Diversion y juegos",
+        "Comida y bebida",
+        "Transporte",
+        "Zoologicas y acuarios",
+        "Casinos y juegos de azar",
+        "Spas"
+    ];
 
-            $scope.atraccion = {lat:-35, lng:-58 };
-            $scope.idiomas = ['es','en','fr','kr','jp'];
-            $scope.monedas = [ 'u$s', '$', 'R$', '€' ];
-            $scope.monedaCosto = "u$s";
-            $scope.mapInfo = {};
-            $scope.idiomaAudio = "";
-            $scope.clasificaciones = [
-                "Atracciones y lugares de interés",
-                "Compras",
-                "Museos",
-                "Niños",
-                "Conciertos y espectáculos",
-                "Naturaleza y parques",
-                "Vida nocturna",
-                "Actividades al aire libre",
-                "Clases y talleres",
-                "Diversion y juegos",
-                "Comida y bebida",
-                "Transporte",
-                "Zoologicas y acuarios",
-                "Casinos y juegos de azar",
-                "Spas"
-            ];
-            $scope.clasificacionSelected = $scope.clasificaciones[0];
-            $scope.ciudadSelected = "";
-            $scope.imagenes = [];
-            $scope.audios = [];
-            $scope.videos = [];
-            $scope.planos = [];
+    this.idiomas = ['es','en','fr','kr','jp'];
+    this.monedas = [ 'u$s', '$', 'R$', '€' ];
+    this.monedaCosto = "u$s";
+    this.montoCosto = 0;
+    this.duracion = 0;
+    this.clasificacionSelected = this.clasificaciones[0];
+    this.horaApertura = "";
+    this.horaCierre = "";
+    this.ciudadSelected = "";
+    this.idiomaAudio = "";
+    this.imagenes = [];
+    this.audios = [];
+    this.videos = [];
+    this.planos = [];
+    this.mapInfo = {};
 
-            $scope.updateImageClick = function(event) {
-                $scope.ciudad.imgSrc = window.URL.createObjectURL(event.target.files[0]);
-                console.log($scope.ciudad.imgSrc);
-                $scope.$digest();
+}
+
+atraccionesApp.controller('atraccionesAddEditController',
+    [ '$scope', '$location', '$http','$routeParams', 'ServerService',
+        function ($scope, $location, $http, $routeParams, ServerService) {
+            $scope.editForm = $routeParams.id;
+            $scope.atraccion = new Atraccion();
+
+            $scope.initAdd = function() {
+                $scope.title = "Agregar atracción";
+                $scope.submitButton = "Agregar";
+            };
+
+            $scope.initEdit = function() {
+                $scope.title = "Editar atracción";
+                $scope.submitButton = "Guardar";
             };
 
             $scope.submitAddAtraccion = function() {
-                //console.log("Agregado la ciudad:", $scope.atraccion);
+                console.log("Add submit atraccion");
                 $scope.addAtraccion($scope.atraccion);
-                //$location.url('/atracciones/');
+            };
+
+            $scope.submitEditAtraccion = function() {
+                console.log("Edit submit atraccion");
+
+            };
+
+            $scope.submitAtraccion = function() {
+                if ($scope.editForm) {
+                    $scope.submitEditAtraccion();
+                } else {
+                    $scope.submitAddAtraccion();
+                }
             };
 
             $scope.createMap = function() {
@@ -103,8 +130,8 @@ atraccionesApp.controller('atraccionesAddController',
                     $scope.atraccion.lng = event.latLng.lng();
                     $scope.$digest();
                 });
-                $scope.mapInfo.map = map;
-                $scope.mapInfo.marker = marker;
+                $scope.atraccion.mapInfo.map = map;
+                $scope.atraccion.mapInfo.marker = marker;
 
             };
 
@@ -131,52 +158,39 @@ atraccionesApp.controller('atraccionesAddController',
             };
 
 
-            $scope.createMap();
-
             $scope.loadCiudades = function() {
-                $http({
-                    method: 'GET',
-                    url : '/api/ciudad'
-                })
-                    .then(function sucess(res) {
-                        console.log("GET OK /api/ciudad");
-                        $scope.ciudades = res.data;
-                        $scope.ciudadSelected = $scope.ciudades[0];
-
-                    }, function error(res) {
-
-                    });
+                ServerService.getCiudades(function(data, err) {
+                    if (err) {
+                        console.log(err.msg);
+                    } else {
+                        $scope.ciudades = data;
+                        $scope.atraccion.ciudadSelected = $scope.ciudades[0];
+                    }
+                });
             };
-            $scope.loadCiudades();
+
 
             $scope.addAtraccion = function(atraccion) {
-                var data = {
-                    "nombre": atraccion.nombre,
-                    "descripcion": atraccion.descripcion,
-                    "costo_monto": atraccion.montoCosto,
-                    "costo_moneda": $scope.monedaCosto,
-                    "hora_apertura": atraccion.horaApertura,
-                    "hora_cierre": atraccion.horaCierre,
-                    "duracion": atraccion.duracion,
-                    "clasificacion": $scope.clasificacionSelected,
-                    "id_ciudad": $scope.ciudadSelected._id,
-                    "latitud": atraccion.lat,
-                    "longitud": atraccion.lng
-                };
-
-                $http({
-                    method: 'POST',
-                    url : '/api/atraccion',
-                    data: data
-                })
-                    .then(function sucess(res) {
-                        atraccion._id = res.data._id;
+                ServerService.addAtraccion(atraccion, function(data, err) {
+                    if (err) {
+                        console.log(err.msg);
+                    } else {
                         $location.url('/atracciones');
-                    }, function error(res) {
+                    }
+                })
+            };
 
-                    });
-            }
+            $scope.inicializar = function() {
+                if ($scope.editForm) {
+                    $scope.initEdit();
+                } else {
+                    $scope.initAdd();
+                }
+                $scope.createMap();
+                $scope.loadCiudades();
+            };
 
+            $scope.inicializar();
         }
     ]
 );

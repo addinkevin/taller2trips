@@ -128,6 +128,35 @@ tripsApp.service('ServerService', [ '$http', function($http) {
             }, function error(res) {
                 callback(ciudadObject, {msg:"No se pudo agregar la ciudad"});
             });
-    }
+    };
+
+    this.addAtraccion = function(atraccion, callback) {
+        var data = {
+            "nombre": atraccion.nombre,
+            "descripcion": atraccion.descripcion,
+            "costo_monto": atraccion.montoCosto,
+            "costo_moneda": atraccion.monedaCosto,
+            "hora_apertura": atraccion.horaApertura,
+            "hora_cierre": atraccion.horaCierre,
+            "duracion": atraccion.duracion,
+            "clasificacion": atraccion.clasificacionSelected,
+            "id_ciudad": atraccion.ciudadSelected._id,
+            "latitud": atraccion.lat,
+            "longitud": atraccion.lng
+        };
+
+        $http({
+            method: 'POST',
+            url : '/api/atraccion',
+            data: data
+        })
+            .then(function success(res) {
+                atraccion._id = res.data._id;
+                callback(res.data, null);
+            }, function error(res) {
+                callback(null, {msg: "Error al agregar la atracción" });
+            });
+
+    };
 
 }]);

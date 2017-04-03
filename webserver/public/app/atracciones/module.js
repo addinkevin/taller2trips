@@ -12,39 +12,10 @@ atracciones.config(['$routeProvider', function config($routeProvider) {
         })
         .when('/atracciones/add', {
             templateUrl: 'app/atracciones/views/add.html',
-            controller: 'atraccionesAddController'
+            controller: 'atraccionesAddEditController'
         })
         .when('/atracciones/edit/:id', {
             templateUrl: 'app/atracciones/views/edit.html',
-            controller: 'atraccionesEditController'
+            controller: 'atraccionesAddEditController'
         });
 }]);
-
-atracciones.service('AtraccionesService', function() {
-    this.loadAtracciones = function() {
-        // TODO
-        return [];
-    };
-
-    this.atracciones = this.loadAtracciones();
-
-    this.setAtracciones = function(atracciones) {
-        this.atracciones = atracciones;
-    };
-
-    this.addAtraccion = function(atraccion) {
-        this.atracciones.push(atraccion);
-    };
-
-    this.getAtracciones = function() {
-        return this.atracciones;
-    };
-
-    this.removeAtraccion = function (atraccion) {
-        var index = this.ciudades.indexOf(atraccion);
-        if (index > -1) {
-            this.atracciones.splice(index, 1);
-        }
-    };
-
-});
