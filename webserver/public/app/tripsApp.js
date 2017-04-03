@@ -39,7 +39,7 @@ tripsApp.service('ServerService', [ '$http', function($http) {
                 var ciudades = res.data;
                 callback(ciudades, null);
             }, function(res) {
-                error(null, {msg: "No se pudo hacer el get /api/ciudad"});
+                callback(null, {msg: "No se pudo hacer el get /api/ciudad"});
             }
         );
     };
@@ -169,7 +169,17 @@ tripsApp.service('ServerService', [ '$http', function($http) {
                 callback(null, {msg:"No se pudo borrar la atracción" });
             }
         );
-
     };
+
+    this.getAtraccion = function(atraccionId, callback) {
+        $http.get('/api/atraccion/'+atraccionId).then(
+            function success(res) {
+                callback(res.data, null);
+            },
+            function error(res) {
+                callback(null, {msg:"Error al hacer el get de la atraccion "+atraccionId});
+            }
+        );
+    }
 
 }]);

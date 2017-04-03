@@ -15,7 +15,7 @@ atracciones.config(['$routeProvider', function config($routeProvider) {
             controller: 'atraccionesAddEditController'
         })
         .when('/atracciones/edit/:id', {
-            templateUrl: 'app/atracciones/views/edit.html',
+            templateUrl: 'app/atracciones/views/add.html',
             controller: 'atraccionesAddEditController'
         });
 }]);

@@ -92,6 +92,7 @@ atraccionesApp.controller('atraccionesAddEditController',
             $scope.initEdit = function() {
                 $scope.title = "Editar atracción";
                 $scope.submitButton = "Guardar";
+                $scope.loadAtraccion();
             };
 
             $scope.submitAddAtraccion = function() {
@@ -99,9 +100,47 @@ atraccionesApp.controller('atraccionesAddEditController',
                 $scope.addAtraccion($scope.atraccion);
             };
 
+            $scope.copyProperties = function(objDest, objSrc, properties) {
+                for (var key in properties) {
+                    objDest[key] = objSrc[properties[key]];
+                }
+            };
+
+            $scope.loadAtraccion = function() {
+                ServerService.getAtraccion($routeParams.id, function (data, err) {
+                    if (err) {
+                        console.log(err.msg);
+                    } else {
+                        $scope.copyProperties(
+                            $scope.atraccion,
+                            data,
+                            {
+                                '_id': '_id',
+                                'nombre': 'nombre',
+                                'descripcion': 'descripcion',
+                                'montoCosto': 'costo_monto',
+                                'monedaCosto': 'costo_moneda',
+                                'duracion': 'duracion',
+                                'clasificacionSelected': 'clasificacion',
+                                'horaApertura': 'hora_apertura',
+                                'horaCierre': 'hora_cierre',
+                                'lat': 'latitud',
+                                'lng': 'longitud'
+                            }
+                        );
+
+                        $scope.atraccion.ciudadSelected = $scope.ciudades.find(
+                            function(element) {
+                                return element._id == data.id_ciudad;
+                            }
+                        );
+                    }
+                });
+            };
+
             $scope.submitEditAtraccion = function() {
                 console.log("Edit submit atraccion");
-
+                $scope.loadAtraccion();
             };
 
             $scope.submitAtraccion = function() {
@@ -181,13 +220,15 @@ atraccionesApp.controller('atraccionesAddEditController',
             };
 
             $scope.inicializar = function() {
+                console.log($scope.editForm);
+                $scope.loadCiudades();
                 if ($scope.editForm) {
                     $scope.initEdit();
                 } else {
                     $scope.initAdd();
                 }
                 $scope.createMap();
-                $scope.loadCiudades();
+
             };
 
             $scope.inicializar();
