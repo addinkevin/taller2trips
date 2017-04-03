@@ -181,9 +181,21 @@ ciudadesApp.controller('ciudadesListadoController',
 
         $scope.ciudades = [];
 
+        $scope.setErrorMsg = function(msgError) {
+            var msg = "<div class='alert alert-danger alert-fixed text-center'>" +
+                    "<button type='button' class='close' data-dismiss='alert'>&times;</button>" +
+                    msgError +
+                    "</div>";
+            $("#errorContainer").replaceWith(msg);
+        };
+
         $scope.deleteCiudad = function(ciudadId) {
             ServerService.deleteCiudad(ciudadId, function(data, err) {
-                $location.url('/ciudades/');
+                if (err) {
+                    $scope.setErrorMsg(err.msg);
+                } else {
+                    $location.url('/ciudades/');
+                }
             });
         };
 

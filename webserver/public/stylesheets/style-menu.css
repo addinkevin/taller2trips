@@ -90,3 +90,11 @@ code {
     vertical-align: middle;
 }
 
+.alert-fixed {
+    position: fixed;
+    top: 80%;
+    left: 50%;
+    margin-left: -150px;
+    width: 300px;
+    z-index: 9999;
+}
