@@ -185,24 +185,26 @@ atraccionesApp.controller('atraccionesAddEditController',
             };
 
             $scope.uploadImageClick = function(event) {
-                $scope.imagenes.push({imgSrc: window.URL.createObjectURL(event.target.files[0])});
-                console.log($scope.imagenes);
+                $scope.atraccion.imagenes.push({
+                    imgSrc: window.URL.createObjectURL(event.target.files[0]),
+                    imgFile: event.target.files[0]
+                });
+                console.log($scope.atraccion.imagenes);
                 $scope.$digest();
             };
 
             $scope.uploadVideoClick = function(event) {
-                $scope.videos.push({vidSrc: window.URL.createObjectURL(event.target.files[0])});
+                $scope.atraccion.videos.push({vidSrc: window.URL.createObjectURL(event.target.files[0])});
                 $scope.$digest();
             };
 
             $scope.uploadAudioClick = function(event) {
-                $scope.audios.push({idiomaAudio: $scope.idiomaAudio, audSrc: window.URL.createObjectURL(event.target.files[0])});
-                console.log($scope.audios);
+                $scope.atraccion.audios.push({idiomaAudio: $scope.idiomaAudio, audSrc: window.URL.createObjectURL(event.target.files[0])});
                 $scope.$digest();
             };
 
             $scope.uploadPlanoClick = function(event) {
-                $scope.planos.push({imgSrc: window.URL.createObjectURL(event.target.files[0])});
+                $scope.atraccion.planos.push({imgSrc: window.URL.createObjectURL(event.target.files[0])});
                 $scope.$digest();
             };
 
@@ -219,11 +221,30 @@ atraccionesApp.controller('atraccionesAddEditController',
             };
 
 
+            $scope.addRecursosImagenes = function(atraccion) {
+                ServerService.uploadImagesAtraccion(atraccion, function(data,err) {
+                    if (err) {
+                        console.log(err.msg);
+                    } else {
+
+                    }
+
+                    $location.url('/atracciones');
+                });
+            };
+
+
+            $scope.addRecursos = function(atraccion) {
+                // Agregado de imagenes.
+                $scope.addRecursosImagenes(atraccion);
+            };
+
             $scope.addAtraccion = function(atraccion) {
                 ServerService.addAtraccion(atraccion, function(data, err) {
                     if (err) {
                         console.log(err.msg);
                     } else {
+                        $scope.addRecursos(atraccion);
                         $location.url('/atracciones');
                     }
                 });

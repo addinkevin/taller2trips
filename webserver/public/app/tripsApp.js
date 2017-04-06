@@ -32,7 +32,7 @@ tripsApp.directive('customOnChange', function() {
     };
 });
 
-tripsApp.service('ServerService', [ '$http', function($http) {
+tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
         this.getCiudades = function(callback) {
         $http.get('/api/ciudad').then(
             function(res) {
@@ -209,6 +209,47 @@ tripsApp.service('ServerService', [ '$http', function($http) {
                 callback(null, {msg:"Error al hacer el get de la atraccion "+atraccionId});
             }
         );
-    }
+    };
 
+    this._uploadImagesAtraccion = function(url, imgFile) {
+        return $http({
+            method: 'POST',
+            url: url,
+            headers: {
+                'Content-Type': undefined
+            },
+            data: {
+                imagen: imgFile
+            },
+            transformRequest: function (data, headersGetter) {
+                var formData = new FormData();
+                angular.forEach(data, function (value, key) {
+                    formData.append(key, value);
+                });
+
+                return formData;
+            }
+        });
+    };
+
+    this.uploadImagesAtraccion = function(atraccion, callback) {
+
+        var url = '/api/atraccion/' + atraccion._id + '/imagen';
+        var requests = [];
+
+        for (var i = 0; i < atraccion.imagenes.length; i++) {
+            var imgFile = atraccion.imagenes[i].imgFile;
+            if (imgFile) {
+                requests.push(this._uploadImagesAtraccion(url, imgFile));
+            }
+        }
+
+        $q
+            .all(requests)
+            .then(function success(values) {
+                callback(null,null);
+            }, function error() {
+                callback(null, {msg:"No fue posible subir todas las imagenes." });
+            });
+    }
 }]);
