@@ -100,6 +100,14 @@ atraccionesApp.controller('atraccionesAddEditController',
                 $scope.addAtraccion($scope.atraccion);
             };
 
+            $scope.loadAtraccionImagenes = function(data) {
+                for (var i = 0; i < data.imagenes.length; i++) {
+                    var imgUrl = '/api/atraccion/'+ $scope.atraccion._id + '/imagen?filename='+data.imagenes[i];
+                    $scope.atraccion.imagenes.push({imgSrc:imgUrl});
+                }
+
+            };
+
             $scope.copyProperties = function(objDest, objSrc, properties) {
                 for (var key in properties) {
                     objDest[key] = objSrc[properties[key]];
@@ -134,6 +142,9 @@ atraccionesApp.controller('atraccionesAddEditController',
                                 return element._id == data.id_ciudad;
                             }
                         );
+
+                        $scope.loadAtraccionImagenes(data);
+
                     }
                 });
             };
@@ -208,7 +219,6 @@ atraccionesApp.controller('atraccionesAddEditController',
                 $scope.$digest();
             };
 
-
             $scope.loadCiudades = function() {
                 ServerService.getCiudades(function(data, err) {
                     if (err) {
@@ -219,7 +229,6 @@ atraccionesApp.controller('atraccionesAddEditController',
                     }
                 });
             };
-
 
             $scope.addRecursosImagenes = function(atraccion) {
                 ServerService.uploadImagesAtraccion(atraccion, function(data,err) {
