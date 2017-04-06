@@ -155,6 +155,7 @@ atraccionesApp.controller('atraccionesAddEditController',
                         console.log(err.msg);
                     } else {
                         $location.url('/atracciones/');
+                        $scope.addRecursosImagenes(atraccion);
                     }
                 });
             };
@@ -234,8 +235,6 @@ atraccionesApp.controller('atraccionesAddEditController',
                 ServerService.uploadImagesAtraccion(atraccion, function(data,err) {
                     if (err) {
                         console.log(err.msg);
-                    } else {
-
                     }
 
                     $location.url('/atracciones');
