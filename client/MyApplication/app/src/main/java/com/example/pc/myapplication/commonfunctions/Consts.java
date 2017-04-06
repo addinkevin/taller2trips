@@ -74,6 +74,9 @@ public class Consts {
     //savedIntance tags
     public static final String CITY = "ciudad";
 
+    public static final int CANT_STARS = 5;
+
+
 
 
 

@@ -1,23 +1,36 @@
 package com.example.pc.myapplication;
 
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
+import android.provider.ContactsContract;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.pc.myapplication.InternetTools.InfoClient;
@@ -31,6 +44,7 @@ import com.example.pc.myapplication.application.TripTP;
 import com.example.pc.myapplication.carruselTools.CarruselPagerAdapter;
 import com.example.pc.myapplication.ciudadesTools.Atraccion;
 import com.example.pc.myapplication.commonfunctions.Consts;
+import com.example.pc.myapplication.commonfunctions.PathJSONParser;
 import com.example.pc.myapplication.singletons.ImagesSingleton;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -38,12 +52,17 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
+
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
-public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener {
+public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener, GoogleMap.OnMapClickListener {
 
     private Toolbar toolbar;
     private ReceiverOnAtraccion onAtraccion;
@@ -92,100 +111,6 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map2);
         mapFragment.getMapAsync(this);
-
-
-
-        ///////////////////////////////////
-        /*
-
-        LinearLayout linlaIMG = (LinearLayout) findViewById(R.id.linlaIMG);
-        LinearLayout linlaVIDEO = (LinearLayout) findViewById(R.id.linlaVIDEO);
-        LinearLayout linlaAUDIO = (LinearLayout) findViewById(R.id.linlaAUDIO);
-
-        List<LinearLayout> listLinla = new ArrayList<>(3);
-        listLinla.add(linlaAUDIO);
-        listLinla.add(linlaIMG);
-        listLinla.add(linlaVIDEO);
-
-        // SET THE IMAGEVIEW DIMENSIONS
-        int dimens = 100;
-        float density = getResources().getDisplayMetrics().density;
-        int finalDimens = (int)(dimens * density);
-        // SET THE MARGIN
-        int dimensMargin = 4;
-        float densityMargin = getResources().getDisplayMetrics().density;
-        int finalDimensMargin = (int) (dimensMargin * densityMargin);
-
-
-        for (int i = 0; i < list.size(); i++) {
-            ImageView imgUsers = list.get(i);
-            LinearLayout.LayoutParams imgvwDimens = new LinearLayout.LayoutParams(finalDimens, finalDimens);
-            imgUsers.setLayoutParams(imgvwDimens);
-
-            // SET SCALETYPE
-            imgUsers.setScaleType(ImageView.ScaleType.CENTER_CROP);
-
-            LinearLayout.LayoutParams imgvwMargin = new LinearLayout.LayoutParams(finalDimens, finalDimens);
-            imgvwMargin.setMargins(finalDimensMargin, finalDimensMargin, finalDimensMargin, finalDimensMargin);
-
-            // ADD THE NEW IMAGEVIEW WITH THE PROFILE PICTURE LOADED TO THE LINEARLAYOUT
-            linlaIMG.addView(imgUsers, imgvwMargin);
-
-            imgUsers.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    System.out.println(v.getId());
-                }
-            });
-        }
-
-        for (int i = 0; i < listA.size(); i++) {
-            ImageView imgUsers = listA.get(i);
-            LinearLayout.LayoutParams imgvwDimens = new LinearLayout.LayoutParams(finalDimens, finalDimens);
-            imgUsers.setLayoutParams(imgvwDimens);
-
-            // SET SCALETYPE
-            imgUsers.setScaleType(ImageView.ScaleType.CENTER_CROP);
-
-            LinearLayout.LayoutParams imgvwMargin = new LinearLayout.LayoutParams(finalDimens, finalDimens);
-            imgvwMargin.setMargins(finalDimensMargin, finalDimensMargin, finalDimensMargin, finalDimensMargin);
-
-            // ADD THE NEW IMAGEVIEW WITH THE PROFILE PICTURE LOADED TO THE LINEARLAYOUT
-            linlaAUDIO.addView(imgUsers, imgvwMargin);
-
-            imgUsers.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    System.out.println(v.getId());
-                }
-            });
-        }
-
-        for (int i = 0; i < listV.size(); i++) {
-            ImageView imgUsers = listV.get(i);
-            LinearLayout.LayoutParams imgvwDimens = new LinearLayout.LayoutParams(finalDimens, finalDimens);
-            imgUsers.setLayoutParams(imgvwDimens);
-
-            // SET SCALETYPE
-            imgUsers.setScaleType(ImageView.ScaleType.CENTER_CROP);
-
-            LinearLayout.LayoutParams imgvwMargin = new LinearLayout.LayoutParams(finalDimens, finalDimens);
-            imgvwMargin.setMargins(finalDimensMargin, finalDimensMargin, finalDimensMargin, finalDimensMargin);
-
-            // ADD THE NEW IMAGEVIEW WITH THE PROFILE PICTURE LOADED TO THE LINEARLAYOUT
-            linlaVIDEO.addView(imgUsers, imgvwMargin);
-
-            imgUsers.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    System.out.println(v.getId());
-                }
-            });
-        }*/
-
     }
 
     @Override
@@ -194,6 +119,7 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
         if (atraccion != null) {
            setMapContent();
         }
+        map.setOnMapClickListener(this);
     }
 
     private void setMapContent() {
@@ -275,8 +201,67 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
         TextView atrInfo = (TextView) findViewById(R.id.infoText);
         atrInfo.setText(atraccion.descripcion);
 
+        TextView atrClassf = (TextView) findViewById(R.id.clasifica);
+        atrClassf.setText( fillFields(atrClassf.getText().toString(), atraccion.clasificacion));
+
+        TextView atrCosto = (TextView) findViewById(R.id.costo);
+        atrCosto.setText( fillFields(atrCosto.getText().toString(), "$" + String.valueOf(atraccion.costo)));
+
+        TextView atrAper = (TextView) findViewById(R.id.horaAp);
+        atrAper.setText( fillFields (atrAper.getText().toString(), atraccion.horaApert));
+
+        TextView atrCierre = (TextView) findViewById(R.id.horacierre);
+        atrCierre.setText(fillFields (atrCierre.getText().toString(), atraccion.horaCierre));
+
+        TextView atrDuracion = (TextView) findViewById(R.id.duracion);
+        atrDuracion.setText(fillFields(atrDuracion.getText().toString(), String.valueOf(atraccion.duracion)));
+
+        TextView atrVoteCount = (TextView) findViewById(R.id.votesCount);
+        atrVoteCount.setText(" "+  atraccion.cantVotos);
+
+        TextView audioName = (TextView) findViewById(R.id.audio01);
+        audioName.setText(Html.fromHtml( "<a href=\"google.com\">" + atraccion.nombre + " 01" + "</a> "));
+        audioName.setMovementMethod(LinkMovementMethod.getInstance());
+
+        LinearLayout ln = (LinearLayout) findViewById(R.id.ratingIMG);
+        ImageView stars = (ImageView) ln.findViewById(R.id.star);
+        ViewGroup.LayoutParams params = stars.getLayoutParams();
+        ln.removeViewAt(1); //remuevo primer estrella solo la puse para setear parametros
+
+        int entero = (int) atraccion.rating;
+
+        for (int i = 0; i < entero; i++) {
+            ImageView imgNew = new ImageView(this);
+            imgNew.setLayoutParams(params);
+            imgNew.setImageResource(R.drawable.star);
+            ln.addView(imgNew,1); //+1 textview
+        }
+
+        int medio = 0;
+
+        if (atraccion.rating - entero != 0 ) {
+            ImageView imgNew = new ImageView(this);
+            imgNew.setLayoutParams(params);
+            imgNew.setImageResource(R.drawable.star_half);
+            ln.addView(imgNew,entero + 1); //+1 textview
+            medio = 1;
+        }
+        //+1 textview
+        for(int i = entero + medio; i < Consts.CANT_STARS; i++) {
+            ImageView imgNew = new ImageView(this);
+            imgNew.setLayoutParams(params);
+            imgNew.setImageResource(R.drawable.star_outline);
+            ln.addView(imgNew,entero + medio + 1); //+1 textview
+        }
+
         ImageView video = (ImageView) findViewById(R.id.plBtn);
         video.setOnClickListener(this);
+    }
+
+    public Spannable fillFields(String title, String add) {
+        Spannable spannable = new SpannableString(title + " " + add);
+        spannable.setSpan(new StyleSpan(Typeface.BOLD), 0, title.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        return spannable;
     }
 
     @Override
@@ -315,4 +300,16 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
             }
         }
     }
+
+    @Override
+    public void onMapClick(LatLng latLng) {
+        Intent mapAct = new Intent(this, MapActivity.class);
+        mapAct.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        mapAct.putExtra(Consts.LATITUD, atraccion.latitud);
+        mapAct.putExtra(Consts.LONGITUD, atraccion.longitud);
+        this.startActivity(mapAct);
+    }
+
+
+
 }

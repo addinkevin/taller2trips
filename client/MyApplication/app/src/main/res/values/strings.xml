@@ -13,9 +13,15 @@
     <string name="informacion">Info</string>
     <string name="videos">Videos</string>
     <string name="fotos">Pictures</string>
-    <string name="audio">Audios</string>
-    <string name="pais">Country:</string>
-
+    <string name="audio">Audio</string>
+    <string name="pais">Country: </string>
+    <string name="clasificacion">Classification: </string>
+    <string name="costo">Cost: </string>
+    <string name="apertura">Opening time: </string>
+    <string name="cierre">Close time: </string>
+    <string name="duracion">Duration: </string>
+    <string name="rating">Rating: </string>
+    <string name="votos">Votes: </string>
     <string name="logout">Logout</string>
     <string name="config">Configuration</string>
 

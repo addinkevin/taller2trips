@@ -42,6 +42,7 @@ public class Atraccion {
         this.descripcion = jsonO.getString(Consts.DESCRIPCION);
         this.costo = (float) jsonO.getDouble(Consts.COSTO);
         this.rating = (float) jsonO.getDouble(Consts.RATING);
+
         this.cantVotos = jsonO.getInt(Consts.CANT_VOTOS);
         this.horaApert = jsonO.getString(Consts.HS_APERTURA);
         this.horaCierre = jsonO.getString(Consts.HS_CIERRE);

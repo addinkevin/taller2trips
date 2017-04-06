@@ -50,7 +50,7 @@ public class MainFragment extends Fragment {
             TextView paisTxt = (TextView) myFragmentView.findViewById(R.id.countryTxt);
             paisTxt.setText(ciudad.pais);
 
-            TextView descripTxt = (TextView) myFragmentView.findViewById(R.id.infoText);
+            TextView descripTxt = (TextView) myFragmentView.findViewById(R.id.infoTextC);
             descripTxt.setText(ciudad.descripcion);
 
         return myFragmentView;
