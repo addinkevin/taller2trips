@@ -251,5 +251,18 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
             }, function error() {
                 callback(null, {msg:"No fue posible subir todas las imagenes." });
             });
-    }
+    };
+
+    this.deleteImageAtraccion = function(atraccion, atraccionImage, callback) {
+        var imgUrl = atraccionImage.imgSrc;
+
+        $http.delete(imgUrl).then(
+            function success() {
+                callback(null, null);
+            },
+            function error() {
+                callback(null, {msg:"No se pudo borrar la image de la atracción" });
+            }
+        );
+    };
 }]);

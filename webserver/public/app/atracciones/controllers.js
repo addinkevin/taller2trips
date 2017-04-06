@@ -196,6 +196,19 @@ atraccionesApp.controller('atraccionesAddEditController',
 
             };
 
+
+            $scope.deleteImage = function(id, atraccionImagen) {
+                console.log("Delete img",id,atraccionImagen);
+                $scope.atraccion.imagenes.splice(id,1);
+                if (!atraccionImagen.imgFile) { // Alojada en el server hay que mandar el request de delete.
+                    ServerService.deleteImageAtraccion($scope.atraccion, atraccionImagen, function(data, error) {
+                        if (error) {
+                            console.log(error.msg);
+                        }
+                    });
+                }
+            };
+
             $scope.uploadImageClick = function(event) {
                 $scope.atraccion.imagenes.push({
                     imgSrc: window.URL.createObjectURL(event.target.files[0]),

@@ -57,7 +57,7 @@
                         <div class="previewDeImagenes">
                             <div class="imagenPreview" ng-repeat="(id,atraccionImagen) in atraccion.imagenes">
                                 <img ng-src="{{atraccionImagen.imgSrc}}" class="img-responsive"/>
-                                <button class="btn btn-default btn-block">Borrar imagen</button>
+                                <button type='button' class="btn btn-default btn-block" ng-click="deleteImage(id,atraccionImagen)">Borrar imagen</button>
                             </div>
                         </div>
                     </div>
