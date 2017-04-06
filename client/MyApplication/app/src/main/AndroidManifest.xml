@@ -49,8 +49,12 @@
         <activity
             android:name=".FullScreenViewActivity"
             android:theme="@android:style/Theme.Holo.NoActionBar" />
+<<<<<<< HEAD
         <activity android:name=".MapActivity"
             android:theme="@android:style/Theme.Holo.NoActionBar"/>
+=======
+        <activity android:name=".VideoActivity"></activity>
+>>>>>>> origin/client
     </application>
 
 </manifest>
