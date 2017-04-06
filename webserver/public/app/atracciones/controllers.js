@@ -13,14 +13,14 @@ atraccionesApp.controller('atraccionesListadoController',
 
             $scope.getNombreCiudad = function(idCiudad) {
                 return $scope.mapCiudades[idCiudad].nombre;
-            }
+            };
 
             $scope.getAtracciones = function() {
                 $http.get('/api/ciudad/')
                     .then(function success(res) {
                         console.log("GET OK /api/ciudad");
                         $scope.ciudades = res.data;
-                        $scope.mapCiudades = {}
+                        $scope.mapCiudades = {};
                         for (var i = 0; i < $scope.ciudades.length; i++) {
                             $scope.mapCiudades[$scope.ciudades[i]._id] = $scope.ciudades[i];
                         }
