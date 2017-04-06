@@ -287,10 +287,15 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
         if (!videoFile.exists()) {
             String url = ((TripTP)getApplication()).getUrl() + Consts.ATRACC + "/" + atraccion._id + Consts.VIDEO;
 
+            Intent videoAct = new Intent(this, VideoActivity.class);
+            videoAct.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            videoAct.putExtra(Consts._ID, url);
+            this.startActivity(videoAct);
+/*
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setPackage("org.videolan.vlc"); // Use org.videolan.vlc for nightly builds
             intent.setDataAndType(Uri.parse(url), "application/mp4");
-            startActivity(intent);
+            startActivity(intent);*/
 
         /*   InternetClient client = new VideoClient(getApplicationContext(), view,
                     Consts.GET_ATR_VID, url, null, Consts.GET, null, true, atraccion._id);

@@ -44,8 +44,10 @@
         <activity android:name=".CiudadActivity" />
         <activity android:name=".CiudadesActivity" />
         <activity android:name=".ConfigActivity" />
-        <activity android:name=".FullScreenViewActivity"
-            android:theme="@android:style/Theme.Holo.NoActionBar"/>
+        <activity
+            android:name=".FullScreenViewActivity"
+            android:theme="@android:style/Theme.Holo.NoActionBar" />
+        <activity android:name=".VideoActivity"></activity>
     </application>
 
 </manifest>
