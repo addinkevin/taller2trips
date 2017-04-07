@@ -28,6 +28,15 @@ atraccionesApp.controller('atraccionesListadoController',
                             .then(function sucess(res) {
                                 console.log("GET OK /api/atraccion");
                                 $scope.atracciones = res.data;
+                                for (var i = 0; i < $scope.atracciones.length; i++) {
+                                    var atraccion = $scope.atracciones[i];
+                                    var imgUrl = "";
+                                    if (atraccion.imagenes) {
+                                        imgUrl = '/api/atraccion/'+atraccion._id+'/imagen?filename='+atraccion.imagenes[0];
+                                    }
+                                    atraccion.preview = imgUrl;
+                                }
+
                             }, function error(res) {
 
                             });
@@ -219,7 +228,10 @@ atraccionesApp.controller('atraccionesAddEditController',
             };
 
             $scope.uploadVideoClick = function(event) {
-                $scope.atraccion.videos.push({vidSrc: window.URL.createObjectURL(event.target.files[0])});
+                $scope.atraccion.videos.push({
+                    vidSrc: window.URL.createObjectURL(event.target.files[0]),
+                    vidFile: event.target.files[0]
+                });
                 $scope.$digest();
             };
 
@@ -249,8 +261,6 @@ atraccionesApp.controller('atraccionesAddEditController',
                     if (err) {
                         console.log(err.msg);
                     }
-
-                    $location.url('/atracciones');
                 });
             };
 
