@@ -71,6 +71,7 @@ function Atraccion() {
     ];
 
     this.idiomas = ['es','en','fr','kr','jp'];
+    this.idioma = 'es';
     this.monedas = [ 'u$s', '$', 'R$', '€' ];
     this.monedaCosto = "u$s";
     this.montoCosto = 0;
@@ -109,6 +110,11 @@ atraccionesApp.controller('atraccionesAddEditController',
             $scope.submitAddAtraccion = function() {
                 console.log("Add submit atraccion");
                 $scope.addAtraccion($scope.atraccion);
+            };
+
+            $scope.loadAtraccionAudios = function(data) {
+                var audUrl = '/api/atraccion/'+ $scope.atraccion._id + '/audio?idioma=es';
+                $scope.atraccion.audios.push({audSrc:audUrl});
             };
 
             $scope.loadAtraccionVideos = function(data) {
@@ -160,6 +166,7 @@ atraccionesApp.controller('atraccionesAddEditController',
 
                         $scope.loadAtraccionImagenes(data);
                         $scope.loadAtraccionVideos(data);
+                        $scope.loadAtraccionAudios(data);
                     }
                 });
             };
@@ -172,6 +179,7 @@ atraccionesApp.controller('atraccionesAddEditController',
                         $location.url('/atracciones/');
                         $scope.addRecursosImagenes(atraccion);
                         $scope.addRecursosVideos(atraccion);
+                        $scope.addRecursosAudios(atraccion);
                     }
                 });
             };
@@ -186,6 +194,17 @@ atraccionesApp.controller('atraccionesAddEditController',
                     $scope.submitEditAtraccion();
                 } else {
                     $scope.submitAddAtraccion();
+                }
+            };
+
+            $scope.deleteAudio = function(id, atraccionAudio) {
+                $scope.atraccion.audios.splice(id,1);
+                if (!atraccionVideo.audFile) { // Alojada en el server hay que mandar el request de delete.
+                    ServerService.deleteAudioAtraccion($scope.atraccion, atraccionAudio, function(data, error) {
+                        if (error) {
+                            console.log(error.msg);
+                        }
+                    });
                 }
             };
 
@@ -230,7 +249,10 @@ atraccionesApp.controller('atraccionesAddEditController',
             };
 
             $scope.uploadAudioClick = function(event) {
-                $scope.atraccion.audios.push({idiomaAudio: $scope.idiomaAudio, audSrc: window.URL.createObjectURL(event.target.files[0])});
+                $scope.atraccion.audios[0] = {
+                    audSrc: window.URL.createObjectURL(event.target.files[0]),
+                    audFile: event.target.files[0]
+                };
                 $scope.$digest();
             };
 
@@ -258,6 +280,14 @@ atraccionesApp.controller('atraccionesAddEditController',
                 });
             };
 
+            $scope.addRecursosAudios = function(atraccion) {
+                ServerService.uploadAudiosAtraccion(atraccion, function(data,err) {
+                    if (err) {
+                        console.log(err.msg);
+                    }
+                });
+            };
+
             $scope.addRecursosVideos = function(atraccion) {
                 ServerService.uploadVideosAtraccion(atraccion, function(data,err) {
                     if (err) {
@@ -270,6 +300,7 @@ atraccionesApp.controller('atraccionesAddEditController',
                 // Agregado de imagenes.
                 $scope.addRecursosImagenes(atraccion);
                 $scope.addRecursosVideos(atraccion);
+                $scope.addRecursosAudios(atraccion);
             };
 
             $scope.addAtraccion = function(atraccion) {

@@ -230,6 +230,30 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
         });
     };
 
+    this.uploadAudiosAtraccion = function(atraccion, callback) {
+        var url = 'api/atraccion/' + atraccion._id + '/audio';
+
+        var requests = [];
+
+        for (var i = 0; i < atraccion.audios.length; i++) {
+            var audFile = atraccion.audios[i].audFile;
+            if (audFile) {
+                requests.push(this._uploadFormData(url, {
+                    idioma: atraccion.idioma,
+                    audio: audFile
+                }));
+            }
+        }
+
+        $q
+            .all(requests)
+            .then(function success(values) {
+                callback(null,null);
+            }, function error() {
+                callback(null, {msg:"No fue posible subir todos los videos." } );
+            });
+    };
+
     this.uploadVideosAtraccion = function(atraccion, callback) {
         var url = 'api/atraccion/' + atraccion._id + '/video';
 
@@ -277,6 +301,18 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
             });
     };
 
+    this.deleteAudioAtraccion = function(atraccion, atraccionAudio, callback) {
+        var audUrl = atraccionAudio.audSrc;
+        $http.delete(audUrl).then(
+            function success() {
+                callback(null, null);
+            },
+            function error() {
+                callback(null, {msg:"No se pudo borrar el video de la atracción" });
+            }
+        );
+    };
+
     this.deleteVideoAtraccion = function(atraccion, atraccionVideo, callback) {
         var vidUrl = atraccionVideo.vidSrc;
         console.log(vidUrl);
@@ -288,7 +324,6 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
                 callback(null, {msg:"No se pudo borrar el video de la atracción" });
             }
         );
-
     };
 
     this.deleteImageAtraccion = function(atraccion, atraccionImage, callback) {
