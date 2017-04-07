@@ -170,7 +170,7 @@ router.post('/atraccion/:id_atraccion/audio', almacen.uploadAudiosAtracciones.si
 });
 
 router.get('/atraccion/:id_atraccion/audio', function(req, res) {
-    var file = constants.dirAudiosAtracciones + req.params.id_atraccion + "_audio_" + req.query.idioma + ".mp4";
+    var file = constants.dirAudiosAtracciones + req.params.id_atraccion + "_audio_" + req.query.idioma + ".mp3";
     res.download(file);
 });
 
