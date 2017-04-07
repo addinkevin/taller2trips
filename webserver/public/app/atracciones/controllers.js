@@ -199,7 +199,7 @@ atraccionesApp.controller('atraccionesAddEditController',
 
             $scope.deleteAudio = function(id, atraccionAudio) {
                 $scope.atraccion.audios.splice(id,1);
-                if (!atraccionVideo.audFile) { // Alojada en el server hay que mandar el request de delete.
+                if (!atraccionAudio.audFile) { // Alojada en el server hay que mandar el request de delete.
                     ServerService.deleteAudioAtraccion($scope.atraccion, atraccionAudio, function(data, error) {
                         if (error) {
                             console.log(error.msg);
