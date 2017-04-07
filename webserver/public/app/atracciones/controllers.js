@@ -27,6 +27,7 @@ atraccionesApp.controller('atraccionesListadoController',
                         $http.get('/api/atraccion')
                             .then(function sucess(res) {
                                 console.log("GET OK /api/atraccion");
+                                console.log(res.data);
                                 $scope.atracciones = res.data;
                                 for (var i = 0; i < $scope.atracciones.length; i++) {
                                     var atraccion = $scope.atracciones[i];
@@ -91,6 +92,7 @@ atraccionesApp.controller('atraccionesAddEditController',
     [ '$scope', '$location', '$http','$routeParams', 'ServerService',
         function ($scope, $location, $http, $routeParams, ServerService) {
             $scope.editForm = $routeParams.id;
+            $scope.ciudades = [];
             $scope.atraccion = new Atraccion();
 
             $scope.initAdd = function() {
@@ -109,12 +111,16 @@ atraccionesApp.controller('atraccionesAddEditController',
                 $scope.addAtraccion($scope.atraccion);
             };
 
+            $scope.loadAtraccionVideos = function(data) {
+                var vidUrl = '/api/atraccion/'+ $scope.atraccion._id + '/video';
+                $scope.atraccion.videos.push({vidSrc:vidUrl});
+            };
+
             $scope.loadAtraccionImagenes = function(data) {
                 for (var i = 0; i < data.imagenes.length; i++) {
                     var imgUrl = '/api/atraccion/'+ $scope.atraccion._id + '/imagen?filename='+data.imagenes[i];
                     $scope.atraccion.imagenes.push({imgSrc:imgUrl});
                 }
-
             };
 
             $scope.copyProperties = function(objDest, objSrc, properties) {
@@ -153,7 +159,7 @@ atraccionesApp.controller('atraccionesAddEditController',
                         );
 
                         $scope.loadAtraccionImagenes(data);
-
+                        $scope.loadAtraccionVideos(data);
                     }
                 });
             };
@@ -165,6 +171,7 @@ atraccionesApp.controller('atraccionesAddEditController',
                     } else {
                         $location.url('/atracciones/');
                         $scope.addRecursosImagenes(atraccion);
+                        $scope.addRecursosVideos(atraccion);
                     }
                 });
             };
@@ -182,35 +189,22 @@ atraccionesApp.controller('atraccionesAddEditController',
                 }
             };
 
-            $scope.createMap = function() {
-                var map = new google.maps.Map(document.getElementById('map'), {
-                    zoom: 4,
-                    center: {lat: $scope.atraccion.lat, lng: $scope.atraccion.lng}
-                });
-
-                var marker = new google.maps.Marker({
-                    position: {lat: $scope.atraccion.lat, lng: $scope.atraccion.lng},
-                    map: map,
-                    title: 'Click atraccion'
-                });
-
-                map.addListener('click', function(event) {
-                    marker.setPosition(event.latLng);
-                    $scope.atraccion.lat = event.latLng.lat();
-                    $scope.atraccion.lng = event.latLng.lng();
-                    $scope.$digest();
-                });
-                $scope.atraccion.mapInfo.map = map;
-                $scope.atraccion.mapInfo.marker = marker;
-
-            };
-
-
             $scope.deleteImage = function(id, atraccionImagen) {
                 console.log("Delete img",id,atraccionImagen);
                 $scope.atraccion.imagenes.splice(id,1);
                 if (!atraccionImagen.imgFile) { // Alojada en el server hay que mandar el request de delete.
                     ServerService.deleteImageAtraccion($scope.atraccion, atraccionImagen, function(data, error) {
+                        if (error) {
+                            console.log(error.msg);
+                        }
+                    });
+                }
+            };
+
+            $scope.deleteVideo = function(id, atraccionVideo) {
+                $scope.atraccion.videos.splice(id,1);
+                if (!atraccionVideo.vidFile) { // Alojada en el server hay que mandar el request de delete.
+                    ServerService.deleteVideoAtraccion($scope.atraccion, atraccionVideo, function(data, error) {
                         if (error) {
                             console.log(error.msg);
                         }
@@ -228,10 +222,10 @@ atraccionesApp.controller('atraccionesAddEditController',
             };
 
             $scope.uploadVideoClick = function(event) {
-                $scope.atraccion.videos.push({
+                $scope.atraccion.videos[0] = {
                     vidSrc: window.URL.createObjectURL(event.target.files[0]),
                     vidFile: event.target.files[0]
-                });
+                };
                 $scope.$digest();
             };
 
@@ -264,10 +258,18 @@ atraccionesApp.controller('atraccionesAddEditController',
                 });
             };
 
+            $scope.addRecursosVideos = function(atraccion) {
+                ServerService.uploadVideosAtraccion(atraccion, function(data,err) {
+                    if (err) {
+                        console.log(err.msg);
+                    }
+                });
+            };
 
             $scope.addRecursos = function(atraccion) {
                 // Agregado de imagenes.
                 $scope.addRecursosImagenes(atraccion);
+                $scope.addRecursosVideos(atraccion);
             };
 
             $scope.addAtraccion = function(atraccion) {
@@ -290,6 +292,29 @@ atraccionesApp.controller('atraccionesAddEditController',
                     $scope.initAdd();
                 }
                 $scope.createMap();
+
+            };
+
+            $scope.createMap = function() {
+                var map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 4,
+                    center: {lat: $scope.atraccion.lat, lng: $scope.atraccion.lng}
+                });
+
+                var marker = new google.maps.Marker({
+                    position: {lat: $scope.atraccion.lat, lng: $scope.atraccion.lng},
+                    map: map,
+                    title: 'Click atraccion'
+                });
+
+                map.addListener('click', function(event) {
+                    marker.setPosition(event.latLng);
+                    $scope.atraccion.lat = event.latLng.lat();
+                    $scope.atraccion.lng = event.latLng.lng();
+                    $scope.$digest();
+                });
+                $scope.atraccion.mapInfo.map = map;
+                $scope.atraccion.mapInfo.marker = marker;
 
             };
 
