@@ -1,19 +1,13 @@
 package com.example.pc.myapplication;
 
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.Typeface;
-import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Handler;
-import android.provider.ContactsContract;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -26,16 +20,20 @@ import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.StyleSpan;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.MediaController;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.example.pc.myapplication.InternetTools.InfoClient;
 import com.example.pc.myapplication.InternetTools.InternetClient;
-import com.example.pc.myapplication.InternetTools.VideoClient;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAtraccion;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAtraccionImgs;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAtraccionVid;
@@ -44,31 +42,27 @@ import com.example.pc.myapplication.application.TripTP;
 import com.example.pc.myapplication.carruselTools.CarruselPagerAdapter;
 import com.example.pc.myapplication.ciudadesTools.Atraccion;
 import com.example.pc.myapplication.commonfunctions.Consts;
-import com.example.pc.myapplication.commonfunctions.PathJSONParser;
 import com.example.pc.myapplication.singletons.ImagesSingleton;
+import com.example.pc.myapplication.singletons.PosVideoSingleton;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
 
-import org.json.JSONObject;
+public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener, GoogleMap.OnMapClickListener, DialogInterface.OnCancelListener, View.OnTouchListener {
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener, GoogleMap.OnMapClickListener {
-
+    private static final long DOUBLE_PRESS_INTERVAL = 250;
     private Toolbar toolbar;
     private ReceiverOnAtraccion onAtraccion;
     private ReceiverOnAtraccionImgs onAtraccionImgs;
     private ReceiverOnAtraccionVid onAtraccionVid;
     private ReceiverOnVidThumbnail onAtrVidThumb;
+
+    private VideoView videoView;
+    private ProgressDialog progressDialog;
+    private MediaController mediaControls;
 
     public int PAGES = 1;
     // You can choose a bigger number for LOOPS, but you know, nobody will fling
@@ -81,6 +75,14 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
     private Atraccion atraccion;
     private GoogleMap map;
     private View view;
+    private ImageView videoThumb;
+    private ImageView videoBtn;
+    private boolean isProgressCanceled;
+    private long lastPressTime;
+    private String _id;
+    private boolean toFullScreen;
+    private StringBuilder heightVideo;
+    private StringBuilder weigthVideo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,18 +92,28 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
         toolbar.setTitle(getString(R.string.ciudades));
         setSupportActionBar(toolbar);
 
-        view = findViewById(R.id.vertScrollView);
-        String _id = getIntent().getStringExtra(Consts._ID);
+        ImagesSingleton.getInstance().clear();
+
+        view = findViewById(R.id.masterAtraccion);
+        view.setVisibility(View.INVISIBLE);
+        if ( _id == null || _id.isEmpty()) {
+            _id = getIntent().getStringExtra(Consts._ID);
+        }
+
+        isProgressCanceled = false;
+        toFullScreen = false;
+        weigthVideo = new StringBuilder();
+        heightVideo = new StringBuilder();
 
         adapter = new CarruselPagerAdapter(this, this.getSupportFragmentManager());
 
-        ImageView img = (ImageView) findViewById(R.id.videoIMG) ;
+        videoThumb = (ImageView) findViewById(R.id.videoIMG) ;
         pager = (ViewPager) findViewById(R.id.myviewpager);
 
         onAtraccion = new ReceiverOnAtraccion(this, view);
         onAtraccionImgs = new ReceiverOnAtraccionImgs(this, view, adapter, pager);
         onAtraccionVid = new ReceiverOnAtraccionVid(this);
-        onAtrVidThumb = new ReceiverOnVidThumbnail(img,this);
+        onAtrVidThumb = new ReceiverOnVidThumbnail(videoThumb,heightVideo,weigthVideo, this);
 
         String url = ((TripTP)getApplication()).getUrl() + Consts.ATRACC + "/" + _id;
 
@@ -111,6 +123,20 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map2);
         mapFragment.getMapAsync(this);
+
+        videoView = (VideoView) findViewById(R.id.miniVideoView);
+        videoBtn = (ImageView) findViewById(R.id.plBtn);
+
+        if (mediaControls == null) {
+            mediaControls = new MediaController(this);
+        }
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("no se que poner");
+        progressDialog.setMessage("cargando...");
+        progressDialog.setCancelable(true);
+        progressDialog.setOnCancelListener(this);
+
     }
 
     @Override
@@ -153,12 +179,22 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
 
     @Override
     public void onResume() {
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                pager.setCurrentItem(ImagesSingleton.getInstance().getCurrentPosition()*LOOPS / 2);
-            }
-        });
+        if (ImagesSingleton.getInstance().getCurrentPosition() != 0) {
+            new Handler().post(new Runnable() {
+                @Override
+                public void run() {
+                    pager.setCurrentItem(ImagesSingleton.getInstance().getCurrentPosition() * LOOPS / 2);
+                }
+            });
+        }
+
+        if (videoView != null && PosVideoSingleton.getInstance().isPlaying()) {
+            videoView.seekTo(PosVideoSingleton.getInstance().getPosition());
+            this.onClick(videoView);
+
+        }
+
+        toFullScreen = false;
 
         super.onResume();
     }
@@ -166,6 +202,7 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
     @Override
     public void onBackPressed() {
         ImagesSingleton.getInstance().clear();
+        PosVideoSingleton.getInstance().clear();
         super.onBackPressed();
     }
 
@@ -254,8 +291,35 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
             ln.addView(imgNew,entero + medio + 1); //+1 textview
         }
 
-        ImageView video = (ImageView) findViewById(R.id.plBtn);
-        video.setOnClickListener(this);
+        videoBtn.setOnClickListener(this);
+
+        videoView.setOnTouchListener(this);
+        view.setVisibility(View.VISIBLE);
+        ScrollView scroll = (ScrollView) view.findViewById(R.id.vertScrollView);
+        scroll.scrollTo(0,0);
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        if(!toFullScreen)
+            PosVideoSingleton.getInstance().setPosition(videoView.getCurrentPosition());
+
+        if ( _id != null && !_id.isEmpty())
+            savedInstanceState.putString(Consts._ID, _id);
+        if (PosVideoSingleton.getInstance().isPlaying()) {
+            videoView.pause();
+        }
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        _id = savedInstanceState.getString(Consts._ID);
+        if (PosVideoSingleton.getInstance().isPlaying()) {
+            videoView.seekTo(PosVideoSingleton.getInstance().getPosition());
+        }
     }
 
     public Spannable fillFields(String title, String add) {
@@ -266,44 +330,38 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
 
     @Override
     public void onClick(View v) {
-        String file = getCacheDir().getAbsolutePath() + "/" + atraccion._id + Consts.EXT;
-        File videoFile = new File( file);
+        isProgressCanceled = false;
+        progressDialog.show();
+        videoBtn.setVisibility(View.INVISIBLE);
+        videoThumb.setVisibility(View.INVISIBLE);
+        videoBtn.setOnClickListener(null);
 
-        if (!videoFile.exists()) {
-            String url = ((TripTP)getApplication()).getUrl() + Consts.ATRACC + "/" + atraccion._id + Consts.VIDEO;
+        final String url = ((TripTP)getApplication()).getUrl() + Consts.ATRACC + "/" + _id + Consts.VIDEO;
 
-            Intent videoAct = new Intent(this, VideoActivity.class);
-            videoAct.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            videoAct.putExtra(Consts._ID, url);
-            this.startActivity(videoAct);
-/*
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setPackage("org.videolan.vlc"); // Use org.videolan.vlc for nightly builds
-            intent.setDataAndType(Uri.parse(url), "application/mp4");
-            startActivity(intent);*/
-
-        /*   InternetClient client = new VideoClient(getApplicationContext(), view,
-                    Consts.GET_ATR_VID, url, null, Consts.GET, null, true, atraccion._id);
-            client.runInBackground();
-
-            ProgressDialog progress = new ProgressDialog(this);
-            progress.setTitle("Cargando video");
-            progress.setMessage("Por favor espere...");
-            progress.setCancelable(true); // disable dismiss by tapping outside of the dialog
-            progress.show();
-
-            onAtraccionVid.setProgress(progress);*/
-
-        } else {
-            MediaPlayer mp = new MediaPlayer();
-            try {
-                mp.setDataSource(file);
-                mp.prepare();
-                mp.start();
-            } catch (IOException e) {
-                e.printStackTrace();
+        try {
+            videoView.setMediaController(mediaControls);
+            if(mediaControls != null){
+                mediaControls.setMediaPlayer(videoView);
             }
+            videoView.setVideoURI(Uri.parse(url));
+
+        } catch (Exception e) {
+            Toast.makeText(this,"No se pudo inializar video", Toast.LENGTH_LONG).show();
         }
+
+        videoView.requestFocus();
+        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                if (!isProgressCanceled) {
+                    progressDialog.dismiss();
+                    videoView.seekTo(PosVideoSingleton.getInstance().getPosition());
+
+                    PosVideoSingleton.getInstance().setPlaying(true);
+                    videoView.start();
+
+                }
+            }
+        });
     }
 
     @Override
@@ -316,5 +374,42 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
 
+    @Override
+    public void onCancel(DialogInterface dialog) {
+        isProgressCanceled = true;
+        videoBtn.setVisibility(View.VISIBLE);
+        videoThumb.setVisibility(View.VISIBLE);
+        videoBtn.setOnClickListener(this);
+    }
 
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+
+            long pressTime = System.currentTimeMillis();
+
+            boolean mHasDoubleClicked;
+            if (pressTime - lastPressTime <= DOUBLE_PRESS_INTERVAL) {
+                String url = ((TripTP) getApplication()).getUrl() + Consts.ATRACC + "/" + atraccion._id + Consts.VIDEO;
+                Intent videoAct = new Intent(this, VideoActivity.class);
+                videoAct.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                videoAct.putExtra(Consts.URL, url);
+                videoAct.putExtra(Consts.IMG_H, heightVideo.toString());
+                videoAct.putExtra(Consts.IMG_W, weigthVideo.toString());
+                PosVideoSingleton.getInstance().setPosition(videoView.getCurrentPosition());
+                videoView.pause();
+                toFullScreen = true;
+                this.startActivity(videoAct);
+                mHasDoubleClicked = true;
+            } else {
+                mHasDoubleClicked = false;
+            }
+
+            lastPressTime = pressTime;
+            return mHasDoubleClicked;
+        } else {
+            return false;
+        }
+    }
 }
