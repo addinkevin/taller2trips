@@ -187,7 +187,7 @@ router.post('/atraccion/:id_atraccion/audio', almacen.uploadAudiosAtracciones.si
         }
         else {
             //TODO: Revisar uniqueness del idioma antes de pushear al array
-            atraccion.idiomas_audio.push(req.body.idioma);
+            atraccion.idiomas_audio.push(req.body.idioma.toLowerCase());
             atraccion.save();
             res.status(200).json({"msj": "exito"});
         }
