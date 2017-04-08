@@ -4,21 +4,21 @@
     android:id="@+id/vertScrollView"
     tools:context="com.example.pc.myapplication.CiudadActivity"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:fillViewport="true"
     android:overScrollMode="never"
     android:scrollbars="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <RelativeLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/relativelayout"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="5dp"
@@ -71,13 +71,12 @@
 
         <TextView
             android:id="@+id/infoTextC"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
-            android:text="asdasdasdasdad"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:layout_marginStart="5dp" />
+            android:layout_marginStart="5dp"/>
 
     </LinearLayout>
 </ScrollView>
