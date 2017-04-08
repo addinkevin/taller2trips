@@ -220,4 +220,32 @@ router.get('/atraccion/:id_atraccion/imagen', function(req, res) {
     res.download(file);
 });
 
+router.delete('/atraccion/:id_atraccion/imagen', function(req, res) {
+    var file = constants.dirImagenesAtracciones + req.query.filename;
+    fs.unlink(file, function(err) {
+        if (err) {
+            res.status(404).json({"msj": "Imagen no encontrada"});
+        }
+        else {
+            Atraccion.findById(req.params.id_atraccion, function(err, atraccion) {
+                if (err) {
+                    throw (err)
+                }
+                else {
+                    console.log("Buscando Imagen");
+                    var index = atraccion.imagenes.indexOf(req.query.filename);
+                    if (index !== -1) {
+                        atraccion.imagenes.splice(index, 1);
+                        atraccion.save();
+                        res.status(200).json({"msj": "exito"});
+                    }
+                    else {
+                        res.status(404).json({"msj": "Imagen no encontrada"});
+                    }
+                }
+            });
+        }
+    });
+});
+
 module.exports = router;
