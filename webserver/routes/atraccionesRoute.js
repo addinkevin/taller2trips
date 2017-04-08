@@ -164,6 +164,19 @@ router.get('/atraccion/:id_atraccion/video', function(req, res) {
     res.download(file);
 });
 
+router.delete('/atraccion/:id_atraccion/video', function(req, res) {
+    var file = constants.dirVideosAtracciones + req.params.id_atraccion + "_video.mp4";
+    fs.unlink(file, function(err) {
+        if (err) {
+            res.status(404).json({"msj": "Video no encontrado"});
+        }
+        else {
+            res.status(200).json({"msj": "exito"});
+        }
+    });
+});
+    
+
 router.post('/atraccion/:id_atraccion/audio', almacen.uploadAudiosAtracciones.single("audio"), function(req, res) {
     Atraccion.findById(req.params.id_atraccion, function(err, atraccion) {
         if (err) {
