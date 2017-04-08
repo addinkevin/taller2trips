@@ -3,6 +3,7 @@ package com.example.pc.myapplication;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
@@ -64,7 +65,8 @@ public class MainActivity extends AppCompatActivity  implements OnMapReadyCallba
             return;
         }
 
-        locationManager.requestLocationUpdates("gps", 250, 1, listener);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2000, 5, listener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 5, listener);
     }
 
     @Override

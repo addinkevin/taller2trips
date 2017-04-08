@@ -13,6 +13,7 @@ import android.provider.Settings;
 import android.widget.Toast;
 
 import com.example.pc.myapplication.R;
+import com.example.pc.myapplication.singletons.GpsSingleton;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -42,6 +43,7 @@ public class LocationGPSListener implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
         LatLng position = new LatLng(location.getLatitude(),location.getLongitude());
+        GpsSingleton.getInstance().setPos(position);
 
         if (marker == null) {
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 13));

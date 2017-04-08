@@ -21,6 +21,8 @@ public class Consts {
     public static final String IMG_OUT = "IMG";
     public static final String FILE_OUT = "FILE";
     public static final String IMG_ID = "IDIMG";
+    public static final String IMG_H = "IMGH";
+    public static final String IMG_W = "IMGW";
     public static final String SUCESS = "SUCESS";
     public final static String RESULT = "RESULT";
 
@@ -34,8 +36,6 @@ public class Consts {
     public static final String GET_ATR_VID = "VIDATR"; //cuando hace click en video
     public static final String GET_VID_THU = "VIDTHU"; //cuando hace click en video
 
-    //public server
-    public static  final String SERVER_URL = "http://192.168.0.18:3000/api";
     //path
     public static final String CIUDAD = "/ciudad";
     public static final String IMAGEN = "/imagen";
@@ -70,9 +70,13 @@ public class Consts {
 
     //sharedPreferences keys
     public static final String URL = "url";
+    public static final String POS = "pos";
 
     //savedIntance tags
     public static final String CITY = "ciudad";
+
+    public static final int CANT_STARS = 5;
+
 
 
 

@@ -27,6 +27,8 @@ public class ThumbnailRetriever extends AsyncTask<String, Void, Integer> {
         String videoPath = params[0];
         Bitmap bitmap = null;
         MediaMetadataRetriever mediaMetadataRetriever = null;
+        String height = "";
+        String width = "";
         Intent activityMsg = new Intent(toCall);
         boolean success = true;
         try {
@@ -37,6 +39,8 @@ public class ThumbnailRetriever extends AsyncTask<String, Void, Integer> {
                 mediaMetadataRetriever.setDataSource(videoPath);
             //   mediaMetadataRetriever.setDataSource(videoPath);
             bitmap = mediaMetadataRetriever.getFrameAtTime();
+            height = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT);
+            width = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH);
         } catch (Exception e) {
             success = false;
         } finally {
@@ -48,6 +52,8 @@ public class ThumbnailRetriever extends AsyncTask<String, Void, Integer> {
         activityMsg.putExtra(Consts.SUCESS, success);
         if (success) {
             activityMsg.putExtra(Consts.IMG_OUT, bitmap);
+            activityMsg.putExtra(Consts.IMG_H, height);
+            activityMsg.putExtra(Consts.IMG_W, width);
         }
         LocalBroadcastManager.getInstance(context).sendBroadcast(activityMsg);
 

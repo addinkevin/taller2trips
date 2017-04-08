@@ -1,28 +1,39 @@
 package com.example.pc.myapplication;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
-import android.media.MediaMetadataRetriever;
+import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.StyleSpan;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
-import android.webkit.MimeTypeMap;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.MediaController;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.example.pc.myapplication.InternetTools.InfoClient;
 import com.example.pc.myapplication.InternetTools.InternetClient;
-import com.example.pc.myapplication.InternetTools.VideoClient;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAtraccion;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAtraccionImgs;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAtraccionVid;
@@ -32,6 +43,7 @@ import com.example.pc.myapplication.carruselTools.CarruselPagerAdapter;
 import com.example.pc.myapplication.ciudadesTools.Atraccion;
 import com.example.pc.myapplication.commonfunctions.Consts;
 import com.example.pc.myapplication.singletons.ImagesSingleton;
+import com.example.pc.myapplication.singletons.PosVideoSingleton;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -39,17 +51,18 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
+public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener, GoogleMap.OnMapClickListener, DialogInterface.OnCancelListener, View.OnTouchListener {
 
-public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener {
-
+    private static final long DOUBLE_PRESS_INTERVAL = 250;
     private Toolbar toolbar;
     private ReceiverOnAtraccion onAtraccion;
     private ReceiverOnAtraccionImgs onAtraccionImgs;
     private ReceiverOnAtraccionVid onAtraccionVid;
     private ReceiverOnVidThumbnail onAtrVidThumb;
+
+    private VideoView videoView;
+    private ProgressDialog progressDialog;
+    private MediaController mediaControls;
 
     public int PAGES = 1;
     // You can choose a bigger number for LOOPS, but you know, nobody will fling
@@ -62,6 +75,14 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
     private Atraccion atraccion;
     private GoogleMap map;
     private View view;
+    private ImageView videoThumb;
+    private ImageView videoBtn;
+    private boolean isProgressCanceled;
+    private long lastPressTime;
+    private String _id;
+    private boolean toFullScreen;
+    private StringBuilder heightVideo;
+    private StringBuilder weigthVideo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,18 +92,28 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
         toolbar.setTitle(getString(R.string.ciudades));
         setSupportActionBar(toolbar);
 
-        view = findViewById(R.id.vertScrollView);
-        String _id = getIntent().getStringExtra(Consts._ID);
+        ImagesSingleton.getInstance().clear();
+
+        view = findViewById(R.id.masterAtraccion);
+        view.setVisibility(View.INVISIBLE);
+        if ( _id == null || _id.isEmpty()) {
+            _id = getIntent().getStringExtra(Consts._ID);
+        }
+
+        isProgressCanceled = false;
+        toFullScreen = false;
+        weigthVideo = new StringBuilder();
+        heightVideo = new StringBuilder();
 
         adapter = new CarruselPagerAdapter(this, this.getSupportFragmentManager());
 
-        ImageView img = (ImageView) findViewById(R.id.videoIMG) ;
+        videoThumb = (ImageView) findViewById(R.id.videoIMG) ;
         pager = (ViewPager) findViewById(R.id.myviewpager);
 
         onAtraccion = new ReceiverOnAtraccion(this, view);
         onAtraccionImgs = new ReceiverOnAtraccionImgs(this, view, adapter, pager);
         onAtraccionVid = new ReceiverOnAtraccionVid(this);
-        onAtrVidThumb = new ReceiverOnVidThumbnail(img,this);
+        onAtrVidThumb = new ReceiverOnVidThumbnail(videoThumb,heightVideo,weigthVideo, this);
 
         String url = ((TripTP)getApplication()).getUrl() + Consts.ATRACC + "/" + _id;
 
@@ -93,98 +124,18 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map2);
         mapFragment.getMapAsync(this);
 
+        videoView = (VideoView) findViewById(R.id.miniVideoView);
+        videoBtn = (ImageView) findViewById(R.id.plBtn);
 
-
-        ///////////////////////////////////
-        /*
-
-        LinearLayout linlaIMG = (LinearLayout) findViewById(R.id.linlaIMG);
-        LinearLayout linlaVIDEO = (LinearLayout) findViewById(R.id.linlaVIDEO);
-        LinearLayout linlaAUDIO = (LinearLayout) findViewById(R.id.linlaAUDIO);
-
-        List<LinearLayout> listLinla = new ArrayList<>(3);
-        listLinla.add(linlaAUDIO);
-        listLinla.add(linlaIMG);
-        listLinla.add(linlaVIDEO);
-
-        // SET THE IMAGEVIEW DIMENSIONS
-        int dimens = 100;
-        float density = getResources().getDisplayMetrics().density;
-        int finalDimens = (int)(dimens * density);
-        // SET THE MARGIN
-        int dimensMargin = 4;
-        float densityMargin = getResources().getDisplayMetrics().density;
-        int finalDimensMargin = (int) (dimensMargin * densityMargin);
-
-
-        for (int i = 0; i < list.size(); i++) {
-            ImageView imgUsers = list.get(i);
-            LinearLayout.LayoutParams imgvwDimens = new LinearLayout.LayoutParams(finalDimens, finalDimens);
-            imgUsers.setLayoutParams(imgvwDimens);
-
-            // SET SCALETYPE
-            imgUsers.setScaleType(ImageView.ScaleType.CENTER_CROP);
-
-            LinearLayout.LayoutParams imgvwMargin = new LinearLayout.LayoutParams(finalDimens, finalDimens);
-            imgvwMargin.setMargins(finalDimensMargin, finalDimensMargin, finalDimensMargin, finalDimensMargin);
-
-            // ADD THE NEW IMAGEVIEW WITH THE PROFILE PICTURE LOADED TO THE LINEARLAYOUT
-            linlaIMG.addView(imgUsers, imgvwMargin);
-
-            imgUsers.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    System.out.println(v.getId());
-                }
-            });
+        if (mediaControls == null) {
+            mediaControls = new MediaController(this);
         }
 
-        for (int i = 0; i < listA.size(); i++) {
-            ImageView imgUsers = listA.get(i);
-            LinearLayout.LayoutParams imgvwDimens = new LinearLayout.LayoutParams(finalDimens, finalDimens);
-            imgUsers.setLayoutParams(imgvwDimens);
-
-            // SET SCALETYPE
-            imgUsers.setScaleType(ImageView.ScaleType.CENTER_CROP);
-
-            LinearLayout.LayoutParams imgvwMargin = new LinearLayout.LayoutParams(finalDimens, finalDimens);
-            imgvwMargin.setMargins(finalDimensMargin, finalDimensMargin, finalDimensMargin, finalDimensMargin);
-
-            // ADD THE NEW IMAGEVIEW WITH THE PROFILE PICTURE LOADED TO THE LINEARLAYOUT
-            linlaAUDIO.addView(imgUsers, imgvwMargin);
-
-            imgUsers.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    System.out.println(v.getId());
-                }
-            });
-        }
-
-        for (int i = 0; i < listV.size(); i++) {
-            ImageView imgUsers = listV.get(i);
-            LinearLayout.LayoutParams imgvwDimens = new LinearLayout.LayoutParams(finalDimens, finalDimens);
-            imgUsers.setLayoutParams(imgvwDimens);
-
-            // SET SCALETYPE
-            imgUsers.setScaleType(ImageView.ScaleType.CENTER_CROP);
-
-            LinearLayout.LayoutParams imgvwMargin = new LinearLayout.LayoutParams(finalDimens, finalDimens);
-            imgvwMargin.setMargins(finalDimensMargin, finalDimensMargin, finalDimensMargin, finalDimensMargin);
-
-            // ADD THE NEW IMAGEVIEW WITH THE PROFILE PICTURE LOADED TO THE LINEARLAYOUT
-            linlaVIDEO.addView(imgUsers, imgvwMargin);
-
-            imgUsers.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    System.out.println(v.getId());
-                }
-            });
-        }*/
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("no se que poner");
+        progressDialog.setMessage("cargando...");
+        progressDialog.setCancelable(true);
+        progressDialog.setOnCancelListener(this);
 
     }
 
@@ -194,6 +145,7 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
         if (atraccion != null) {
            setMapContent();
         }
+        map.setOnMapClickListener(this);
     }
 
     private void setMapContent() {
@@ -227,12 +179,22 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
 
     @Override
     public void onResume() {
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                pager.setCurrentItem(ImagesSingleton.getInstance().getCurrentPosition()*LOOPS / 2);
-            }
-        });
+        if (ImagesSingleton.getInstance().getCurrentPosition() != 0) {
+            new Handler().post(new Runnable() {
+                @Override
+                public void run() {
+                    pager.setCurrentItem(ImagesSingleton.getInstance().getCurrentPosition() * LOOPS / 2);
+                }
+            });
+        }
+
+        if (videoView != null && PosVideoSingleton.getInstance().isPlaying()) {
+            videoView.seekTo(PosVideoSingleton.getInstance().getPosition());
+            this.onClick(videoView);
+
+        }
+
+        toFullScreen = false;
 
         super.onResume();
     }
@@ -240,6 +202,7 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
     @Override
     public void onBackPressed() {
         ImagesSingleton.getInstance().clear();
+        PosVideoSingleton.getInstance().clear();
         super.onBackPressed();
     }
 
@@ -275,44 +238,178 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
         TextView atrInfo = (TextView) findViewById(R.id.infoText);
         atrInfo.setText(atraccion.descripcion);
 
-        ImageView video = (ImageView) findViewById(R.id.plBtn);
-        video.setOnClickListener(this);
+        TextView atrClassf = (TextView) findViewById(R.id.clasifica);
+        atrClassf.setText( fillFields(atrClassf.getText().toString(), atraccion.clasificacion));
+
+        TextView atrCosto = (TextView) findViewById(R.id.costo);
+        atrCosto.setText( fillFields(atrCosto.getText().toString(), "$" + String.valueOf(atraccion.costo)));
+
+        TextView atrAper = (TextView) findViewById(R.id.horaAp);
+        atrAper.setText( fillFields (atrAper.getText().toString(), atraccion.horaApert));
+
+        TextView atrCierre = (TextView) findViewById(R.id.horacierre);
+        atrCierre.setText(fillFields (atrCierre.getText().toString(), atraccion.horaCierre));
+
+        TextView atrDuracion = (TextView) findViewById(R.id.duracion);
+        atrDuracion.setText(fillFields(atrDuracion.getText().toString(), String.valueOf(atraccion.duracion)));
+
+        TextView atrVoteCount = (TextView) findViewById(R.id.votesCount);
+        atrVoteCount.setText(" "+  atraccion.cantVotos);
+
+        TextView audioName = (TextView) findViewById(R.id.audio01);
+        audioName.setText(Html.fromHtml( "<a href=\"google.com\">" + atraccion.nombre + " 01" + "</a> "));
+        audioName.setMovementMethod(LinkMovementMethod.getInstance());
+
+        LinearLayout ln = (LinearLayout) findViewById(R.id.ratingIMG);
+        ImageView stars = (ImageView) ln.findViewById(R.id.star);
+        ViewGroup.LayoutParams params = stars.getLayoutParams();
+        ln.removeViewAt(1); //remuevo primer estrella solo la puse para setear parametros
+
+        int entero = (int) atraccion.rating;
+
+        for (int i = 0; i < entero; i++) {
+            ImageView imgNew = new ImageView(this);
+            imgNew.setLayoutParams(params);
+            imgNew.setImageResource(R.drawable.star);
+            ln.addView(imgNew,1); //+1 textview
+        }
+
+        int medio = 0;
+
+        if (atraccion.rating - entero != 0 ) {
+            ImageView imgNew = new ImageView(this);
+            imgNew.setLayoutParams(params);
+            imgNew.setImageResource(R.drawable.star_half);
+            ln.addView(imgNew,entero + 1); //+1 textview
+            medio = 1;
+        }
+        //+1 textview
+        for(int i = entero + medio; i < Consts.CANT_STARS; i++) {
+            ImageView imgNew = new ImageView(this);
+            imgNew.setLayoutParams(params);
+            imgNew.setImageResource(R.drawable.star_outline);
+            ln.addView(imgNew,entero + medio + 1); //+1 textview
+        }
+
+        videoBtn.setOnClickListener(this);
+
+        videoView.setOnTouchListener(this);
+        view.setVisibility(View.VISIBLE);
+        ScrollView scroll = (ScrollView) view.findViewById(R.id.vertScrollView);
+        scroll.scrollTo(0,0);
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        if(!toFullScreen)
+            PosVideoSingleton.getInstance().setPosition(videoView.getCurrentPosition());
+
+        if ( _id != null && !_id.isEmpty())
+            savedInstanceState.putString(Consts._ID, _id);
+        if (PosVideoSingleton.getInstance().isPlaying()) {
+            videoView.pause();
+        }
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        _id = savedInstanceState.getString(Consts._ID);
+        if (PosVideoSingleton.getInstance().isPlaying()) {
+            videoView.seekTo(PosVideoSingleton.getInstance().getPosition());
+        }
+    }
+
+    public Spannable fillFields(String title, String add) {
+        Spannable spannable = new SpannableString(title + " " + add);
+        spannable.setSpan(new StyleSpan(Typeface.BOLD), 0, title.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        return spannable;
     }
 
     @Override
     public void onClick(View v) {
-        String file = getCacheDir().getAbsolutePath() + "/" + atraccion._id + Consts.EXT;
-        File videoFile = new File( file);
+        isProgressCanceled = false;
+        progressDialog.show();
+        videoBtn.setVisibility(View.INVISIBLE);
+        videoThumb.setVisibility(View.INVISIBLE);
+        videoBtn.setOnClickListener(null);
 
-        if (!videoFile.exists()) {
-            String url = ((TripTP)getApplication()).getUrl() + Consts.ATRACC + "/" + atraccion._id + Consts.VIDEO;
+        final String url = ((TripTP)getApplication()).getUrl() + Consts.ATRACC + "/" + _id + Consts.VIDEO;
 
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setPackage("org.videolan.vlc"); // Use org.videolan.vlc for nightly builds
-            intent.setDataAndType(Uri.parse(url), "application/mp4");
-            startActivity(intent);
-
-        /*   InternetClient client = new VideoClient(getApplicationContext(), view,
-                    Consts.GET_ATR_VID, url, null, Consts.GET, null, true, atraccion._id);
-            client.runInBackground();
-
-            ProgressDialog progress = new ProgressDialog(this);
-            progress.setTitle("Cargando video");
-            progress.setMessage("Por favor espere...");
-            progress.setCancelable(true); // disable dismiss by tapping outside of the dialog
-            progress.show();
-
-            onAtraccionVid.setProgress(progress);*/
-
-        } else {
-            MediaPlayer mp = new MediaPlayer();
-            try {
-                mp.setDataSource(file);
-                mp.prepare();
-                mp.start();
-            } catch (IOException e) {
-                e.printStackTrace();
+        try {
+            videoView.setMediaController(mediaControls);
+            if(mediaControls != null){
+                mediaControls.setMediaPlayer(videoView);
             }
+            videoView.setVideoURI(Uri.parse(url));
+
+        } catch (Exception e) {
+            Toast.makeText(this,"No se pudo inializar video", Toast.LENGTH_LONG).show();
+        }
+
+        videoView.requestFocus();
+        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                if (!isProgressCanceled) {
+                    progressDialog.dismiss();
+                    videoView.seekTo(PosVideoSingleton.getInstance().getPosition());
+
+                    PosVideoSingleton.getInstance().setPlaying(true);
+                    videoView.start();
+
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onMapClick(LatLng latLng) {
+        Intent mapAct = new Intent(this, MapActivity.class);
+        mapAct.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        mapAct.putExtra(Consts.LATITUD, atraccion.latitud);
+        mapAct.putExtra(Consts.LONGITUD, atraccion.longitud);
+        this.startActivity(mapAct);
+    }
+
+
+    @Override
+    public void onCancel(DialogInterface dialog) {
+        isProgressCanceled = true;
+        videoBtn.setVisibility(View.VISIBLE);
+        videoThumb.setVisibility(View.VISIBLE);
+        videoBtn.setOnClickListener(this);
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+
+            long pressTime = System.currentTimeMillis();
+
+            boolean mHasDoubleClicked;
+            if (pressTime - lastPressTime <= DOUBLE_PRESS_INTERVAL) {
+                String url = ((TripTP) getApplication()).getUrl() + Consts.ATRACC + "/" + atraccion._id + Consts.VIDEO;
+                Intent videoAct = new Intent(this, VideoActivity.class);
+                videoAct.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                videoAct.putExtra(Consts.URL, url);
+                videoAct.putExtra(Consts.IMG_H, heightVideo.toString());
+                videoAct.putExtra(Consts.IMG_W, weigthVideo.toString());
+                PosVideoSingleton.getInstance().setPosition(videoView.getCurrentPosition());
+                videoView.pause();
+                toFullScreen = true;
+                this.startActivity(videoAct);
+                mHasDoubleClicked = true;
+            } else {
+                mHasDoubleClicked = false;
+            }
+
+            lastPressTime = pressTime;
+            return mHasDoubleClicked;
+        } else {
+            return false;
         }
     }
 }
