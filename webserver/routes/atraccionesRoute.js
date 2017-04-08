@@ -1,4 +1,5 @@
 var express = require('express');
+var fs = require('fs');
 var constants = require('../config/constants');
 var router = express.Router();
 var Atraccion = require('../models/atracciones');
@@ -140,6 +141,18 @@ router.post('/atraccion/:id_atraccion/plano', almacen.uploadPlanosAtracciones.si
 router.get('/atraccion/:id_atraccion/plano', function(req, res) {
     var file = constants.dirPlanosAtracciones + req.params.id_atraccion + "_plano.png";
     res.download(file);
+});
+
+router.delete('/atraccion/:id_atraccion/plano', function(req, res) {
+    var file = constants.dirPlanosAtracciones + req.params.id_atraccion + "_plano.png";
+    fs.unlink(file, function(err) {
+        if (err) {
+            res.status(404).json({"msj": "Plano no encontrado"});
+        }
+        else {
+            res.status(200).json({"msj": "exito"});
+        }
+    });
 });
 
 router.post('/atraccion/:id_atraccion/video', almacen.uploadVideosAtracciones.single("video"), function(req, res) {
