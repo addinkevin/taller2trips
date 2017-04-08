@@ -195,12 +195,12 @@ router.post('/atraccion/:id_atraccion/audio', almacen.uploadAudiosAtracciones.si
 });
 
 router.get('/atraccion/:id_atraccion/audio', function(req, res) {
-    var file = constants.dirAudiosAtracciones + req.params.id_atraccion + "_audio_" + req.query.idioma + ".mp3";
+    var file = constants.dirAudiosAtracciones + req.params.id_atraccion + "_audio_" + req.query.idioma.toLowerCase(); + ".mp3";
     res.download(file);
 });
 
 router.delete('/atraccion/:id_atraccion/audio', function(req, res) {
-    var file = constants.dirAudiosAtracciones + req.params.id_atraccion + "_audio_" + req.query.idioma + ".mp3";
+    var file = constants.dirAudiosAtracciones + req.params.id_atraccion + "_audio_" + req.query.idioma.toLowerCase(); + ".mp3";
     fs.unlink(file, function(err) {
         if (err) {
             res.status(404).json({"msj": "Audio no encontrado"});
