@@ -82,7 +82,6 @@ router.post('/atraccion', function(req, res) {
 
     atraccion.save(function(err, atraccion) {
         if (err) {
-            console.log(err);
             res.status(405).json({"msj": "input invalido"});
         }
         else {
