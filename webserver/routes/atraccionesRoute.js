@@ -199,6 +199,34 @@ router.get('/atraccion/:id_atraccion/audio', function(req, res) {
     res.download(file);
 });
 
+router.delete('/atraccion/:id_atraccion/audio', function(req, res) {
+    var file = constants.dirAudiosAtracciones + req.params.id_atraccion + "_audio_" + req.query.idioma + ".mp3";
+    fs.unlink(file, function(err) {
+        if (err) {
+            res.status(404).json({"msj": "Audio no encontrado"});
+        }
+        else {
+            Atraccion.findById(req.params.id_atraccion, function(err, atraccion) {
+                if (err) {
+                    throw (err)
+                }
+                else {
+                    var index = atraccion.idiomas_audio.indexOf(req.query.idioma);
+                    if (index !== -1) {
+                        atraccion.idiomas_audio.splice(index, 1);
+                        atraccion.save();
+                        res.status(200).json({"msj": "exito"});
+                    }
+                    else {
+                        res.status(404).json({"msj": "Audio no encontrada"});
+                    }
+                }
+            });
+        }
+    });
+});
+
+
 router.post('/atraccion/:id_atraccion/imagen', almacen.uploadImagenesAtracciones.single("imagen"), function(req, res) {
     Atraccion.findById(req.params.id_atraccion, function(err, atraccion) {
         if (err) {
