@@ -186,7 +186,7 @@ ciudadesApp.controller('ciudadesListadoController',
                     "<button type='button' class='close' data-dismiss='alert'>&times;</button>" +
                     msgError +
                     "</div>";
-            $("#errorContainer").replaceWith(msg);
+            $("#errorContainer").html(msg);
         };
 
         $scope.deleteCiudad = function(ciudadId) {

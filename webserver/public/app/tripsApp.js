@@ -61,7 +61,12 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
                 callback(null, null);
             },
             function error(res) {
-                callback(null, {msg:"No se pudo borrar la ciudad:"+ ciudadId});
+                if (res.status == 409) {
+                    // Borrado de una ciudad que tiene atracciones.
+                    callback(null, { msg: "No puedes borrar una ciudad que tiene atracciones agregadas." });
+                } else {
+                    callback(null, {msg:"No se pudo borrar la ciudad. Inténtelo nuevamente" });
+                }
             }
         );
     };

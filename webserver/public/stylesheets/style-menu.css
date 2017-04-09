@@ -99,9 +99,9 @@ code {
 
 .alert-fixed {
     position: fixed;
-    top: 80%;
+    top: 0;
     left: 50%;
-    margin-left: -150px;
-    width: 300px;
+    margin-left:-25%;
+    width: 50%;
     z-index: 9999;
 }
