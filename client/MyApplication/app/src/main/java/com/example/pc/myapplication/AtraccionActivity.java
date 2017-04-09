@@ -328,7 +328,7 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
         atrCosto.setText( fillFields(atrCosto.getText().toString(), "$" + String.valueOf(atraccion.costo)));
 
         TextView atrMoneda = (TextView) findViewById(R.id.moneda);
-        atrMoneda.setText( fillFields(atrCosto.getText().toString(), "$" + String.valueOf(atraccion.moneda)));
+        atrMoneda.setText( fillFields(atrMoneda.getText().toString(), atraccion.moneda));
 
         TextView atrAper = (TextView) findViewById(R.id.horaAp);
         atrAper.setText( fillFields (atrAper.getText().toString(), atraccion.horaApert));
