@@ -174,6 +174,7 @@ atraccionesApp.controller('atraccionesAddEditController',
             $scope.initAdd = function() {
                 $scope.title = "Agregar atracción";
                 $scope.submitButton = "Agregar";
+                $scope.createMap();
             };
 
             $scope.initEdit = function() {
@@ -258,6 +259,7 @@ atraccionesApp.controller('atraccionesAddEditController',
                         $scope.loadAtraccionImagenes(data);
                         $scope.loadAtraccionVideos(data);
                         $scope.loadAtraccionAudios(data);
+                        $scope.createMap();
                     }
                 });
             };
@@ -422,8 +424,6 @@ atraccionesApp.controller('atraccionesAddEditController',
                 } else {
                     $scope.initAdd();
                 }
-                $scope.createMap();
-
             };
 
             $scope.createMap = function() {
