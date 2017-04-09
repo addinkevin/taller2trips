@@ -34,28 +34,34 @@ ciudadesApp.controller('ciudadesAddController',
             };
 
             $scope.validateCiudad = function(ciudad) {
-                var ok = true;
+                var validateList = [
+                    {
+                        parametro : 'nombre',
+                        msg: "Debes especificar el nombre de la ciudad!"
+                    },
+                    {
+                        parametro: 'pais',
+                        msg: "Debes especificar el país de la ciudad"
 
-                if (!ciudad.nombre) {
-                    $scope.alert.msg = "Debes especificar el nombre de la ciudad!";
-                    return false;
+                    },
+                    {
+                        parametro: 'descripcion',
+                        msg: "Debes especificar la descripción de la ciudad"
+                    },
+                    {
+                        parametro: 'imgFile',
+                        msg: "Debes subir una imagen!"
+                    }
+                ];
+
+                for (var i = 0; i < validateList.length; i++) {
+                    var parametro = validateList[i].parametro;
+                    var msg = validateList[i].msg;
+                    if (!ciudad[parametro]) {
+                        $scope.alert.msg = msg;
+                        return false;
+                    }
                 }
-
-                if (!ciudad.pais) {
-                    $scope.alert.msg = "Debes especificar el país de la ciudad";
-                    return false;
-                }
-
-                if (!ciudad.descripcion) {
-                    $scope.alert.msg = "Debes especificar la descripción de la ciudad";
-                    return false;
-                }
-
-                if (!ciudad.imgFile) {
-                    $scope.alert.msg = "Debes subir una imagen!";
-                    return false;
-                }
-
                 return true;
             };
 
@@ -122,25 +128,31 @@ ciudadesApp.controller('ciudadesEditController',
             };
 
             $scope.validateCiudad = function(ciudad) {
-                var ok = true;
+                var validateList = [
+                    {
+                        parametro : 'nombre',
+                        msg: "Debes especificar el nombre de la ciudad!"
+                    },
+                    {
+                        parametro: 'pais',
+                        msg: "Debes especificar el país de la ciudad"
 
-                if (!ciudad.nombre) {
-                    $scope.alert.msg = "Debes especificar el nombre de la ciudad!";
-                    return false;
+                    },
+                    {
+                        parametro: 'descripcion',
+                        msg: "Debes especificar la descripción de la ciudad"
+                    }
+                ];
+
+                for (var i = 0; i < validateList.length; i++) {
+                    var parametro = validateList[i].parametro;
+                    var msg = validateList[i].msg;
+                    if (!ciudad[parametro]) {
+                        $scope.alert.msg = msg;
+                        return false;
+                    }
                 }
-
-                if (!ciudad.pais) {
-                    $scope.alert.msg = "Debes especificar el país de la ciudad";
-                    return false;
-                }
-
-                if (!ciudad.descripcion) {
-                    $scope.alert.msg = "Debes especificar la descripción de la ciudad";
-                    return false;
-                }
-
                 return true;
-
             };
 
             $scope.submitEditCiudad = function() {
