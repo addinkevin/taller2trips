@@ -16,8 +16,6 @@ import com.google.android.gms.maps.model.Marker;
 
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class MapInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {

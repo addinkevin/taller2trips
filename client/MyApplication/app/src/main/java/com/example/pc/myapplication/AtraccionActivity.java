@@ -42,6 +42,7 @@ import com.example.pc.myapplication.application.TripTP;
 import com.example.pc.myapplication.carruselTools.CarruselPagerAdapter;
 import com.example.pc.myapplication.ciudadesTools.Atraccion;
 import com.example.pc.myapplication.commonfunctions.Consts;
+import com.example.pc.myapplication.mapTools.MapInfoWindowAdapter;
 import com.example.pc.myapplication.mediaPlayers.AudioPlayer;
 import com.example.pc.myapplication.mediaPlayers.PlayPauseListener;
 import com.example.pc.myapplication.mediaPlayers.VideoPlayer;
@@ -191,6 +192,7 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
     @Override
     public void onMapReady(GoogleMap map) {
         this.map = map;
+        map.setInfoWindowAdapter(new MapInfoWindowAdapter(getLayoutInflater()));
         if (atraccion != null) {
            setMapContent();
         }
@@ -200,7 +202,12 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
     private void setMapContent() {
         LatLng latLng = new LatLng(atraccion.latitud, atraccion.longitud);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));
-        map.addMarker(new MarkerOptions().position(latLng).flat(true));
+        map.addMarker(new MarkerOptions()
+                .title(atraccion.nombre)
+                .snippet(atraccion.descripcion)
+                .position(latLng)
+                .flat(true))
+                .setTag(0);
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12.0f));
     }
 
@@ -447,6 +454,8 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
         mapAct.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         mapAct.putExtra(Consts.LATITUD, atraccion.latitud);
         mapAct.putExtra(Consts.LONGITUD, atraccion.longitud);
+        mapAct.putExtra(Consts.NOMBRE, atraccion.nombre);
+        mapAct.putExtra(Consts.DESCRIPCION, atraccion.descripcion);
         this.startActivity(mapAct);
     }
 

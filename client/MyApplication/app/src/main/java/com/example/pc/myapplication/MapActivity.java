@@ -7,6 +7,7 @@ import android.widget.LinearLayout;
 
 import com.example.pc.myapplication.InternetTools.ReadMapTask;
 import com.example.pc.myapplication.commonfunctions.Consts;
+import com.example.pc.myapplication.mapTools.MapInfoWindowAdapter;
 import com.example.pc.myapplication.singletons.GpsSingleton;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -20,6 +21,8 @@ public class MapActivity extends Activity implements OnMapReadyCallback {
     private float latitud;
     private float longitud;
     private LinearLayout mapLN;
+    private String descripcion;
+    private String nombre;
 
     private void hideClockBateryBar(){
         View decorView = getWindow().getDecorView();
@@ -41,6 +44,8 @@ public class MapActivity extends Activity implements OnMapReadyCallback {
 
         latitud = getIntent().getFloatExtra(Consts.LATITUD,0f);
         longitud = getIntent().getFloatExtra(Consts.LONGITUD,0f);
+        descripcion = getIntent().getStringExtra(Consts.DESCRIPCION);
+        nombre = getIntent().getStringExtra(Consts.NOMBRE);
     }
 
 
@@ -73,8 +78,14 @@ public class MapActivity extends Activity implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         LatLng latLng = new LatLng(latitud, longitud);
+        googleMap.setInfoWindowAdapter(new MapInfoWindowAdapter(getLayoutInflater()));
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));
-        googleMap.addMarker(new MarkerOptions().position(latLng).flat(true));
+        googleMap.addMarker(new MarkerOptions()
+                .title(nombre)
+                .snippet(descripcion)
+                .position(latLng)
+                .flat(true))
+                .setTag(0);
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12.0f));
 
         String url = getMapsApiDirectionsUrl(GpsSingleton.getInstance().getPos(), latLng);
