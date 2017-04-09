@@ -32,11 +32,13 @@ public class Atraccion {
     public List<Bitmap> fotosBitmap = new ArrayList<>();
     public float latitud;
     public float longitud;
+    public String moneda;
 
     public Atraccion(JSONObject jsonO) throws JSONException {
         this._id = jsonO.getString(Consts._ID);
         this.nombre = jsonO.getString(Consts.NOMBRE);
         this.descripcion = jsonO.getString(Consts.DESCRIPCION);
+        this.moneda = jsonO.getString(Consts.MONEDA);
         this.costo = (float) jsonO.getDouble(Consts.COSTO);
         this.rating = (float) jsonO.getDouble(Consts.RATING);
 

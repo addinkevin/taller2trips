@@ -48,7 +48,8 @@ public class Consts {
     public static final String DESCRIPCION = "descripcion";
     public static final String _ID = "_id";
     public static final String PAIS = "pais";
-    public static final String COSTO = "costo";
+    public static final String COSTO = "costo_monto";
+    public static final String MONEDA = "costo_moneda";
     public static final String RATING = "rating";
     public static final String CANT_VOTOS = "cantidad_votos";
     public static final String HS_APERTURA = "hora_apertura";
@@ -78,9 +79,5 @@ public class Consts {
 
     public static final int CANT_STARS = 5;
     public static final int DEF_RADIO = 25;
-
-
-
-
 
 }

@@ -20,6 +20,7 @@
     <string name="pais">País:</string>
     <string name="clasificacion">Clasificación: </string>
     <string name="costo">Costo: </string>
+    <string name="moneda">Moneda: </string>
     <string name="apertura">Hora apertura: </string>
     <string name="cierre">Hora cierre: </string>
     <string name="duracion">Duración: </string>
