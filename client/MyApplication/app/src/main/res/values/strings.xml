@@ -4,8 +4,10 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="buscar_cercanos">Near by</string>
+    <string name="buscar_cercanos">Nearby</string>
+    <string name="cercanoTitle">Nearby attractions</string>
     <string name="atracciones">Attractions</string>
+    <string name="atraccion">Attraction</string>
     <string name="recorridos">Tours</string>
     <string name="ciudades">Cities</string>
     <string name="ubicarme">Where am I?</string>
@@ -25,6 +27,7 @@
     <string name="votos">Votes: </string>
     <string name="logout">Logout</string>
     <string name="config">Configuration</string>
+    <string name="radio">Search radius</string>
     <string name="noPlano">There is no plan to show.</string>
     <string name="noAudio">There is no audio to show.</string>
     <string name="noVideo">There is no video to show.</string>

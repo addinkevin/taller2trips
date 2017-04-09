@@ -9,9 +9,14 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.view.View;
 import android.widget.Toast;
 
+import com.example.pc.myapplication.InternetTools.InfoClient;
+import com.example.pc.myapplication.InternetTools.InternetClient;
 import com.example.pc.myapplication.R;
+import com.example.pc.myapplication.application.TripTP;
+import com.example.pc.myapplication.commonfunctions.Consts;
 import com.example.pc.myapplication.singletons.GpsSingleton;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -29,11 +34,18 @@ public class LocationGPSListener implements LocationListener {
     private final Context ctx;
     private static final String LOCATION_TAG = "LocationGPSListener";
     private GoogleMap map;
+    private String urlToAtr;
+    private Integer radio;
+    private View view;
     private MarkerOptions marker = null;
+    private boolean firstLocation = true;
 
-    public LocationGPSListener(Context ctx, GoogleMap map) {
+    public LocationGPSListener(Context ctx, GoogleMap map, String urlToAtr, Integer radio, View view) {
         this.ctx = ctx;
         this.map = map;
+        this.urlToAtr = urlToAtr;
+        this.radio = radio;
+        this.view = view;
     }
 
     @Override
@@ -42,7 +54,7 @@ public class LocationGPSListener implements LocationListener {
         GpsSingleton.getInstance().setPos(position);
 
         if (marker == null) {
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 13));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(position, getZoomLevel(radio)));
             marker = new MarkerOptions()
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_simple))
                     .position(position)
@@ -54,20 +66,23 @@ public class LocationGPSListener implements LocationListener {
                     .rotation(location.getBearing()-45);
         }
 
-        Geocoder gcd = new Geocoder(ctx, Locale.getDefault());
-        List<Address> addresses = null;
-        String ciudad = null;
-        try {
-            addresses = gcd.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-            if (addresses.size() > 0) {
-                ciudad = addresses.get(0).getLocality();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (firstLocation) {
+            firstLocation = false;
+            urlToAtr = urlToAtr + "?" + Consts.LATITUD + "=" + position.latitude +
+                    "&" + Consts.LONGITUD + "=" + position.longitude +
+                    "&" + Consts.RADIO + "=" + radio;
+            InternetClient client = new InfoClient(ctx, view,
+                    Consts.GET_ATR_CERC, urlToAtr, null, Consts.GET, null, true);
+            client.runInBackground();
         }
-        System.out.println(location.getLongitude() + " " + location.getLatitude());
 
-        Toast.makeText(ctx, location.getLongitude() + " " + location.getLatitude() + " "+ ciudad, Toast.LENGTH_LONG).show();
+    }
+
+    public int getZoomLevel(int radio) {
+
+        double scale = radio*1000 / 500;
+
+        return (int) (16 - Math.log(scale) / Math.log(2));
     }
 
     @Override

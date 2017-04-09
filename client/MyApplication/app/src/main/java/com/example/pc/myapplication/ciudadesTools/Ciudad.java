@@ -44,7 +44,7 @@ public class Ciudad implements Parcelable {
     };
 
     public String toString() {
-        return nombre;
+        return nombre + " (" + pais + ")";
     }
 
     @Override

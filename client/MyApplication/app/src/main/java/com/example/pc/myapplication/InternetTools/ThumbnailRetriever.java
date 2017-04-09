@@ -33,6 +33,7 @@ public class ThumbnailRetriever extends AsyncTask<String, Void, Integer> {
         boolean success = true;
         try {
             mediaMetadataRetriever = new MediaMetadataRetriever();
+
             if (Build.VERSION.SDK_INT >= 14)
                 mediaMetadataRetriever.setDataSource(videoPath, new HashMap<String, String>());
             else

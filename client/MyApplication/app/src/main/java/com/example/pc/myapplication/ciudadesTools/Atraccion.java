@@ -27,12 +27,9 @@ public class Atraccion {
     public String horaCierre;
     public float duracion;
     public String clasificacion;
-    public String planoPath;
     public String idCiudad;
     public List<String> fotosPath = new ArrayList<>();
     public List<Bitmap> fotosBitmap = new ArrayList<>();
-    public String videoPath;
-    public List<Audio> audios = new ArrayList<>();
     public float latitud;
     public float longitud;
 

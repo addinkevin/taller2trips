@@ -2,6 +2,7 @@ package com.example.pc.myapplication;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -10,24 +11,41 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 
+import com.example.pc.myapplication.InternetTools.InfoClient;
+import com.example.pc.myapplication.InternetTools.InternetClient;
+import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAtrNearInMap;
+import com.example.pc.myapplication.application.TripTP;
+import com.example.pc.myapplication.ciudadesTools.Atraccion;
+import com.example.pc.myapplication.commonfunctions.Consts;
+import com.example.pc.myapplication.mapTools.MapInfoWindowAdapter;
 import com.example.pc.myapplication.services.LocationGPSListener;
+import com.example.pc.myapplication.singletons.GpsSingleton;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity  implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
 
     private LocationManager locationManager;
     private LocationListener listener;
+    private ReceiverOnAtrNearInMap onArtNearInMap;
+    private List<Atraccion> atraccionItems;
 
     private Toolbar toolbar;
+    private View view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +57,10 @@ public class MainActivity extends AppCompatActivity  implements OnMapReadyCallba
         toolbar = (Toolbar) findViewById(R.id.include);
         toolbar.setTitle("Taller2Trips");
         setSupportActionBar(toolbar);
+
+        view = findViewById(R.id.mainLayout);
+        atraccionItems = new ArrayList<>();
+        onArtNearInMap = new ReceiverOnAtrNearInMap(atraccionItems);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -78,9 +100,25 @@ public class MainActivity extends AppCompatActivity  implements OnMapReadyCallba
         }
     }
 
+    public void onStart() {
+        LocalBroadcastManager.getInstance(this).registerReceiver(onArtNearInMap,
+                new IntentFilter(Consts.GET_ATR_CERC));
+        super.onStart();
+
+    }
+
+    public void onStop() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(onArtNearInMap);
+        super.onStop();
+    }
+
     @Override
     public void onMapReady(GoogleMap map) {
-        listener = new LocationGPSListener(this,map);
+        onArtNearInMap.setMap(map);
+        map.setInfoWindowAdapter(new MapInfoWindowAdapter(getLayoutInflater()));
+        TripTP tripTP = (TripTP) getApplication();
+        String url = tripTP.getUrl() + Consts.ATRACC + Consts.CERCANIA;
+        listener = new LocationGPSListener(this,map, url, tripTP.getRadio(), view);
         locationConfig();
 
     }
@@ -99,6 +137,14 @@ public class MainActivity extends AppCompatActivity  implements OnMapReadyCallba
             Intent config = new Intent(this, ConfigActivity.class);
             config.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(config);
+        } else if (id == R.id.buscar_cercanos) {
+            Intent buscaAct = new Intent(this, BuscaAtrCercaActivity.class);
+            buscaAct.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(buscaAct);
+        } else if (id == R.id.atracciones) {
+            Intent atraccionesAct = new Intent(this, AtraccionesActivity.class);
+            atraccionesAct.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(atraccionesAct);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -30,6 +30,10 @@ public class Consts {
     public static final String GET_ATR_PLANO = "PLANOATR"; //plano
     public static final String GET_ATR_VID = "VIDATR"; //cuando hace click en video
     public static final String GET_VID_THU = "VIDTHU"; //cuando hace click en video
+    public static final String GET_ATRS = "ATRS";
+    public static final String GET_CHECK_VID = "VID";
+    public static final String GET_CHECK_AUD = "AUD";
+    public static final String GET_ATR_CERC = "CERC";
 
     //path
     public static final String CIUDAD = "/ciudad";
@@ -37,6 +41,7 @@ public class Consts {
     public static final String AUDIO = "/audio";
     public static final String VIDEO = "/video";
     public static final String ATRACC = "/atraccion";
+    public static final String CERCANIA = "/cercania";
 
     //Json Keys
     public static final String NOMBRE = "nombre";
@@ -56,9 +61,9 @@ public class Consts {
     public static final String VIDEO_K = "video";
     public static final String AUDIOS = "audios";
     public static final String AUDIO_K = "AUDIO_K";
-    public static final String IDIOMA = "idioma";
-    public static final String LATITUD = "latitud";
-    public static final String LONGITUD = "longitud";
+    public static final String IDIOMA = "idioma"; //tmb se usa como querry
+    public static final String LATITUD = "latitud"; //tmb se usa como querry
+    public static final String LONGITUD = "longitud";//tmb se usa como querry
 
     //querry param
     public static final String FILENAME = "filename";
@@ -66,11 +71,13 @@ public class Consts {
     //sharedPreferences keys
     public static final String URL = "url";
     public static final String POS = "pos";
+    public static final String RADIO = "radio";
 
     //savedIntance tags
     public static final String CITY = "ciudad";
 
     public static final int CANT_STARS = 5;
+    public static final int DEF_RADIO = 25;
 
 
 

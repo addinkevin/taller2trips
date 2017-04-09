@@ -45,9 +45,9 @@ public class AtraccionesFragment extends Fragment implements AdapterView.OnItemC
 
         if ( onCiudadAtracc == null) {
             atraccionItems = new ArrayList<>();
-            atraccionesAdp = new AtraccionesListAdp(this,atraccionItems);
+            atraccionesAdp = new AtraccionesListAdp(getActivity(),atraccionItems);
 
-            onCiudadAtracc = new ReceiverOnCiudadAtracc(this, myFragmentView, atraccionItems);
+            onCiudadAtracc = new ReceiverOnCiudadAtracc(getActivity(), myFragmentView, atraccionItems);
             onAtraccImg = new ReceiverOnAtraccImg(atraccionItems,atraccionesAdp);
 
             String url = ((TripTP)getActivity().getApplication()).getUrl() + Consts.ATRACC + "?" + Consts.ID_CIUDAD + "=" + ciudad._id;
@@ -56,7 +56,7 @@ public class AtraccionesFragment extends Fragment implements AdapterView.OnItemC
                     Consts.GET_CITY_ATR, url, null, Consts.GET, null, true);
             client.runInBackground();
         } else {
-            atraccionesAdp = new AtraccionesListAdp(this, atraccionItems);
+            atraccionesAdp = new AtraccionesListAdp(getActivity(), atraccionItems);
         }
         ListView atraccList = (ListView) myFragmentView.findViewById(R.id.atraccList);
         atraccList.setAdapter(atraccionesAdp);

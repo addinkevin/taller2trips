@@ -1,6 +1,7 @@
 package com.example.pc.myapplication;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -25,6 +26,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +35,8 @@ import com.example.pc.myapplication.InternetTools.InternetClient;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAtraccion;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAtraccionImgs;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAtraccionPlano;
+import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAudCheck;
+import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnVidCheck;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnVidThumbnail;
 import com.example.pc.myapplication.application.TripTP;
 import com.example.pc.myapplication.carruselTools.CarruselPagerAdapter;
@@ -51,6 +55,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Locale;
 
@@ -61,12 +66,15 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
                                                         View.OnTouchListener,
                                                         MediaPlayer.OnPreparedListener {
 
-    private static final long DOUBLE_PRESS_INTERVAL = 250;
+    private static final long DOUBLE_PRESS_INTERVAL = 250;//double tap
+
     private Toolbar toolbar;
     private ReceiverOnAtraccion onAtraccion;
     private ReceiverOnAtraccionImgs onAtraccionImgs;
     private ReceiverOnVidThumbnail onAtrVidThumb;
     private ReceiverOnAtraccionPlano onAtrPlano;
+    private ReceiverOnAudCheck onAudCheck;
+    private ReceiverOnVidCheck onVidCheck;
 
     private VideoPlayer videoPlayerView;
     private MediaPlayer audioPlayer;
@@ -99,13 +107,13 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_atraccion);
         toolbar = (Toolbar) findViewById(R.id.include3);
-        toolbar.setTitle(getString(R.string.ciudades));
+        toolbar.setTitle(R.string.atraccion);
         setSupportActionBar(toolbar);
 
         ImagesSingleton.getInstance().clear();
 
         view = findViewById(R.id.masterAtraccion);
-        view.setVisibility(View.INVISIBLE);
+
         if ( _id == null || _id.isEmpty()) {
             _id = getIntent().getStringExtra(Consts._ID);
         }
@@ -120,10 +128,14 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
         videoThumb = (ImageView) findViewById(R.id.videoIMG) ;
         pager = (ViewPager) findViewById(R.id.myviewpager);
 
+        String urlConst = ((TripTP)getApplication()).getUrl() + Consts.ATRACC + "/" + _id;
+
         onAtraccion = new ReceiverOnAtraccion(this, view);
         onAtraccionImgs = new ReceiverOnAtraccionImgs(this, view, adapter, pager);
         onAtrVidThumb = new ReceiverOnVidThumbnail(view,heightVideo,weigthVideo, this);
         onAtrPlano = new ReceiverOnAtraccionPlano(view);
+        onVidCheck = new ReceiverOnVidCheck(view, urlConst, this);
+        onAudCheck = new ReceiverOnAudCheck(view);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map2);
         mapFragment.getMapAsync(this);
@@ -155,11 +167,24 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
         progressDialog.setCancelable(true);
         progressDialog.setOnCancelListener(this);
 
-        String url = ((TripTP)getApplication()).getUrl() + Consts.ATRACC + "/" + _id;
-
         InternetClient client = new InfoClient(getApplicationContext(), view,
-                Consts.GET_ATR, url, null, Consts.GET, null, true);
+                Consts.GET_ATR, urlConst, null, Consts.GET, null, true);
         client.runInBackground();
+
+        String urlVideo = urlConst + Consts.VIDEO;
+        InternetClient clientVid = new InfoClient(getApplicationContext(), view,
+                Consts.GET_CHECK_VID, urlVideo, null, Consts.GET, null, false);
+        clientVid.runInBackground();
+
+        try {
+            String idioma = URLEncoder.encode(Locale.getDefault().getDisplayLanguage().toLowerCase(), "utf-8");
+            String urlAudio = urlConst + Consts.AUDIO + "?" + Consts.IDIOMA + "=" + idioma;
+            InternetClient clientAud = new InfoClient(getApplicationContext(), view,
+                    Consts.GET_CHECK_AUD, urlAudio, null, Consts.GET, null, true);
+            clientAud.runInBackground();
+        } catch (UnsupportedEncodingException e) {
+
+        }
 
     }
 
@@ -182,6 +207,10 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
     public void onStart() {
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(onAtraccion,
                 new IntentFilter(Consts.GET_ATR));
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(onVidCheck,
+                new IntentFilter(Consts.GET_CHECK_VID));
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(onAudCheck,
+                new IntentFilter(Consts.GET_CHECK_AUD));
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(onAtraccionImgs,
                 new IntentFilter(Consts.GET_ATR_IMG_S));
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(onAtrVidThumb,
@@ -194,6 +223,8 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
 
     public void onStop() {
         LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(onAtraccion);
+        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(onVidCheck);
+        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(onAudCheck);
         LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(onAtraccionImgs);
         LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(onAtrVidThumb);
         LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(onAtrPlano);
@@ -339,6 +370,9 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
 
         videoPlayerView.setOnTouchListener(this);
         view.setVisibility(View.VISIBLE);
+
+        ScrollView scroll = (ScrollView) view.findViewById(R.id.vertScrollView);
+        scroll.scrollTo(0,0);
     }
 
     @Override
@@ -459,6 +493,7 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
 
     public void audioClick(View view) {
         if (!audioPlayer.isPlaying()) {
+            findViewById(R.id.controllerHolder).setVisibility(View.VISIBLE);
             stopVideo();
             try {
                 audioPlayer.reset();
