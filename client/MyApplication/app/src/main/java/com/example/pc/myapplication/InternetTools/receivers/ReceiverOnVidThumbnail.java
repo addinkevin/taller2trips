@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.pc.myapplication.R;
@@ -29,6 +30,7 @@ public class ReceiverOnVidThumbnail extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         boolean success = intent.getBooleanExtra(Consts.SUCESS,false);
         View relative = view.findViewById(R.id.relativeVideo);
+        TextView noVid = (TextView) view.findViewById(R.id.noVideo);
         if (success) {
             Bitmap thumbnailVideo = intent.getParcelableExtra(Consts.IMG_OUT);
             String height = intent.getStringExtra(Consts.IMG_H);
@@ -40,8 +42,12 @@ public class ReceiverOnVidThumbnail extends BroadcastReceiver {
                 weigthVideo.append(weight);
             } else {
                 relative.setVisibility(View.GONE);
+                noVid.setVisibility(View.VISIBLE);
                 //Toast.makeText(this.context,"Error Video sin metadata.", Toast.LENGTH_LONG).show();
             }
+        } else {
+            relative.setVisibility(View.GONE);
+            noVid.setVisibility(View.VISIBLE);
         }
     }
 }

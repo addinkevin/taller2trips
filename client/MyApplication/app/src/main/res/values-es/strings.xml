@@ -5,7 +5,9 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="buscar_cercanos">Buscar atracciones cercanas</string>
+    <string name="cercanoTitle">Atracciones cercanas</string>
     <string name="atracciones">Atracciones</string>
+    <string name="atraccion">Atracción</string>
     <string name="recorridos">Recorridos</string>
     <string name="ciudades">Ciudades</string>
     <string name="ubicarme">Ubicarme</string>
@@ -18,6 +20,7 @@
     <string name="pais">País:</string>
     <string name="clasificacion">Clasificación: </string>
     <string name="costo">Costo: </string>
+    <string name="moneda">Moneda: </string>
     <string name="apertura">Hora apertura: </string>
     <string name="cierre">Hora cierre: </string>
     <string name="duracion">Duración: </string>
@@ -25,6 +28,7 @@
     <string name="votos">Votos: </string>
     <string name="logout">Salir</string>
     <string name="config">Configuración</string>
+    <string name="radio">Radio de búsqueda</string>
     <string name="noPlano">No hay ningún plano para mostrar.</string>
     <string name="noAudio">No hay ningún audio para escuchar.</string>
     <string name="noVideo">No hay ningún video para ver.</string>

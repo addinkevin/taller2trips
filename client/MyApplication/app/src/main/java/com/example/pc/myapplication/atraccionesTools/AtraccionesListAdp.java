@@ -1,5 +1,6 @@
 package com.example.pc.myapplication.atraccionesTools;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -16,10 +17,10 @@ import java.util.List;
 
 public class AtraccionesListAdp extends BaseAdapter {
 
-    private final Fragment context;
+    private final Activity context;
     List<Atraccion> atraccionItems; /**< Lista de todos los items del ChatList*/
 
-    public AtraccionesListAdp(Fragment context, List<Atraccion> atraccionItems) {
+    public AtraccionesListAdp(Activity context, List<Atraccion> atraccionItems) {
         this.context = context;
         this.atraccionItems = atraccionItems;
 
@@ -31,6 +32,7 @@ public class AtraccionesListAdp extends BaseAdapter {
     }
 
     private class ViewHolder {
+        int position = -1;
         ImageView atraccionPic;
         TextView atraccionName;
         boolean setted = false;
@@ -54,19 +56,21 @@ public class AtraccionesListAdp extends BaseAdapter {
     @Override
     public View getView(int position, View view, ViewGroup parent) {
         ViewHolder holder;
-        if (view == null || (view.getTag() != null && !((ViewHolder) view.getTag()).setted)) {
-            LayoutInflater inflater = context.getActivity().getLayoutInflater();
+        if (view == null || (view.getTag() != null &&
+                ( !((ViewHolder) view.getTag()).setted) || ((ViewHolder) view.getTag()).position != position)) {
+            LayoutInflater inflater = context.getLayoutInflater();
             view = inflater.inflate(R.layout.atraccion_item, null, true);
             holder = new ViewHolder();
             holder.atraccionName = (TextView) view.findViewById(R.id.textView2);
             holder.atraccionPic = (ImageView) view.findViewById(R.id.imageView);
-            view.setTag(holder);
             Atraccion rowPos = atraccionItems.get(position);
             if (!rowPos.fotosBitmap.isEmpty()) {
                 holder.setted =true;
                 holder.atraccionPic.setImageBitmap(rowPos.fotosBitmap.get(0));
             }
+            holder.position = position;
             holder.atraccionName.setText(rowPos.nombre);
+            view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
         }

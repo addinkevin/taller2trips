@@ -1,10 +1,8 @@
 package com.example.pc.myapplication.InternetTools.receivers;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.view.View;
 import android.widget.Toast;
 
 import com.example.pc.myapplication.InternetTools.ImageClient;
@@ -12,27 +10,33 @@ import com.example.pc.myapplication.InternetTools.InternetClient;
 import com.example.pc.myapplication.application.TripTP;
 import com.example.pc.myapplication.ciudadesTools.Atraccion;
 import com.example.pc.myapplication.commonfunctions.Consts;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.List;
 
-public class ReceiverOnCiudadAtracc extends BroadcastReceiver {
-    private final Activity act;
-    private final View view;
-    private List<Atraccion> atraccionItems;
+/**
+ * Created by PC on 09/04/2017.
+ */
 
-    public ReceiverOnCiudadAtracc(Activity atraccionesFragment, View view, List<Atraccion> atraccionItems) {
-        this.act = atraccionesFragment;
-        this.view = view;
+public class ReceiverOnAtrNearInMap extends BroadcastReceiver {
+
+
+    private List<Atraccion> atraccionItems;
+    private GoogleMap map;
+
+    public ReceiverOnAtrNearInMap(List<Atraccion> atraccionItems) {
         this.atraccionItems = atraccionItems;
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
         boolean succes = intent.getBooleanExtra(Consts.SUCESS, false);
-        if (succes) {
+        if (succes && map != null) {
             String jsonOut = intent.getStringExtra(Consts.JSON_OUT);
             if (jsonOut != null) {
                 try {
@@ -40,18 +44,14 @@ public class ReceiverOnCiudadAtracc extends BroadcastReceiver {
                     for (int i = 0; i < jsonA.length(); i++) {
                         Atraccion atraccion = new Atraccion(jsonA.getJSONObject(i));
                         atraccionItems.add(atraccion);
+                        LatLng pos = new LatLng(atraccion.latitud,atraccion.longitud);
+                        map.addMarker(new MarkerOptions()
+                                .title(atraccion.nombre)
+                                .snippet(atraccion.descripcion)
+                                .position(pos)
+                                .flat(true))
+                                .setTag(i);
 
-                        String urlConst = ((TripTP) act.getApplication()).getUrl() + Consts.ATRACC + "/" + atraccion._id +
-                                Consts.IMAGEN + "?" + Consts.FILENAME + "=";
-
-                        if (!atraccion.fotosPath.isEmpty()) {
-                            String firstImg = atraccion.fotosPath.get(0); //primer imagen para mostrar
-                            String url = urlConst + firstImg;
-
-                            InternetClient client = new ImageClient(act, view,
-                                    Consts.GET_ATR_IMG, url, null, Consts.GET, null, true, i);
-                            client.runInBackground();
-                        }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -64,6 +64,9 @@ public class ReceiverOnCiudadAtracc extends BroadcastReceiver {
         } else {
             Toast.makeText(context,"Error Conexión", Toast.LENGTH_LONG).show();
         }
+    }
 
+    public void setMap(GoogleMap map) {
+        this.map = map;
     }
 }

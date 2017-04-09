@@ -23,13 +23,13 @@
             android:icon="@drawable/ic_favorite_black_24dp"
             android:title="@string/favoritos"/>
         <item
+            android:id="@+id/config"
+            android:icon="@drawable/ic_build_black_24dp"
+            android:title="@string/config"/>
+        <item
             android:id="@+id/logout"
             android:icon="@drawable/logout"
             android:title="@string/logout"/>
-        <item
-            android:id="@+id/config"
-            android:icon="@drawable/logout"
-            android:title="@string/config"/>
     </group>
 
 </menu>

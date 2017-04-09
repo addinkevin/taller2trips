@@ -44,18 +44,18 @@ public class ReceiverOnAtraccion extends BroadcastReceiver {
                     Atraccion atraccion = new Atraccion(new JSONObject(jsonOut));
                     atrAct.attachAtraccion(atraccion);
                     List fotos = atraccion.fotosPath;
+
                     TripTP app = ((TripTP) atrAct.getApplication());
+                    String urlConst = app.getUrl() + Consts.ATRACC + "/" + atraccion._id
+                            + Consts.IMAGEN + "?" + Consts.FILENAME + "=";
+
                     for(int i = 0; i < fotos.size(); i++) {
-                        String urlIMG = app.getUrl() + Consts.ATRACC + "/" + atraccion._id
-                                + Consts.IMAGEN + "?" + Consts.FILENAME + "=" + fotos.get(i);
-                        Log.i("IMGConn", "Comienza descarga imagen " + i);
+                        String urlIMG = urlConst  + fotos.get(i);
+
                         InternetClient client = new ImageClient(atrAct, view,
                                 Consts.GET_ATR_IMG_S, urlIMG, null, Consts.GET, null, true, -1);
                         client.runInBackground();
                     }
-
-                    String url = app.getUrl() + Consts.ATRACC + "/" + atraccion._id + Consts.VIDEO;
-                    new ThumbnailRetriever(Consts.GET_VID_THU, atrAct).execute(url);
 
                     String urlPlano = app.getUrl() + Consts.ATRACC + "/" + atraccion._id + Consts.PLANO;
                     Log.i("IMGConn", "Comienza descarga imagen Plano");
