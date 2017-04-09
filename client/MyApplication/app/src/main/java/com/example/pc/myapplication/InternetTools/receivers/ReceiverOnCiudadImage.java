@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.pc.myapplication.R;
-import com.example.pc.myapplication.ciudadTools.MainFragment;
 import com.example.pc.myapplication.ciudadesTools.Ciudad;
 import com.example.pc.myapplication.commonfunctions.Consts;
 

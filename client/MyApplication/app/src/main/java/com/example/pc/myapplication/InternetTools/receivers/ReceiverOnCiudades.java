@@ -10,7 +10,6 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 
-import com.example.pc.myapplication.AtraccionActivity;
 import com.example.pc.myapplication.CiudadActivity;
 import com.example.pc.myapplication.R;
 import com.example.pc.myapplication.ciudadesTools.Ciudad;
@@ -21,7 +20,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
-import java.util.concurrent.CompletionService;
 
 public class ReceiverOnCiudades extends BroadcastReceiver {
 

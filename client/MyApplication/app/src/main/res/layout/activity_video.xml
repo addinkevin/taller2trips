@@ -6,7 +6,7 @@
     tools:context="com.example.pc.myapplication.VideoActivity"
     android:background="@color/black">
 
-    <VideoView
+    <com.example.pc.myapplication.mediaPlayers.VideoPlayer
         android:id="@+id/videoView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

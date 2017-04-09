@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.pc.myapplication.commonfunctions.PathJSONParser;

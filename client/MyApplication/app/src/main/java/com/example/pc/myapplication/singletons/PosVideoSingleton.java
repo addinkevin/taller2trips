@@ -1,8 +1,5 @@
 package com.example.pc.myapplication.singletons;
 
-
-import java.nio.BufferOverflowException;
-
 public class PosVideoSingleton {
 
     private static PosVideoSingleton Singleton = null;
@@ -10,6 +7,8 @@ public class PosVideoSingleton {
     private int position = 0;
 
     private Boolean isPlaying = null;
+
+    private boolean haveToKeepPlaying = false;
 
     public static PosVideoSingleton getInstance() {
         if(Singleton == null)
@@ -42,5 +41,14 @@ public class PosVideoSingleton {
         position = 0;
         isPlaying = null;
         Singleton = null;
+        haveToKeepPlaying = false;
+    }
+
+    public void setHaveToKeepPlaying(boolean haveTo) {
+        haveToKeepPlaying = haveTo;
+    }
+
+    public boolean haveToKeepPlaying() {
+        return haveToKeepPlaying;
     }
 }

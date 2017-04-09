@@ -4,44 +4,43 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 import com.example.pc.myapplication.InternetTools.InfoClient;
 import com.example.pc.myapplication.InternetTools.InternetClient;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAtraccion;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAtraccionImgs;
-import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAtraccionVid;
+import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAtraccionPlano;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnVidThumbnail;
 import com.example.pc.myapplication.application.TripTP;
 import com.example.pc.myapplication.carruselTools.CarruselPagerAdapter;
 import com.example.pc.myapplication.ciudadesTools.Atraccion;
 import com.example.pc.myapplication.commonfunctions.Consts;
+import com.example.pc.myapplication.mediaPlayers.AudioPlayer;
+import com.example.pc.myapplication.mediaPlayers.PlayPauseListener;
+import com.example.pc.myapplication.mediaPlayers.VideoPlayer;
 import com.example.pc.myapplication.singletons.ImagesSingleton;
 import com.example.pc.myapplication.singletons.PosVideoSingleton;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -51,22 +50,34 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener, GoogleMap.OnMapClickListener, DialogInterface.OnCancelListener, View.OnTouchListener {
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.util.Locale;
+
+public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCallback,
+                                                        View.OnClickListener,
+                                                        GoogleMap.OnMapClickListener,
+                                                        DialogInterface.OnCancelListener,
+                                                        View.OnTouchListener,
+                                                        MediaPlayer.OnPreparedListener {
 
     private static final long DOUBLE_PRESS_INTERVAL = 250;
     private Toolbar toolbar;
     private ReceiverOnAtraccion onAtraccion;
     private ReceiverOnAtraccionImgs onAtraccionImgs;
-    private ReceiverOnAtraccionVid onAtraccionVid;
     private ReceiverOnVidThumbnail onAtrVidThumb;
+    private ReceiverOnAtraccionPlano onAtrPlano;
 
-    private VideoView videoView;
+    private VideoPlayer videoPlayerView;
+    private MediaPlayer audioPlayer;
     private ProgressDialog progressDialog;
-    private MediaController mediaControls;
+    private MediaController videoController;
+    private MediaController audioController;
+
+    private StringBuilder heightVideo;
+    private StringBuilder weigthVideo;
 
     public int PAGES = 1;
-    // You can choose a bigger number for LOOPS, but you know, nobody will fling
-    // more than 1000 times just in order to test your "infinite" ViewPager :D
     public final static int LOOPS = 1000;
     public int FIRST_PAGE = PAGES * LOOPS / 2;
 
@@ -81,8 +92,7 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
     private long lastPressTime;
     private String _id;
     private boolean toFullScreen;
-    private StringBuilder heightVideo;
-    private StringBuilder weigthVideo;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,30 +122,44 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
 
         onAtraccion = new ReceiverOnAtraccion(this, view);
         onAtraccionImgs = new ReceiverOnAtraccionImgs(this, view, adapter, pager);
-        onAtraccionVid = new ReceiverOnAtraccionVid(this);
-        onAtrVidThumb = new ReceiverOnVidThumbnail(videoThumb,heightVideo,weigthVideo, this);
+        onAtrVidThumb = new ReceiverOnVidThumbnail(view,heightVideo,weigthVideo, this);
+        onAtrPlano = new ReceiverOnAtraccionPlano(view);
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map2);
+        mapFragment.getMapAsync(this);
+
+        videoPlayerView = (VideoPlayer) findViewById(R.id.miniVideoView);
+        videoPlayerView.setPlayPauseListener(new PlayPauseListener() {
+            @Override
+            public void onPlay() {
+                stopAudio();
+            }
+
+            @Override
+            public void onPause() {}
+        });
+        videoBtn = (ImageView) findViewById(R.id.plBtn);
+
+        audioPlayer = new MediaPlayer();
+
+        if (videoController == null) {
+            videoController = new MediaController(this);
+        }
+
+        if (audioController == null) {
+            audioController = new MediaController(this);
+        }
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Por favor espere...");
+        progressDialog.setCancelable(true);
+        progressDialog.setOnCancelListener(this);
 
         String url = ((TripTP)getApplication()).getUrl() + Consts.ATRACC + "/" + _id;
 
         InternetClient client = new InfoClient(getApplicationContext(), view,
                 Consts.GET_ATR, url, null, Consts.GET, null, true);
         client.runInBackground();
-
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map2);
-        mapFragment.getMapAsync(this);
-
-        videoView = (VideoView) findViewById(R.id.miniVideoView);
-        videoBtn = (ImageView) findViewById(R.id.plBtn);
-
-        if (mediaControls == null) {
-            mediaControls = new MediaController(this);
-        }
-
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("no se que poner");
-        progressDialog.setMessage("cargando...");
-        progressDialog.setCancelable(true);
-        progressDialog.setOnCancelListener(this);
 
     }
 
@@ -156,24 +180,24 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     public void onStart() {
-        super.onStart();
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(onAtraccion,
                 new IntentFilter(Consts.GET_ATR));
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(onAtraccionImgs,
                 new IntentFilter(Consts.GET_ATR_IMG_S));
-        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(onAtraccionVid,
-                new IntentFilter(Consts.GET_ATR_VID));
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(onAtrVidThumb,
                 new IntentFilter(Consts.GET_VID_THU));
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(onAtrPlano,
+                new IntentFilter(Consts.GET_ATR_PLANO));
+        super.onStart();
 
     }
 
     public void onStop() {
-        super.onStop();
         LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(onAtraccion);
         LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(onAtraccionImgs);
-        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(onAtraccionVid);
         LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(onAtrVidThumb);
+        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(onAtrPlano);
+        super.onStop();
 
     }
 
@@ -188,9 +212,9 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
             });
         }
 
-        if (videoView != null && PosVideoSingleton.getInstance().isPlaying()) {
-            videoView.seekTo(PosVideoSingleton.getInstance().getPosition());
-            this.onClick(videoView);
+        if (videoPlayerView != null && PosVideoSingleton.getInstance().isPlaying()) {
+            videoPlayerView.seekTo(PosVideoSingleton.getInstance().getPosition());
+            this.onClick(videoPlayerView);
 
         }
 
@@ -200,36 +224,57 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        if (PosVideoSingleton.getInstance().isPlaying()) {
+            PosVideoSingleton.getInstance().setHaveToKeepPlaying(true);
+        } else {
+            PosVideoSingleton.getInstance().setHaveToKeepPlaying(false);
+        }
+        super.onConfigurationChanged(newConfig);
+    }
+
+    @Override
     public void onBackPressed() {
         ImagesSingleton.getInstance().clear();
         PosVideoSingleton.getInstance().clear();
+        stopAudio();
+        audioPlayer.release();
         super.onBackPressed();
     }
 
-    public void attachAtraccion(Atraccion atraccion) {
+    private void stopAudio() {
+        if (audioPlayer != null && audioPlayer.isPlaying()) {
+            audioPlayer.pause();
+        }
+        if (audioController != null && audioController.isShowing())
+            audioController.hide();
+    }
+
+    private void stopVideo() {
+        if (videoPlayerView != null && videoPlayerView.isPlaying()) {
+            videoPlayerView.pause();
+        }
+        if (videoController != null && videoController.isShowing())
+            videoController.hide();
+    }
+
+    public void attachAtraccion(final Atraccion atraccion) {
         this.atraccion = atraccion;
         if (map != null) {
             setMapContent();
         }
-        Log.i("IMGConn", "Set pagges");
+
         PAGES = atraccion.fotosPath.size();
-        Log.i("IMGConn", "notify pages");
         adapter.notifyDataSetChanged();
 
         pager.setAdapter(adapter);
         pager.setPageTransformer(false, adapter);
 
-        // Set current item to the middle page so we can fling to both
-        // directions left and right
         FIRST_PAGE = PAGES * LOOPS / 2;
         pager.setCurrentItem(FIRST_PAGE);
 
-        // Necessary or the pager will only have one extra page to show
-        // make this at least however many pages you can see
         pager.setOffscreenPageLimit(3);
 
-        // Set margin for pages as a negative number, so a part of next and
-        // previous pages will be showed
         pager.setPageMargin(-200);
 
         TextView atrName = (TextView) findViewById(R.id.nombreAtr);
@@ -257,8 +302,7 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
         atrVoteCount.setText(" "+  atraccion.cantVotos);
 
         TextView audioName = (TextView) findViewById(R.id.audio01);
-        audioName.setText(Html.fromHtml( "<a href=\"google.com\">" + atraccion.nombre + " 01" + "</a> "));
-        audioName.setMovementMethod(LinkMovementMethod.getInstance());
+        audioName.setText(Html.fromHtml( "<a href=>" + atraccion.nombre + " 01" + "</a> "));
 
         LinearLayout ln = (LinearLayout) findViewById(R.id.ratingIMG);
         ImageView stars = (ImageView) ln.findViewById(R.id.star);
@@ -293,23 +337,20 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
 
         videoBtn.setOnClickListener(this);
 
-        videoView.setOnTouchListener(this);
+        videoPlayerView.setOnTouchListener(this);
         view.setVisibility(View.VISIBLE);
-        ScrollView scroll = (ScrollView) view.findViewById(R.id.vertScrollView);
-        scroll.scrollTo(0,0);
-
     }
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         if(!toFullScreen)
-            PosVideoSingleton.getInstance().setPosition(videoView.getCurrentPosition());
+            PosVideoSingleton.getInstance().setPosition(videoPlayerView.getCurrentPosition());
 
         if ( _id != null && !_id.isEmpty())
             savedInstanceState.putString(Consts._ID, _id);
         if (PosVideoSingleton.getInstance().isPlaying()) {
-            videoView.pause();
+            videoPlayerView.pause();
         }
     }
 
@@ -318,7 +359,7 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
         super.onRestoreInstanceState(savedInstanceState);
         _id = savedInstanceState.getString(Consts._ID);
         if (PosVideoSingleton.getInstance().isPlaying()) {
-            videoView.seekTo(PosVideoSingleton.getInstance().getPosition());
+            videoPlayerView.seekTo(PosVideoSingleton.getInstance().getPosition());
         }
     }
 
@@ -336,28 +377,30 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
         videoThumb.setVisibility(View.INVISIBLE);
         videoBtn.setOnClickListener(null);
 
-        final String url = ((TripTP)getApplication()).getUrl() + Consts.ATRACC + "/" + _id + Consts.VIDEO;
+        String url = ((TripTP)getApplication()).getUrl() + Consts.ATRACC + "/" + _id + Consts.VIDEO;
 
         try {
-            videoView.setMediaController(mediaControls);
-            if(mediaControls != null){
-                mediaControls.setMediaPlayer(videoView);
+            videoPlayerView.setMediaController(videoController);
+            if(videoController != null){
+                videoController.setMediaPlayer(videoPlayerView);
+                videoController.setAnchorView(videoPlayerView);
             }
-            videoView.setVideoURI(Uri.parse(url));
+            videoPlayerView.setVideoURI(Uri.parse(url));
 
         } catch (Exception e) {
             Toast.makeText(this,"No se pudo inializar video", Toast.LENGTH_LONG).show();
         }
 
-        videoView.requestFocus();
-        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+        PosVideoSingleton.getInstance().setHaveToKeepPlaying(true);
+        videoPlayerView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             public void onPrepared(MediaPlayer mediaPlayer) {
                 if (!isProgressCanceled) {
                     progressDialog.dismiss();
-                    videoView.seekTo(PosVideoSingleton.getInstance().getPosition());
-
-                    PosVideoSingleton.getInstance().setPlaying(true);
-                    videoView.start();
+                    videoPlayerView.seekTo(PosVideoSingleton.getInstance().getPosition());
+                    if (PosVideoSingleton.getInstance().haveToKeepPlaying())
+                        videoPlayerView.start();
+                    else
+                        videoPlayerView.pause();
 
                 }
             }
@@ -397,8 +440,9 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
                 videoAct.putExtra(Consts.URL, url);
                 videoAct.putExtra(Consts.IMG_H, heightVideo.toString());
                 videoAct.putExtra(Consts.IMG_W, weigthVideo.toString());
-                PosVideoSingleton.getInstance().setPosition(videoView.getCurrentPosition());
-                videoView.pause();
+                PosVideoSingleton.getInstance().setPosition(videoPlayerView.getCurrentPosition());
+                PosVideoSingleton.getInstance().setHaveToKeepPlaying(videoPlayerView.isPlaying());
+                videoPlayerView.pause();
                 toFullScreen = true;
                 this.startActivity(videoAct);
                 mHasDoubleClicked = true;
@@ -410,6 +454,51 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
             return mHasDoubleClicked;
         } else {
             return false;
+        }
+    }
+
+    public void audioClick(View view) {
+        if (!audioPlayer.isPlaying()) {
+            stopVideo();
+            try {
+                audioPlayer.reset();
+                String idioma = URLEncoder.encode(Locale.getDefault().getDisplayLanguage().toLowerCase(), "utf-8");
+                String url = ((TripTP) getApplication()).getUrl() + Consts.ATRACC + "/" + atraccion._id + Consts.AUDIO + "?" + Consts.IDIOMA + "=" + idioma;
+                audioPlayer.setDataSource(url);
+                audioPlayer.prepareAsync();
+
+                audioPlayer.setOnPreparedListener(this);
+
+            } catch (IllegalArgumentException | IllegalStateException | IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void onPrepared(MediaPlayer mp) {
+        audioController.setMediaPlayer(new AudioPlayer(audioPlayer,audioController,videoPlayerView, videoController));
+        Handler handler = new Handler();
+        audioController.setAnchorView(findViewById(R.id.controllerHolder));
+        handler.post(new Runnable() {
+
+            public void run() {
+                audioController.setEnabled(true);
+                audioController.show(0);
+            }
+        });
+        audioPlayer.start();
+    }
+
+    public void showAudioController(View view) {
+        if (audioController != null) {
+            Handler handler = new Handler();
+            handler.post(new Runnable() {
+                public void run() {
+                    audioController.setEnabled(true);
+                    audioController.show(0);
+                }
+            });
         }
     }
 }

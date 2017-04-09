@@ -1,13 +1,10 @@
 package com.example.pc.myapplication.atraccionesTools;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,7 +12,6 @@ import android.widget.TextView;
 import com.example.pc.myapplication.R;
 import com.example.pc.myapplication.ciudadesTools.Atraccion;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AtraccionesListAdp extends BaseAdapter {

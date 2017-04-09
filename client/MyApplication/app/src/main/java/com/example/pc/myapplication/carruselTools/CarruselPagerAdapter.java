@@ -3,18 +3,13 @@ package com.example.pc.myapplication.carruselTools;
 import android.graphics.Bitmap;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
 
 import com.example.pc.myapplication.AtraccionActivity;
 import com.example.pc.myapplication.R;
 import com.example.pc.myapplication.singletons.ImagesSingleton;
-
-import java.util.ArrayList;
-import java.util.List;
 
     public class CarruselPagerAdapter extends FragmentStatePagerAdapter implements ViewPager.PageTransformer {
     public final static float BIG_SCALE = 1.0f;
