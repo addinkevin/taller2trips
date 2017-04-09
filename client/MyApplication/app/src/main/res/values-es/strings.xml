@@ -11,9 +11,10 @@
     <string name="ubicarme">Ubicarme</string>
     <string name="favoritos">Favoritos</string>
     <string name="informacion">Información</string>
-    <string name="videos">Videos</string>
+    <string name="videos">Video</string>
     <string name="fotos">Imágenes</string>
     <string name="audio">Audio</string>
+    <string name="plano">Plano</string>
     <string name="pais">País:</string>
     <string name="clasificacion">Clasificación: </string>
     <string name="costo">Costo: </string>
@@ -24,6 +25,10 @@
     <string name="votos">Votos: </string>
     <string name="logout">Salir</string>
     <string name="config">Configuración</string>
+    <string name="noPlano">No hay ningún plano para mostrar.</string>
+    <string name="noAudio">No hay ningún audio para escuchar.</string>
+    <string name="noVideo">No hay ningún video para ver.</string>
+
 
 
 </resources>

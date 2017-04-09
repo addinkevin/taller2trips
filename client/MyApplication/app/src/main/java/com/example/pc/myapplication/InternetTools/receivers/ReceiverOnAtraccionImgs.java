@@ -4,19 +4,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.media.Image;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.pc.myapplication.AtraccionActivity;
-import com.example.pc.myapplication.R;
 import com.example.pc.myapplication.carruselTools.CarruselPagerAdapter;
-import com.example.pc.myapplication.ciudadesTools.Atraccion;
 import com.example.pc.myapplication.commonfunctions.Consts;
-import com.example.pc.myapplication.singletons.ImagesSingleton;
 
 public class ReceiverOnAtraccionImgs extends BroadcastReceiver {
     private final AtraccionActivity atraccionActivity;

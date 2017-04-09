@@ -1,23 +1,15 @@
 package com.example.pc.myapplication;
 
 
-
-import android.content.IntentFilter;
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Window;
 
-
-import com.example.pc.myapplication.InternetTools.ImageClient;
-import com.example.pc.myapplication.InternetTools.InfoClient;
-import com.example.pc.myapplication.InternetTools.InternetClient;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnCiudadImage;
-import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnCiudades;
 import com.example.pc.myapplication.ciudadTools.TabsAdapter;
 import com.example.pc.myapplication.ciudadesTools.Ciudad;
 import com.example.pc.myapplication.commonfunctions.Consts;

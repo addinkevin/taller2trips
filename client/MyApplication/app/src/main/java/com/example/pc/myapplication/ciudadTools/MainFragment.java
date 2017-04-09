@@ -64,14 +64,14 @@ public class MainFragment extends Fragment {
     }
 
     public void onStart() {
-        super.onStart();
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(onCiudadImage,
                 new IntentFilter(Consts.GET_CITY_IMG));
+        super.onStart();
     }
 
     public void onStop() {
-        super.onStop();
         LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(onCiudadImage);
+        super.onStop();
     }
 
     public void setCiudad (Ciudad ciudad) {

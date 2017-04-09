@@ -1,11 +1,5 @@
 package com.example.pc.myapplication.commonfunctions;
 
-import android.graphics.Bitmap;
-import android.media.MediaMetadataRetriever;
-import android.os.Build;
-
-import java.util.HashMap;
-
 public class Consts {
 
     public static final String EXT = ".mp4";
@@ -33,6 +27,7 @@ public class Consts {
     public static final String GET_ATR = "_ATR";
     public static final String GET_ATR_IMG = "IMGATR";// una sola imagen, la primera
     public static final String GET_ATR_IMG_S = "IMGsATR"; //todas las imagenes
+    public static final String GET_ATR_PLANO = "PLANOATR"; //plano
     public static final String GET_ATR_VID = "VIDATR"; //cuando hace click en video
     public static final String GET_VID_THU = "VIDTHU"; //cuando hace click en video
 

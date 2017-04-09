@@ -1,31 +1,19 @@
 package com.example.pc.myapplication;
 
 import android.app.Activity;
-import android.graphics.Color;
-import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
 
 import com.example.pc.myapplication.InternetTools.ReadMapTask;
 import com.example.pc.myapplication.commonfunctions.Consts;
-import com.example.pc.myapplication.commonfunctions.PathJSONParser;
 import com.example.pc.myapplication.singletons.GpsSingleton;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
-
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class MapActivity extends Activity implements OnMapReadyCallback {
 

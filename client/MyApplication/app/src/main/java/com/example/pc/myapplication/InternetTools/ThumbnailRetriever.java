@@ -37,7 +37,7 @@ public class ThumbnailRetriever extends AsyncTask<String, Void, Integer> {
                 mediaMetadataRetriever.setDataSource(videoPath, new HashMap<String, String>());
             else
                 mediaMetadataRetriever.setDataSource(videoPath);
-            //   mediaMetadataRetriever.setDataSource(videoPath);
+
             bitmap = mediaMetadataRetriever.getFrameAtTime();
             height = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT);
             width = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH);
