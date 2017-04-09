@@ -11,13 +11,23 @@
     <string name="ubicarme">Where am I?</string>
     <string name="favoritos">Favorites</string>
     <string name="informacion">Info</string>
-    <string name="videos">Videos</string>
+    <string name="videos">Video</string>
     <string name="fotos">Pictures</string>
-    <string name="audio">Audios</string>
-    <string name="pais">Country:</string>
-
+    <string name="audio">Audio</string>
+    <string name="plano">Plan</string>
+    <string name="pais">Country: </string>
+    <string name="clasificacion">Classification: </string>
+    <string name="costo">Cost: </string>
+    <string name="apertura">Opening time: </string>
+    <string name="cierre">Close time: </string>
+    <string name="duracion">Duration: </string>
+    <string name="rating">Rating: </string>
+    <string name="votos">Votes: </string>
     <string name="logout">Logout</string>
     <string name="config">Configuration</string>
+    <string name="noPlano">There is no plan to show.</string>
+    <string name="noAudio">There is no audio to show.</string>
+    <string name="noVideo">There is no video to show.</string>
 
 
 </resources>

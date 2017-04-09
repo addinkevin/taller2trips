@@ -9,8 +9,6 @@
 
     </div>
 
-
-
     <div class="panel panel-default">
         <div class="panel-body">
             <form class="buscadorAtracciones">
@@ -27,7 +25,8 @@
         <div class="panel-body">
             <div class="row">
                 <div class="col-xs-6 col-md-3">
-                    <img ng-src="{{'/api/ciudad/'+atraccion.id_ciudad+'/imagen'}}" alt="" class="img-responsive"/>
+                    <img ng-src="{{atraccion.preview}}" alt="" class="img-responsive"/>
+                    <!-- <img ng-src="{{'/api/ciudad/'+atraccion.id_ciudad+'/imagen'}}" alt="" class="img-responsive"/> -->
                 </div>
                 <div class="col-xs-6 col-md-9">
                     <h3>{{atraccion.nombre}}</h3>
@@ -54,8 +53,8 @@
         </div>
         <div class="panel-footer">
             <div class="btn-group" role="group" aria-label="edit-remove">
-                <a disabled href="#/atracciones/edit/{{id}}" class="btn btn-default" role="button">Edit</a>
-                <button disabled type="button" class="btn btn-default" ng-click="deleteAtraccion(id)">Remove</button>
+                <a href="#/atracciones/edit/{{atraccion._id}}" class="btn btn-default" role="button">Edit</a>
+                <button type="button" class="btn btn-default" ng-click="deleteAtraccion(atraccion._id)">Remove</button>
             </div>
         </div>
     </div>

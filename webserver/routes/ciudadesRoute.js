@@ -2,6 +2,7 @@ var express = require('express');
 var constants = require('../config/constants');
 var router = express.Router();
 var Ciudad = require('../models/ciudades');
+var Atraccion = require('../models/atracciones');
 var almacen = require('../config/helperAlmacenamiento');
 
 router.get('/ciudad', function(req, res) {
@@ -31,8 +32,6 @@ router.get('/ciudad/:id_ciudad', function(req, res) {
 
 
 router.post('/ciudad', function(req, res) {
-    console.log(req.body);
-
     var ciudad = new Ciudad({
         nombre: req.body.nombre,
         descripcion: req.body.descripcion,
@@ -69,12 +68,23 @@ router.put('/ciudad', function(req, res) {
 });
 
 router.delete('/ciudad/:id_ciudad', function(req,res) {
-    Ciudad.remove({_id: req.params.id_ciudad}, function (err) {
+    // Valido que no tenga atracciones relacionadas
+    Atraccion.find({id_ciudad: req.params.id_ciudad}, function(err, atracciones) {
         if (err) {
-            res.send(err)
+            res.send(err);
+        }
+        else if (atracciones.length > 0) {
+            res.status(409).json({"msj": "No se puede eliminar la ciudad, tiene atracciones relacionadas"});
         }
         else {
-            res.status(200).json({"msj": "exito"});
+            Ciudad.remove({_id: req.params.id_ciudad}, function (err) {
+                if (err) {
+                    res.send(err)
+                }
+                else {
+                    res.status(200).json({"msj": "exito"});
+                }
+            });
         }
     });
 });

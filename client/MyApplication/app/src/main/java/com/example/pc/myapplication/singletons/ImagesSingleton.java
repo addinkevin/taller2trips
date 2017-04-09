@@ -42,4 +42,8 @@ public class ImagesSingleton {
     public void clear() {
         bitmaps.clear();
     }
+
+    public boolean isEmpty() {
+        return bitmaps.isEmpty();
+    }
 }

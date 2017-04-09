@@ -10,9 +10,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.pc.myapplication.AtraccionActivity;
-import com.example.pc.myapplication.R;
 import com.example.pc.myapplication.carruselTools.CarruselPagerAdapter;
-import com.example.pc.myapplication.ciudadesTools.Atraccion;
 import com.example.pc.myapplication.commonfunctions.Consts;
 
 public class ReceiverOnAtraccionImgs extends BroadcastReceiver {

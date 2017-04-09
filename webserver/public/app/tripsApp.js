@@ -32,14 +32,14 @@ tripsApp.directive('customOnChange', function() {
     };
 });
 
-tripsApp.service('ServerService', [ '$http', function($http) {
+tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
         this.getCiudades = function(callback) {
         $http.get('/api/ciudad').then(
             function(res) {
                 var ciudades = res.data;
                 callback(ciudades, null);
             }, function(res) {
-                error(null, {msg: "No se pudo hacer el get /api/ciudad"});
+                callback(null, {msg: "No se pudo hacer el get /api/ciudad"});
             }
         );
     };
@@ -128,6 +128,214 @@ tripsApp.service('ServerService', [ '$http', function($http) {
             }, function error(res) {
                 callback(ciudadObject, {msg:"No se pudo agregar la ciudad"});
             });
-    }
+    };
 
+    this.addAtraccion = function(atraccion, callback) {
+        var data = {
+            "nombre": atraccion.nombre,
+            "descripcion": atraccion.descripcion,
+            "costo_monto": atraccion.montoCosto,
+            "costo_moneda": atraccion.monedaCosto,
+            "hora_apertura": atraccion.horaApertura,
+            "hora_cierre": atraccion.horaCierre,
+            "duracion": atraccion.duracion,
+            "clasificacion": atraccion.clasificacionSelected,
+            "id_ciudad": atraccion.ciudadSelected._id,
+            "latitud": atraccion.lat,
+            "longitud": atraccion.lng
+        };
+
+        $http({
+            method: 'POST',
+            url : '/api/atraccion',
+            data: data
+        })
+            .then(function success(res) {
+                atraccion._id = res.data._id;
+                callback(res.data, null);
+            }, function error(res) {
+                callback(null, {msg: "Error al agregar la atracción" });
+            });
+
+    };
+
+    this.editAtraccion = function (atraccion, callback) {
+        var data = {
+            "_id": atraccion._id,
+            "nombre": atraccion.nombre,
+            "descripcion": atraccion.descripcion,
+            "costo_monto": atraccion.montoCosto,
+            "costo_moneda": atraccion.monedaCosto,
+            "hora_apertura": atraccion.horaApertura,
+            "hora_cierre": atraccion.horaCierre,
+            "duracion": atraccion.duracion,
+            "clasificacion": atraccion.clasificacionSelected,
+            "id_ciudad": atraccion.ciudadSelected._id,
+            "latitud": atraccion.lat,
+            "longitud": atraccion.lng
+        };
+
+        $http({
+            method: 'PUT',
+            url : '/api/atraccion',
+            data: data
+        })
+            .then(function success(res) {
+                callback(res.data, null);
+            }, function error(res) {
+                callback(null, {msg: "Error al modificar la atracción" });
+            });
+    };
+
+
+    this.deleteAtraccion = function(atraccionId, callback) {
+        var url = '/api/atraccion/' + atraccionId;
+        $http.delete(url).then(
+            function success() {
+                callback(null, null);
+            },
+            function error() {
+                callback(null, {msg:"No se pudo borrar la atracción" });
+            }
+        );
+    };
+
+    this.getAtraccion = function(atraccionId, callback) {
+        $http.get('/api/atraccion/'+atraccionId).then(
+            function success(res) {
+                callback(res.data, null);
+            },
+            function error(res) {
+                callback(null, {msg:"Error al hacer el get de la atraccion "+atraccionId});
+            }
+        );
+    };
+
+    this._uploadFormData = function(url, data) {
+        return $http({
+            method: 'POST',
+            url: url,
+            headers: {
+                'Content-Type': undefined
+            },
+            data: data,
+            transformRequest: function (data, headersGetter) {
+                var formData = new FormData();
+                angular.forEach(data, function (value, key) {
+                    formData.append(key, value);
+                });
+
+                return formData;
+            }
+        });
+    };
+
+    this.uploadAudiosAtraccion = function(atraccion, callback) {
+        var url = 'api/atraccion/' + atraccion._id + '/audio';
+
+        var requests = [];
+
+        for (var i = 0; i < atraccion.audios.length; i++) {
+            var audFile = atraccion.audios[i].audFile;
+            if (audFile) {
+                requests.push(this._uploadFormData(url, {
+                    idioma: atraccion.idioma,
+                    audio: audFile
+                }));
+            }
+        }
+
+        $q
+            .all(requests)
+            .then(function success(values) {
+                callback(null,null);
+            }, function error() {
+                callback(null, {msg:"No fue posible subir todos los videos." } );
+            });
+    };
+
+    this.uploadVideosAtraccion = function(atraccion, callback) {
+        var url = 'api/atraccion/' + atraccion._id + '/video';
+
+        var requests = [];
+
+        for (var i = 0; i < atraccion.videos.length; i++) {
+            var vidFile = atraccion.videos[i].vidFile;
+            console.log(vidFile);
+            if (vidFile) {
+                requests.push(this._uploadFormData(url, {
+                    video: vidFile
+                }));
+            }
+        }
+
+        $q
+            .all(requests)
+            .then(function success(values) {
+                callback(null,null);
+            }, function error() {
+                callback(null, {msg:"No fue posible subir todos los videos." } );
+            });
+    };
+
+    this.uploadImagesAtraccion = function(atraccion, callback) {
+
+        var url = '/api/atraccion/' + atraccion._id + '/imagen';
+        var requests = [];
+
+        for (var i = 0; i < atraccion.imagenes.length; i++) {
+            var imgFile = atraccion.imagenes[i].imgFile;
+            if (imgFile) {
+                requests.push(this._uploadFormData(url, {
+                    imagen: imgFile
+                }));
+            }
+        }
+
+        $q
+            .all(requests)
+            .then(function success(values) {
+                callback(null,null);
+            }, function error() {
+                callback(null, {msg:"No fue posible subir todas las imagenes." });
+            });
+    };
+
+    this.deleteAudioAtraccion = function(atraccion, atraccionAudio, callback) {
+        var audUrl = atraccionAudio.audSrc;
+        $http.delete(audUrl).then(
+            function success() {
+                callback(null, null);
+            },
+            function error() {
+                callback(null, {msg:"No se pudo borrar el video de la atracción" });
+            }
+        );
+    };
+
+    this.deleteVideoAtraccion = function(atraccion, atraccionVideo, callback) {
+        var vidUrl = atraccionVideo.vidSrc;
+        console.log(vidUrl);
+        $http.delete(vidUrl).then(
+            function success() {
+                callback(null, null);
+            },
+            function error() {
+                callback(null, {msg:"No se pudo borrar el video de la atracción" });
+            }
+        );
+    };
+
+    this.deleteImageAtraccion = function(atraccion, atraccionImage, callback) {
+        var imgUrl = atraccionImage.imgSrc;
+
+        $http.delete(imgUrl).then(
+            function success() {
+                callback(null, null);
+            },
+            function error() {
+                callback(null, {msg:"No se pudo borrar la image de la atracción" });
+            }
+        );
+    };
 }]);

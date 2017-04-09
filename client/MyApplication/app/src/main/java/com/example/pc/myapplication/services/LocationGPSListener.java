@@ -3,7 +3,6 @@ package com.example.pc.myapplication.services;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -13,13 +12,11 @@ import android.provider.Settings;
 import android.widget.Toast;
 
 import com.example.pc.myapplication.R;
+import com.example.pc.myapplication.singletons.GpsSingleton;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
@@ -42,6 +39,7 @@ public class LocationGPSListener implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
         LatLng position = new LatLng(location.getLatitude(),location.getLongitude());
+        GpsSingleton.getInstance().setPos(position);
 
         if (marker == null) {
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 13));

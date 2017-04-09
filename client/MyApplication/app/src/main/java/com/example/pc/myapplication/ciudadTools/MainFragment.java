@@ -50,7 +50,7 @@ public class MainFragment extends Fragment {
             TextView paisTxt = (TextView) myFragmentView.findViewById(R.id.countryTxt);
             paisTxt.setText(ciudad.pais);
 
-            TextView descripTxt = (TextView) myFragmentView.findViewById(R.id.infoText);
+            TextView descripTxt = (TextView) myFragmentView.findViewById(R.id.infoTextC);
             descripTxt.setText(ciudad.descripcion);
 
         return myFragmentView;
@@ -64,14 +64,14 @@ public class MainFragment extends Fragment {
     }
 
     public void onStart() {
-        super.onStart();
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(onCiudadImage,
                 new IntentFilter(Consts.GET_CITY_IMG));
+        super.onStart();
     }
 
     public void onStop() {
-        super.onStop();
         LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(onCiudadImage);
+        super.onStop();
     }
 
     public void setCiudad (Ciudad ciudad) {

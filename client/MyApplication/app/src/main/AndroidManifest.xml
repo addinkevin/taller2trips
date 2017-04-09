@@ -14,6 +14,8 @@
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
+    <uses-feature android:name="android.hardware.location.network" />
+    <uses-feature android:name="android.hardware.location.gps" />
 
     <application
         android:name=".application.TripTP"
@@ -40,12 +42,18 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".AtraccionActivity" />
+        <activity android:name=".AtraccionActivity"
+            android:configChanges="orientation|screenSize"/>
         <activity android:name=".CiudadActivity" />
         <activity android:name=".CiudadesActivity" />
         <activity android:name=".ConfigActivity" />
-        <activity android:name=".FullScreenViewActivity"
+        <activity
+            android:name=".FullScreenViewActivity"
+            android:theme="@android:style/Theme.Holo.NoActionBar" />
+        <activity android:name=".MapActivity"
             android:theme="@android:style/Theme.Holo.NoActionBar"/>
+        <activity android:name=".VideoActivity"/>
+
     </application>
 
 </manifest>

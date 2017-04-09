@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -13,11 +14,9 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import com.example.pc.myapplication.commonfunctions.Consts;
 import com.example.pc.myapplication.services.LocationGPSListener;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -64,7 +63,8 @@ public class MainActivity extends AppCompatActivity  implements OnMapReadyCallba
             return;
         }
 
-        locationManager.requestLocationUpdates("gps", 250, 1, listener);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2000, 5, listener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 5, listener);
     }
 
     @Override
