@@ -32,6 +32,16 @@ tripsApp.directive('customOnChange', function() {
     };
 });
 
+tripsApp.directive('onErrorVideo', function() {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+            var func = scope.$eval(attrs.onErrorVideo);
+            element.bind('error', func);
+        }
+    };
+});
+
 tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
         this.getCiudades = function(callback) {
         $http.get('/api/ciudad').then(
@@ -313,7 +323,7 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
                 callback(null, null);
             },
             function error() {
-                callback(null, {msg:"No se pudo borrar el video de la atracción" });
+                callback(null, {msg:"No se pudo borrar el audio de la atracción" });
             }
         );
     };

@@ -114,12 +114,33 @@ atraccionesApp.controller('atraccionesAddEditController',
 
             $scope.loadAtraccionAudios = function(data) {
                 var audUrl = '/api/atraccion/'+ $scope.atraccion._id + '/audio?idioma=es';
-                $scope.atraccion.audios.push({audSrc:audUrl});
+                // REFACTOR. LA API TENDRIA QUE SER REST. VER
+                $http.get(audUrl).then(
+                    function success(res) {
+                        $scope.atraccion.audios.push({audSrc:audUrl});
+                    },
+                    function error(res) {
+                        $scope.atraccion.audios = [];
+                    }
+                );
+            };
+
+            $scope.loadAtraccionVideoOnError = function() {
+                console.log("ERROR???");
+                $scope.atraccion.videos = [];
             };
 
             $scope.loadAtraccionVideos = function(data) {
                 var vidUrl = '/api/atraccion/'+ $scope.atraccion._id + '/video';
-                $scope.atraccion.videos.push({vidSrc:vidUrl});
+                // REFACTOR. LA API TENDRIA QUE SER REST. VER
+                $http.get(vidUrl).then(
+                    function success(res) {
+                        $scope.atraccion.videos.push({vidSrc:vidUrl});
+                    },
+                    function error(res) {
+                        $scope.atraccion.videos = [];
+                    }
+                );
             };
 
             $scope.loadAtraccionImagenes = function(data) {
