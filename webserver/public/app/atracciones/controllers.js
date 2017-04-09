@@ -96,6 +96,81 @@ atraccionesApp.controller('atraccionesAddEditController',
             $scope.ciudades = [];
             $scope.atraccion = new Atraccion();
 
+            $scope.alert = {
+                class : 'hide',
+                msg: ''
+            };
+
+            $scope.validateAtraccion = function(atraccion) {
+                var validadorFormatoHora =  function(data) {
+                    var regex = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/;
+                    return regex.test(data);
+                };
+
+                var validadorCosto = function(data) {
+                    return ((data !== "") && (+data >= 0));
+                };
+
+                var validadorDuracion = function(data) {
+                    return (data !== "" && +data >= 0 && +data == parseInt(data));
+                };
+
+                var validadorImagenes = function(data) {
+                    return data.length > 0;
+                };
+
+                var validateList = [
+                    {
+                        parametro : 'nombre',
+                        msg: "Debes especificar el nombre de la atracción!"
+                    },
+                    {
+                        parametro: 'descripcion',
+                        msg: "Debes especificar la descripción de la atracción!"
+                    },
+                    {
+                        parametro: 'imagenes',
+                        msg: "Debes agregar al menos una imagen",
+                        validador: validadorImagenes
+                    },
+                    {
+                        parametro: 'monedaCosto',
+                        msg: "Debes especificar la moneda del costo de la atracción"
+                    },
+                    {
+                        parametro: 'montoCosto',
+                        msg: "Debes especificar el costo de la atracción. Debe ser mayor o igual a 0.",
+                        validador: validadorCosto
+                    },
+                    {
+                        parametro: 'horaApertura',
+                        msg: "Debe especificarse una hora de apertura que cumpla con el formato HH:MM (Rango: 00:00 - 23:59)",
+                        validador: validadorFormatoHora
+                    },
+                    {
+                        parametro: 'horaCierre',
+                        msg: "Debe especificarse una hora de cierre que cumpla con el formato HH:MM (Rango: 00:00 - 23:59)",
+                        validador: validadorFormatoHora
+                    },
+                    {
+                        parametro: 'duracion',
+                        msg: "Debes especificar la duración de la atracción. Debe ser un entero mayor o igual a 0",
+                        validador: validadorDuracion
+                    }
+                ];
+
+                for (var i = 0; i < validateList.length; i++) {
+                    var validador = validateList[i].validador;
+                    var parametro = validateList[i].parametro;
+                    var msg = validateList[i].msg;
+                    if ((!validador && !atraccion[parametro]) || (validador && !validador(atraccion[parametro]))) {
+                        $scope.alert.msg = msg;
+                        return false;
+                    }
+                }
+                return true;
+            };
+
             $scope.initAdd = function() {
                 $scope.title = "Agregar atracción";
                 $scope.submitButton = "Agregar";
@@ -123,11 +198,6 @@ atraccionesApp.controller('atraccionesAddEditController',
                         $scope.atraccion.audios = [];
                     }
                 );
-            };
-
-            $scope.loadAtraccionVideoOnError = function() {
-                console.log("ERROR???");
-                $scope.atraccion.videos = [];
             };
 
             $scope.loadAtraccionVideos = function(data) {
@@ -193,6 +263,11 @@ atraccionesApp.controller('atraccionesAddEditController',
             };
 
             $scope.editAtraccion = function(atraccion) {
+                if (!$scope.validateAtraccion(atraccion)) {
+                    $scope.alert.class = '';
+                    return;
+                }
+
                 ServerService.editAtraccion(atraccion, function(data, err) {
                     if (err) {
                         console.log(err.msg);
@@ -325,6 +400,10 @@ atraccionesApp.controller('atraccionesAddEditController',
             };
 
             $scope.addAtraccion = function(atraccion) {
+                if (!$scope.validateAtraccion(atraccion)) {
+                    $scope.alert.class = '';
+                    return;
+                }
                 ServerService.addAtraccion(atraccion, function(data, err) {
                     if (err) {
                         console.log(err.msg);
