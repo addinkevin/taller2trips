@@ -92,6 +92,8 @@ function Atraccion() {
 atraccionesApp.controller('atraccionesAddEditController',
     [ '$scope', '$location', '$http','$routeParams', 'ServerService', '$q',
         function ($scope, $location, $http, $routeParams, ServerService, $q) {
+
+            $scope.sendingInformation = false;
             $scope.editForm = $routeParams.id;
             $scope.ciudades = [];
             $scope.atraccion = new Atraccion();
@@ -169,6 +171,13 @@ atraccionesApp.controller('atraccionesAddEditController',
                     }
                 }
                 return true;
+            };
+
+            $scope.setInfoMsg = function(msgError) {
+                var msg = "<div class='alert alert-info alert-fixed text-center'>" +
+                    msgError +
+                    "</div>";
+                $("#infoContainer").html(msg);
             };
 
             $scope.initAdd = function() {
@@ -270,9 +279,12 @@ atraccionesApp.controller('atraccionesAddEditController',
                     return;
                 }
 
+                $scope.setInfoMsg("Enviando información al servidor");
+
                 ServerService.editAtraccion(atraccion, function(data, err) {
                     if (err) {
                         console.log(err.msg);
+                        $location.url('/atracciones/');
                     } else {
                         $scope.addRecursos(atraccion);
                     }
@@ -285,6 +297,8 @@ atraccionesApp.controller('atraccionesAddEditController',
             };
 
             $scope.submitAtraccion = function() {
+                if ($scope.sendingInformation) return;
+                $scope.sendingInformation = true;
                 if ($scope.editForm) {
                     $scope.submitEditAtraccion();
                 } else {
@@ -410,9 +424,13 @@ atraccionesApp.controller('atraccionesAddEditController',
                     $scope.alert.class = '';
                     return;
                 }
+
+                $scope.setInfoMsg("Enviando información al servidor...");
+
                 ServerService.addAtraccion(atraccion, function(data, err) {
                     if (err) {
                         console.log(err.msg);
+                        $location.url('/atracciones/');
                     } else {
                         $scope.addRecursos(atraccion);
                     }
