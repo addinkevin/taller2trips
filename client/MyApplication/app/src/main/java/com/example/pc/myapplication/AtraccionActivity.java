@@ -509,7 +509,7 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
             stopVideo();
             try {
                 audioPlayer.reset();
-                String idioma = URLEncoder.encode(Locale.getDefault().getDisplayLanguage().toLowerCase(), "utf-8");
+                String idioma = URLEncoder.encode(Locale.getDefault().getLanguage().toLowerCase(), "utf-8");
                 String url = ((TripTP) getApplication()).getUrl() + Consts.ATRACC + "/" + atraccion._id + Consts.AUDIO + "?" + Consts.IDIOMA + "=" + idioma;
                 audioPlayer.setDataSource(url);
                 audioPlayer.prepareAsync();
