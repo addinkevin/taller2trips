@@ -260,7 +260,6 @@ router.delete('/atraccion/:id_atraccion/imagen', function(req, res) {
                     throw (err)
                 }
                 else {
-                    console.log("Buscando Imagen");
                     var index = atraccion.imagenes.indexOf(req.query.filename);
                     if (index !== -1) {
                         atraccion.imagenes.splice(index, 1);
