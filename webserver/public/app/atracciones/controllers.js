@@ -277,15 +277,16 @@ atraccionesApp.controller('atraccionesAddEditController',
                 }
 
                 $scope.setInfoMsg("Enviando información al servidor");
+                $scope.sendingInformation = true;
 
                 ServerService.editAtraccion(atraccion, function(data, err) {
                     if (err) {
                         console.log(err.msg);
                         $location.url('/atracciones/');
                     } else {
-                        var promiseAddRecursos = $scope.addRecursos(atraccion);
                         var promiseDeleteRecursos = $scope.sendDeleteRequests();
-                        $q.all([promiseAddRecursos, promiseDeleteRecursos]).then(
+                        var promiseAddRecursos = $scope.addRecursos(atraccion);
+                        $q.all([promiseDeleteRecursos, promiseAddRecursos]).then(
                             function success() {
                                 $location.url('/atracciones/');
                             }, function error() {
@@ -303,7 +304,6 @@ atraccionesApp.controller('atraccionesAddEditController',
 
             $scope.submitAtraccion = function() {
                 if ($scope.sendingInformation) return;
-                $scope.sendingInformation = true;
                 if ($scope.editForm) {
                     $scope.submitEditAtraccion();
                 } else {
@@ -398,17 +398,16 @@ atraccionesApp.controller('atraccionesAddEditController',
                     }
                 }
 
+                if (index >= 0) {
+                    $scope.deleteAudio(index, oldAudio);
+                }
                 var newAudio = {
                     audSrc: window.URL.createObjectURL(event.target.files[0]),
                     audFile: event.target.files[0],
                     idiomaAudio: $scope.atraccion.idiomaSelected
                 };
 
-                if (index >= 0) {
-                    $scope.atraccion.audios[index] = newAudio;
-                } else {
-                    $scope.atraccion.audios.push(newAudio);
-                }
+                $scope.atraccion.audios.push(newAudio);
                 $scope.$digest();
             };
 
@@ -468,6 +467,7 @@ atraccionesApp.controller('atraccionesAddEditController',
                 }
 
                 $scope.setInfoMsg("Enviando información al servidor...");
+                $scope.sendingInformation = true;
 
                 ServerService.addAtraccion(atraccion, function(data, err) {
                     if (err) {
