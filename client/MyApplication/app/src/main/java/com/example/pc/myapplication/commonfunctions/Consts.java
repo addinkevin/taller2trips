@@ -42,6 +42,7 @@ public class Consts {
     public static final String VIDEO = "/video";
     public static final String ATRACC = "/atraccion";
     public static final String CERCANIA = "/cercania";
+    public static final String PLANO = "/plano";
 
     //Json Keys
     public static final String NOMBRE = "nombre";
@@ -56,7 +57,6 @@ public class Consts {
     public static final String HS_CIERRE = "hora_cierre";
     public static final String DURACION = "duracion";
     public static final String CLASIFICACION = "clasificacion";
-    public static final String PLANO = "plano";
     public static final String ID_CIUDAD = "id_ciudad";
     public static final String FOTOS = "imagenes";
     public static final String VIDEO_K = "video";

@@ -252,7 +252,7 @@
                     android:id="@+id/videoIMG"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:scaleType="centerCrop" />
+                    android:scaleType="fitCenter" />
 
                 <ImageView
                     android:id="@+id/plBtn"
@@ -367,9 +367,9 @@
 
             <ImageView
                 android:id="@+id/planoIMG"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="250dp"
-                android:scaleType="centerCrop"
+                android:scaleType="fitCenter"
                 android:layout_marginBottom="8dp"
                 android:layout_marginEnd="5dp"
                 android:layout_marginLeft="5dp"
