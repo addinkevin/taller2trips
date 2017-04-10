@@ -97,6 +97,7 @@ atraccionesApp.controller('atraccionesAddEditController',
             $scope.editForm = $routeParams.id;
             $scope.ciudades = [];
             $scope.atraccion = new Atraccion();
+            $scope.deleteRequests = [];
 
             $scope.alert = {
                 class : 'hide',
@@ -282,7 +283,15 @@ atraccionesApp.controller('atraccionesAddEditController',
                         console.log(err.msg);
                         $location.url('/atracciones/');
                     } else {
-                        $scope.addRecursos(atraccion);
+                        var promiseAddRecursos = $scope.addRecursos(atraccion);
+                        var promiseDeleteRecursos = $scope.sendDeleteRequests();
+                        $q.all([promiseAddRecursos, promiseDeleteRecursos]).then(
+                            function success() {
+                                $location.url('/atracciones/');
+                            }, function error() {
+                                $location.url('/atracciones/');
+                            }
+                        )
                     }
                 });
             };
@@ -302,37 +311,58 @@ atraccionesApp.controller('atraccionesAddEditController',
                 }
             };
 
+            $scope.sendDeleteRequests = function() {
+                var requests = [];
+
+                for (var i = 0; i < $scope.deleteRequests.length; i++) {
+                    requests.push($scope.deleteRequests[i]());
+                }
+
+                return $q.all(requests);
+            };
+
             $scope.deleteAudio = function(id, atraccionAudio) {
                 $scope.atraccion.audios.splice(id,1);
                 if (!atraccionAudio.audFile) { // Alojada en el server hay que mandar el request de delete.
-                    ServerService.deleteAudioAtraccion($scope.atraccion, atraccionAudio, function(data, error) {
-                        if (error) {
-                            console.log(error.msg);
+                    $scope.deleteRequests.push(
+                        function() {
+                            return ServerService.deleteAudioAtraccion($scope.atraccion, atraccionAudio, function(data, error) {
+                                if (error) {
+                                    console.log(error.msg);
+                                }
+                            });
                         }
-                    });
+                    );
                 }
             };
 
             $scope.deleteImage = function(id, atraccionImagen) {
-                console.log("Delete img",id,atraccionImagen);
                 $scope.atraccion.imagenes.splice(id,1);
                 if (!atraccionImagen.imgFile) { // Alojada en el server hay que mandar el request de delete.
-                    ServerService.deleteImageAtraccion($scope.atraccion, atraccionImagen, function(data, error) {
-                        if (error) {
-                            console.log(error.msg);
+                    $scope.deleteRequests.push(
+                        function() {
+                            return ServerService.deleteImageAtraccion($scope.atraccion, atraccionImagen, function(data, error) {
+                                if (error) {
+                                    console.log(error.msg);
+                                }
+                            });
                         }
-                    });
+                    );
                 }
             };
 
             $scope.deleteVideo = function(id, atraccionVideo) {
                 $scope.atraccion.videos.splice(id,1);
                 if (!atraccionVideo.vidFile) { // Alojada en el server hay que mandar el request de delete.
-                    ServerService.deleteVideoAtraccion($scope.atraccion, atraccionVideo, function(data, error) {
-                        if (error) {
-                            console.log(error.msg);
+                    $scope.deleteRequests.push(
+                        function() {
+                            return ServerService.deleteVideoAtraccion($scope.atraccion, atraccionVideo, function(data, error) {
+                                if (error) {
+                                    console.log(error.msg);
+                                }
+                            });
                         }
-                    });
+                    );
                 }
             };
 
@@ -428,13 +458,7 @@ atraccionesApp.controller('atraccionesAddEditController',
                 var promiseVideos = $scope.addRecursosVideos(atraccion);
                 var promiseAudios = $scope.addRecursosAudios(atraccion);
 
-                return $q
-                    .all([ promiseImagenes, promiseAudios, promiseVideos])
-                    .then(function success() {
-                        $location.url('/atracciones');
-                    }, function error() {
-                        $location.url('/atracciones');
-                    });
+                return $q.all([ promiseImagenes, promiseAudios, promiseVideos]);
             };
 
             $scope.addAtraccion = function(atraccion) {
@@ -450,7 +474,14 @@ atraccionesApp.controller('atraccionesAddEditController',
                         console.log(err.msg);
                         $location.url('/atracciones/');
                     } else {
-                        $scope.addRecursos(atraccion);
+                        $scope.addRecursos(atraccion).then(
+                            function success() {
+                                $location.url('/atracciones/');
+                            },
+                            function error() {
+                                $location.url('/atracciones/');
+                            }
+                        );
                     }
                 });
             };
