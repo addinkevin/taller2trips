@@ -115,7 +115,7 @@
 
                         <div class="previewDeAudios">
                             <div class="audioPreview" ng-repeat="(id,atraccionAudio) in atraccion.audios">
-                                <span class="label label-info">{{atraccionAudio.idiomaAudio}}</span>
+                                <span class="label label-info" style="min-width: 30px; display: inline-block;">{{atraccionAudio.idiomaAudio}}</span>
                                 <audio class="media-middle" controls>
                                     <source ng-src="{{atraccionAudio.audSrc}}">
                                     Your browser does not support the audio element.
