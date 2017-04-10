@@ -34,7 +34,6 @@
                 android:id="@+id/distance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0 Km"
                 android:textSize="18sp" />
 
         </LinearLayout>
@@ -43,7 +42,7 @@
             android:id="@+id/intensitySlider"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:max="10000" />
+            android:max="100" />
     </LinearLayout>
 
     <EditText
