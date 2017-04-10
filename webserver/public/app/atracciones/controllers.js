@@ -90,8 +90,8 @@ function Atraccion() {
 }
 
 atraccionesApp.controller('atraccionesAddEditController',
-    [ '$scope', '$location', '$http','$routeParams', 'ServerService',
-        function ($scope, $location, $http, $routeParams, ServerService) {
+    [ '$scope', '$location', '$http','$routeParams', 'ServerService', '$q',
+        function ($scope, $location, $http, $routeParams, ServerService, $q) {
             $scope.editForm = $routeParams.id;
             $scope.ciudades = [];
             $scope.atraccion = new Atraccion();
@@ -274,10 +274,7 @@ atraccionesApp.controller('atraccionesAddEditController',
                     if (err) {
                         console.log(err.msg);
                     } else {
-                        $location.url('/atracciones/');
-                        $scope.addRecursosImagenes(atraccion);
-                        $scope.addRecursosVideos(atraccion);
-                        $scope.addRecursosAudios(atraccion);
+                        $scope.addRecursos(atraccion);
                     }
                 });
             };
@@ -371,7 +368,7 @@ atraccionesApp.controller('atraccionesAddEditController',
             };
 
             $scope.addRecursosImagenes = function(atraccion) {
-                ServerService.uploadImagesAtraccion(atraccion, function(data,err) {
+                return ServerService.uploadImagesAtraccion(atraccion, function(data,err) {
                     if (err) {
                         console.log(err.msg);
                     }
@@ -379,7 +376,7 @@ atraccionesApp.controller('atraccionesAddEditController',
             };
 
             $scope.addRecursosAudios = function(atraccion) {
-                ServerService.uploadAudiosAtraccion(atraccion, function(data,err) {
+                return ServerService.uploadAudiosAtraccion(atraccion, function(data,err) {
                     if (err) {
                         console.log(err.msg);
                     }
@@ -387,7 +384,7 @@ atraccionesApp.controller('atraccionesAddEditController',
             };
 
             $scope.addRecursosVideos = function(atraccion) {
-                ServerService.uploadVideosAtraccion(atraccion, function(data,err) {
+                return ServerService.uploadVideosAtraccion(atraccion, function(data,err) {
                     if (err) {
                         console.log(err.msg);
                     }
@@ -395,10 +392,17 @@ atraccionesApp.controller('atraccionesAddEditController',
             };
 
             $scope.addRecursos = function(atraccion) {
-                // Agregado de imagenes.
-                $scope.addRecursosImagenes(atraccion);
-                $scope.addRecursosVideos(atraccion);
-                $scope.addRecursosAudios(atraccion);
+                var promiseImagenes = $scope.addRecursosImagenes(atraccion);
+                var promiseVideos = $scope.addRecursosVideos(atraccion);
+                var promiseAudios = $scope.addRecursosAudios(atraccion);
+
+                return $q
+                    .all([ promiseImagenes, promiseAudios, promiseVideos])
+                    .then(function success() {
+                        $location.url('/atracciones');
+                    }, function error() {
+                        $location.url('/atracciones');
+                    });
             };
 
             $scope.addAtraccion = function(atraccion) {
@@ -411,7 +415,6 @@ atraccionesApp.controller('atraccionesAddEditController',
                         console.log(err.msg);
                     } else {
                         $scope.addRecursos(atraccion);
-                        $location.url('/atracciones');
                     }
                 });
             };

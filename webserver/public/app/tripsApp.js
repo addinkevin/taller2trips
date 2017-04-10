@@ -43,8 +43,8 @@ tripsApp.directive('onErrorVideo', function() {
 });
 
 tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
-        this.getCiudades = function(callback) {
-        $http.get('/api/ciudad').then(
+    this.getCiudades = function(callback) {
+        return $http.get('/api/ciudad').then(
             function(res) {
                 var ciudades = res.data;
                 callback(ciudades, null);
@@ -55,7 +55,7 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
     };
 
     this.getCiudad = function(ciudadId, callback) {
-        $http.get('/api/ciudad/'+ciudadId).then(
+        return $http.get('/api/ciudad/'+ciudadId).then(
             function success(res) {
                 callback(res.data, null);
             },
@@ -66,7 +66,7 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
     };
 
     this.deleteCiudad = function(ciudadId, callback) {
-        $http.delete('/api/ciudad/'+ciudadId).then(
+        return $http.delete('/api/ciudad/'+ciudadId).then(
             function success(res) {
                 callback(null, null);
             },
@@ -83,7 +83,7 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
 
     this.updateCiudadImage = function(ciudadObject, callback) {
         var url = '/api/ciudad/' + ciudadObject._id + '/imagen';
-        $http({
+        return $http({
             method: 'POST',
             url: url,
             headers: {
@@ -109,7 +109,7 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
     };
 
     this.updateCiudadInfo = function(ciudadObject, callback) {
-        $http({
+        return $http({
             method: 'PUT',
             url : '/api/ciudad',
             data: {
@@ -127,7 +127,7 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
     };
 
     this.addCiudad = function(ciudadObject, callback) {
-        $http({
+        return $http({
             method: 'POST',
             url : '/api/ciudad',
             data:
@@ -160,7 +160,7 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
             "longitud": atraccion.lng
         };
 
-        $http({
+        return $http({
             method: 'POST',
             url : '/api/atraccion',
             data: data
@@ -190,7 +190,7 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
             "longitud": atraccion.lng
         };
 
-        $http({
+        return $http({
             method: 'PUT',
             url : '/api/atraccion',
             data: data
@@ -205,7 +205,7 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
 
     this.deleteAtraccion = function(atraccionId, callback) {
         var url = '/api/atraccion/' + atraccionId;
-        $http.delete(url).then(
+        return $http.delete(url).then(
             function success() {
                 callback(null, null);
             },
@@ -216,7 +216,7 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
     };
 
     this.getAtraccion = function(atraccionId, callback) {
-        $http.get('/api/atraccion/'+atraccionId).then(
+        return $http.get('/api/atraccion/'+atraccionId).then(
             function success(res) {
                 callback(res.data, null);
             },
@@ -260,7 +260,7 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
             }
         }
 
-        $q
+        return $q
             .all(requests)
             .then(function success(values) {
                 callback(null,null);
@@ -284,7 +284,7 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
             }
         }
 
-        $q
+        return $q
             .all(requests)
             .then(function success(values) {
                 callback(null,null);
@@ -307,7 +307,7 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
             }
         }
 
-        $q
+        return $q
             .all(requests)
             .then(function success(values) {
                 callback(null,null);
@@ -318,7 +318,7 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
 
     this.deleteAudioAtraccion = function(atraccion, atraccionAudio, callback) {
         var audUrl = atraccionAudio.audSrc;
-        $http.delete(audUrl).then(
+        return $http.delete(audUrl).then(
             function success() {
                 callback(null, null);
             },
@@ -331,7 +331,7 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
     this.deleteVideoAtraccion = function(atraccion, atraccionVideo, callback) {
         var vidUrl = atraccionVideo.vidSrc;
         console.log(vidUrl);
-        $http.delete(vidUrl).then(
+        return $http.delete(vidUrl).then(
             function success() {
                 callback(null, null);
             },
@@ -344,7 +344,7 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
     this.deleteImageAtraccion = function(atraccion, atraccionImage, callback) {
         var imgUrl = atraccionImage.imgSrc;
 
-        $http.delete(imgUrl).then(
+        return $http.delete(imgUrl).then(
             function success() {
                 callback(null, null);
             },
