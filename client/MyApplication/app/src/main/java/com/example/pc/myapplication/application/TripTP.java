@@ -10,6 +10,7 @@ import com.example.pc.myapplication.commonfunctions.Consts;
 public class TripTP extends Application {
 
     private String url;
+    private Integer radio = -1;
 
     public String getUrl() {
         if (url == null) {
@@ -25,6 +26,22 @@ public class TripTP extends Application {
         editor.putString(Consts.URL, newUrl);
         editor.apply();
         this.url = newUrl;
+    }
+
+    public Integer getRadio() {
+        if (radio == -1) {
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            this.radio = sharedPreferences.getInt(Consts.RADIO, Consts.DEF_RADIO);
+        }
+        return radio;
+    }
+
+    public void setRadio(Integer radio) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt(Consts.RADIO, radio);
+        editor.apply();
+        this.radio = radio;
     }
 
 }

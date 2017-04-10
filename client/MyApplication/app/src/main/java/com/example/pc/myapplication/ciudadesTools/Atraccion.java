@@ -27,19 +27,18 @@ public class Atraccion {
     public String horaCierre;
     public float duracion;
     public String clasificacion;
-    public String planoPath;
     public String idCiudad;
     public List<String> fotosPath = new ArrayList<>();
     public List<Bitmap> fotosBitmap = new ArrayList<>();
-    public String videoPath;
-    public List<Audio> audios = new ArrayList<>();
     public float latitud;
     public float longitud;
+    public String moneda;
 
     public Atraccion(JSONObject jsonO) throws JSONException {
         this._id = jsonO.getString(Consts._ID);
         this.nombre = jsonO.getString(Consts.NOMBRE);
         this.descripcion = jsonO.getString(Consts.DESCRIPCION);
+        this.moneda = jsonO.getString(Consts.MONEDA);
         this.costo = (float) jsonO.getDouble(Consts.COSTO);
         this.rating = (float) jsonO.getDouble(Consts.RATING);
 
@@ -48,20 +47,11 @@ public class Atraccion {
         this.horaCierre = jsonO.getString(Consts.HS_CIERRE);
         this.duracion = (float) jsonO.getDouble(Consts.DURACION);
         this.clasificacion = jsonO.getString(Consts.CLASIFICACION);
-       // this.planoPath = jsonO.getString(Consts.PLANO);
         this.idCiudad = jsonO.getString(Consts.ID_CIUDAD);
         JSONArray jsonA = jsonO.getJSONArray(Consts.FOTOS);
         for(int i = 0; i < jsonA.length(); i++) {
             this.fotosPath.add((String) jsonA.get(i));
         }
-
-        /*JSONArray jsonAF = jsonO.getJSONArray(Consts.AUDIOS);
-        for(int i = 0; i < jsonA.length(); i++) {
-            Audio audio = new Audio(jsonAF.getJSONObject(i));
-            this.audios.add(audio);
-        }
-
-        this.videoPath = jsonO.getString(Consts.VIDEO_K);*/
 
         latitud = (float) jsonO.getDouble(Consts.LATITUD);
         longitud = (float) jsonO.getDouble(Consts.LONGITUD);
