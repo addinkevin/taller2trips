@@ -71,7 +71,7 @@ function Atraccion() {
     ];
 
     this.idiomas = ['es','en','fr','kr','jp'];
-    this.idioma = 'es';
+    this.idiomaSelected = 'es';
     this.monedas = [ 'u$s', '$', 'R$', '€' ];
     this.monedaCosto = "u$s";
     this.montoCosto = 0;
@@ -80,7 +80,7 @@ function Atraccion() {
     this.horaApertura = "";
     this.horaCierre = "";
     this.ciudadSelected = "";
-    this.idiomaAudio = "";
+    this.idiomasAudio = [];
     this.imagenes = [];
     this.audios = [];
     this.videos = [];
@@ -198,16 +198,11 @@ atraccionesApp.controller('atraccionesAddEditController',
             };
 
             $scope.loadAtraccionAudios = function(data) {
-                var audUrl = '/api/atraccion/'+ $scope.atraccion._id + '/audio?idioma=es';
-                // REFACTOR. LA API TENDRIA QUE SER REST. VER
-                $http.get(audUrl).then(
-                    function success(res) {
-                        $scope.atraccion.audios.push({audSrc:audUrl});
-                    },
-                    function error(res) {
-                        $scope.atraccion.audios = [];
-                    }
-                );
+                for (var i = 0; i < data.idiomas_audio.length; i++) {
+                    var idioma = data.idiomas_audio[i];
+                    var audUrl = '/api/atraccion/'+ $scope.atraccion._id + '/audio?idioma=' + idioma;
+                    $scope.atraccion.audios.push({audSrc:audUrl, idiomaAudio:idioma});
+                }
             };
 
             $scope.loadAtraccionVideos = function(data) {
@@ -255,7 +250,8 @@ atraccionesApp.controller('atraccionesAddEditController',
                                 'horaApertura': 'hora_apertura',
                                 'horaCierre': 'hora_cierre',
                                 'lat': 'latitud',
-                                'lng': 'longitud'
+                                'lng': 'longitud',
+                                'idiomasAudio': 'idiomas_audio'
                             }
                         );
 
@@ -341,6 +337,7 @@ atraccionesApp.controller('atraccionesAddEditController',
             };
 
             $scope.uploadImageClick = function(event) {
+                if (!event.target.files[0]) return;
                 $scope.atraccion.imagenes.push({
                     imgSrc: window.URL.createObjectURL(event.target.files[0]),
                     imgFile: event.target.files[0]
@@ -350,6 +347,7 @@ atraccionesApp.controller('atraccionesAddEditController',
             };
 
             $scope.uploadVideoClick = function(event) {
+                if (!event.target.files[0]) return;
                 $scope.atraccion.videos[0] = {
                     vidSrc: window.URL.createObjectURL(event.target.files[0]),
                     vidFile: event.target.files[0]
@@ -358,14 +356,34 @@ atraccionesApp.controller('atraccionesAddEditController',
             };
 
             $scope.uploadAudioClick = function(event) {
-                $scope.atraccion.audios[0] = {
+                if (!event.target.files[0]) return;
+                var index = -1;
+                var oldAudio;
+                for (var i = 0; i < $scope.atraccion.audios.length; i++) {
+                    var audio = $scope.atraccion.audios[i];
+                    if ( audio.idiomaAudio == $scope.atraccion.idiomaSelected ) {
+                        index = i;
+                        oldAudio = audio;
+                        break;
+                    }
+                }
+
+                var newAudio = {
                     audSrc: window.URL.createObjectURL(event.target.files[0]),
-                    audFile: event.target.files[0]
+                    audFile: event.target.files[0],
+                    idiomaAudio: $scope.atraccion.idiomaSelected
                 };
+
+                if (index >= 0) {
+                    $scope.atraccion.audios[index] = newAudio;
+                } else {
+                    $scope.atraccion.audios.push(newAudio);
+                }
                 $scope.$digest();
             };
 
             $scope.uploadPlanoClick = function(event) {
+                if (!event.target.files[0]) return;
                 $scope.atraccion.planos.push({imgSrc: window.URL.createObjectURL(event.target.files[0])});
                 $scope.$digest();
             };

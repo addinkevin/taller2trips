@@ -254,7 +254,7 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
             var audFile = atraccion.audios[i].audFile;
             if (audFile) {
                 requests.push(this._uploadFormData(url, {
-                    idioma: atraccion.idioma,
+                    idioma: atraccion.audios[i].idiomaAudio,
                     audio: audFile
                 }));
             }
