@@ -178,7 +178,7 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
         clientVid.runInBackground();
 
         try {
-            String idioma = URLEncoder.encode(Locale.getDefault().getDisplayLanguage().toLowerCase(), "utf-8");
+            String idioma = URLEncoder.encode(Locale.getDefault().getLanguage().toLowerCase(), "utf-8");
             String urlAudio = urlConst + Consts.AUDIO + "?" + Consts.IDIOMA + "=" + idioma;
             InternetClient clientAud = new InfoClient(getApplicationContext(), view,
                     Consts.GET_CHECK_AUD, urlAudio, null, Consts.GET, null, true);
