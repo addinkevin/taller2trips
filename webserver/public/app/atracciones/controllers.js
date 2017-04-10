@@ -56,7 +56,7 @@ function Atraccion() {
         "Atracciones y lugares de interés",
         "Compras",
         "Museos",
-        "Niños",
+        "Ideal para visitar con niños",
         "Conciertos y espectáculos",
         "Naturaleza y parques",
         "Vida nocturna",
