@@ -37,7 +37,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyB7ULvFSBHZKvmZyjEVst6wg-9LrIYKZ30" />
+            android:value="AIzaSyCDpNDszVFbEIeKyoYf2j7wALoYRALUGYU" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -56,7 +56,8 @@
             android:theme="@android:style/Theme.Holo.NoActionBar" />
         <activity android:name=".VideoActivity" />
         <activity android:name=".BuscaAtrCercaActivity" />
-        <activity android:name=".AtraccionesActivity"></activity>
+        <activity android:name=".AtraccionesActivity" />
+        <activity android:name=".FullImageMapActivity"></activity>
     </application>
 
 </manifest>

@@ -71,17 +71,4 @@ public class MapInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         return null;
     }
 
-    private abstract class ImageStreetViewRetriever extends AsyncTask<String, Void, Bitmap> {
-
-        protected Bitmap doInBackground(String... urls) {
-            try {
-                URL url = new URL(urls[0]);
-                return BitmapFactory.decodeStream((InputStream)url.getContent());
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-    }
-
 }
