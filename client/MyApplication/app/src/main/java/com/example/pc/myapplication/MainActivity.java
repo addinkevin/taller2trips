@@ -29,6 +29,7 @@ import com.example.pc.myapplication.commonfunctions.Consts;
 import com.example.pc.myapplication.mapTools.MapInfoWindowAdapter;
 import com.example.pc.myapplication.services.LocationGPSListener;
 import com.example.pc.myapplication.singletons.GpsSingleton;
+import com.facebook.FacebookSdk;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
