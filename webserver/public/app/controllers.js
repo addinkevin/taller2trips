@@ -1,7 +1,7 @@
 angular.module('tripsApp').controller('tripsAppController', [ '$scope','$http', '$location',
     function tripsAppController( $scope, $http, $location) {
         $scope.menuItems = [
-            { url: '#/home', description: 'Home', path:'/home' },
+            { url: '#/home', description: 'Inicio', path:'/home' },
             { url: '#/ciudades', description: 'Ciudades' , path:'/ciudades'},
             { url: '#/atracciones', description: 'Atracciones', path:'/atracciones' }
         ];

@@ -6,8 +6,12 @@
                 <a href="#/atracciones" class="btn btn-primary" role="button">Volver al listado de atracciones</a>
             </div>
         </div>
-        <h1>Agregar atracción</h1>
+        <h1>{{title}}</h1>
 
+    </div>
+
+    <!-- Error header -->
+    <div id="infoContainer">
     </div>
 
     <div class="panel-custom" ng-show="ciudades.length == 0">
@@ -16,18 +20,18 @@
 
     <div class="panel panel-default" ng-show="ciudades.length > 0">
         <div class="panel-body">
-            <form ng-submit="submitAddAtraccion()">
+            <form ng-submit="submitAtraccion()">
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Nombre de atracción</label>
                     <div class="col-sm-10">
-                        <input required type="text" ng-model="atraccion.nombre" class="form-control" placeholder="Nombre de la atracción">
+                        <input type="text" ng-model="atraccion.nombre" class="form-control" placeholder="Nombre de la atracción">
                     </div>
                 </div>
 
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Ciudad de la atracción</label>
                     <div class="col-sm-10">
-                        <select required ng-model="ciudadSelected" ng-options="ciudad.nombre for ciudad in ciudades">
+                        <select class="form-control" ng-model="atraccion.ciudadSelected" ng-options="ciudad.nombre for ciudad in ciudades">
                         </select>
                     </div>
                 </div>
@@ -35,56 +39,128 @@
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Descripción de la atracción</label>
                     <div class="col-sm-10">
-                        <textarea required class="form-control" ng-model="atraccion.descripcion" rows="5" style="resize: none;" id="descripcionAtraccion" placeholder="Descripción de la atracción"></textarea>
+                        <textarea class="form-control" ng-model="atraccion.descripcion" rows="5" style="resize: none;" id="descripcionAtraccion" placeholder="Descripción de la atracción"></textarea>
                     </div>
                 </div>
 
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Ubicación</label>
                     <div class="col-sm-10">
-                        {{atraccion.lat}}, {{atraccion.lng}}
+                        <input id="pac-input" class="controls" type="text" placeholder="Buscador">
                         <div id="map" style="width: 100%; height: 500px; position: relative; overflow: hidden;">Error al cargar el mapa</div>
                     </div>
                 </div>
 
                 <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Imágenes</label>
+                    <div class="col-sm-10">
+                        <h4>Información</h4>
+                        <p>El formato de la imagen debe ser png.</p>
+                        <p>El tamaño de la imagen debería ser 1920x1080 para una mejor visualización en la aplicación móvil.</p>
+                        <label class="btn btn-primary">
+                            <input type="file" custom-on-change="uploadImageClick" style="display:none;" multiple="multiple" accept="image/png">
+                            Subir imagen
+                        </label>
+
+                        <div class="previewDeImagenes">
+                            <div class="imagenPreview" ng-repeat="(id,atraccionImagen) in atraccion.imagenes">
+                                <img ng-src="{{atraccionImagen.imgSrc}}" class="img-responsive"/>
+                                <button type='button' class="btn btn-default btn-block" ng-click="deleteImage(id,atraccionImagen)">Borrar imagen</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Videos -->
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Videos</label>
+                    <div class="col-sm-10">
+                        <h4>Información</h4>
+                        <p>El formato del video debe ser mp4.</p>
+                        <label class="btn btn-primary">
+                            <input type="file" custom-on-change="uploadVideoClick" style="display:none;" multiple="multiple" accept="video/mp4">
+                            Subir video
+                        </label>
+
+                        <div class="previewDeVideos">
+                            <div class="videoPreview" ng-repeat="(id,atraccionVideo) in atraccion.videos">
+                                <video controls>
+                                    <source ng-src="{{atraccionVideo.vidSrc}}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                                <button type='button' class="btn btn-default btn-block" ng-click="deleteVideo(id,atraccionVideo)">Borrar video</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Audios -->
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Audios</label>
+                    <div class="col-sm-10">
+                        <h4>Información</h4>
+                        <p>El formato del audio debe ser mp3.</p>
+                        <div class="input-group">
+                            <span>
+                                <select class="form-control" style="width:auto;margin-right:5px" ng-model="atraccion.idiomaSelected"
+                                        ng-options="idioma for idioma in atraccion.idiomas">
+                                </select>
+                            </span>
+                            <label class="btn btn-primary" >
+                                <input type="file" custom-on-change="uploadAudioClick" style="display:none;" multiple="multiple" accept="audio/mp3">
+                                Subir audio
+                            </label>
+
+                        </div>
+
+                        <div class="previewDeAudios">
+                            <div class="audioPreview" ng-repeat="(id,atraccionAudio) in atraccion.audios">
+                                <span class="label label-info" style="min-width: 30px; display: inline-block;">{{atraccionAudio.idiomaAudio}}</span>
+                                <audio class="media-middle" controls>
+                                    <source ng-src="{{atraccionAudio.audSrc}}">
+                                    Your browser does not support the audio element.
+                                </audio>
+                                <button type='button' class="btn btn-default" ng-click="deleteAudio(id,atraccionAudio)">Borrar audio</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Costo</label>
                     <div class="col-sm-10">
                         <div class="input-group">
-                            <span class="input-group-addon" id="basic-addon1">
-                                <input ng-model="monedaCosto" list="monedas">
+                            <span class="input-group-addon">
+                                <input ng-model="atraccion.monedaCosto" list="monedas">
                                     <datalist id="monedas">
-                                        <option value="{{moneda}}" ng-repeat="moneda in monedas">
+                                        <option value="{{moneda}}" ng-repeat="moneda in atraccion.monedas">
                                     </datalist>
                             </span>
-                            <input required step="any" min="0" type="number" ng-model="atraccion.monedaCosto" class="form-control" placeholder="Costo de la atracción">
-                        </div>
-
-                        <!--
-                        <div class="input-group">
+                            <!--
                             <span class="input-group-addon" id="basic-addon1">
-                                <input ng-model="monedaCosto" list="monedas">
+                                <input ng-model="atraccion.monedaCosto" list="monedas">
                                     <datalist id="monedas">
-                                        <option value="{{moneda}}" ng-repeat="moneda in monedas">
+                                        <option value="{{moneda}}" ng-repeat="moneda in atraccion.monedas">
                                     </datalist>
                             </span>
-                            <input type="text" class="form-control" placeholder="Costo de la atracción"> aria-describedby="basic-addon1">
+                            -->
+                            <input type="text" ng-model="atraccion.montoCosto" class="form-control" placeholder="Costo de la atracción">
                         </div>
-                        -->
                     </div>
                 </div>
 
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Hora de apertura</label>
                     <div class="col-sm-10">
-                        <input required type="time" class="form-control" ng-model="atraccion.horaApertura">
+                        <input type="text" class="form-control" ng-model="atraccion.horaApertura" placeholder="Formato: HH:MM Rango: 00:00 - 23:59">
                     </div>
                 </div>
 
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Hora de cierre</label>
                     <div class="col-sm-10">
-                        <input required type="time" class="form-control" ng-model="atraccion.horaCierre">
+                        <input type="text" class="form-control" ng-model="atraccion.horaCierre" placeholder="Formato: HH:MM Rango: 00:00 - 23:59">
                     </div>
                 </div>
 
@@ -92,7 +168,7 @@
                     <label class="col-sm-2 col-form-label">Duración promedio</label>
                     <div class="col-sm-10">
                         <div class="input-group">
-                            <input required type="number" min="1" class="form-control" placeholder="Duración promedio de la atracción">
+                            <input ng-model="atraccion.duracion" type="text" class="form-control" placeholder="Duración promedio de la atracción">
                             <span class="input-group-addon" id="basic-addon2">minutos</span>
                         </div>
                     </div>
@@ -101,13 +177,18 @@
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Clasificación</label>
                     <div class="col-sm-10">
-                        <select ng-model="clasificacionSelected" ng-options="clasificacion for clasificacion in clasificaciones">
+                        <select class="form-control" ng-model="atraccion.clasificacionSelected" ng-options="clasificacion for clasificacion in atraccion.clasificaciones">
                         </select>
                     </div>
                 </div>
 
+                <div class="alert alert-danger {{alert.class}}">
+                    {{alert.msg}}
+                </div>
+
+
                 <div class="form-group row">
-                    <button type="submit" class="btn btn-primary center-block">Agregar atracción</button>
+                    <button type="submit" class="btn btn-primary center-block">{{submitButton}}</button>
                 </div>
             </form>
 
