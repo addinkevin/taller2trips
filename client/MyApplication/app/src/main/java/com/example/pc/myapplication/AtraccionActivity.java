@@ -53,6 +53,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
@@ -65,7 +66,7 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
                                                         GoogleMap.OnMapClickListener,
                                                         DialogInterface.OnCancelListener,
                                                         View.OnTouchListener,
-                                                        MediaPlayer.OnPreparedListener {
+                                                        MediaPlayer.OnPreparedListener, GoogleMap.OnInfoWindowClickListener {
 
     private static final long DOUBLE_PRESS_INTERVAL = 250;//double tap
 
@@ -193,6 +194,7 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
     public void onMapReady(GoogleMap map) {
         this.map = map;
         map.setInfoWindowAdapter(new MapInfoWindowAdapter(getLayoutInflater()));
+        map.setOnInfoWindowClickListener(this);
         if (atraccion != null) {
            setMapContent();
         }
@@ -547,5 +549,15 @@ public class AtraccionActivity extends AppCompatActivity implements OnMapReadyCa
                 }
             });
         }
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        Intent imageFull = new Intent(this, FullImageMapActivity.class);
+        imageFull.putExtra(Consts.DESCRIPCION,marker.getSnippet());
+        imageFull.putExtra(Consts.NOMBRE,marker.getTitle());
+        imageFull.putExtra(Consts.POS,marker.getPosition());
+        imageFull.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(imageFull);
     }
 }

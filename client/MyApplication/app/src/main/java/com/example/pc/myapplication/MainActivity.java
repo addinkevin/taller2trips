@@ -34,11 +34,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity  implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity  implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener, GoogleMap.OnInfoWindowClickListener {
 
     private LocationManager locationManager;
     private LocationListener listener;
@@ -116,7 +117,9 @@ public class MainActivity extends AppCompatActivity  implements OnMapReadyCallba
     @Override
     public void onMapReady(GoogleMap map) {
         onArtNearInMap.setMap(map);
+
         map.setInfoWindowAdapter(new MapInfoWindowAdapter(getLayoutInflater()));
+        map.setOnInfoWindowClickListener(this);
         TripTP tripTP = (TripTP) getApplication();
         String url = tripTP.getUrl() + Consts.ATRACC + Consts.CERCANIA;
         listener = new LocationGPSListener(this,map, url, tripTP.getRadio(), view);
@@ -154,5 +157,13 @@ public class MainActivity extends AppCompatActivity  implements OnMapReadyCallba
     }
 
 
-
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        Intent imageFull = new Intent(this, FullImageMapActivity.class);
+        imageFull.putExtra(Consts.DESCRIPCION,marker.getSnippet());
+        imageFull.putExtra(Consts.NOMBRE,marker.getTitle());
+        imageFull.putExtra(Consts.POS,marker.getPosition());
+        imageFull.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(imageFull);
+    }
 }
