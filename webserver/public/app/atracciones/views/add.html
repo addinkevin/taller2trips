@@ -6,8 +6,16 @@
                 <a href="#/atracciones" class="btn btn-primary" role="button">Volver al listado de atracciones</a>
             </div>
         </div>
-        <h1>{{title}}</h1>
-
+        <div class="titulo">
+            <h1>{{title}}</h1>
+        </div>
+        <div class="titulo-select">
+                <span>
+                <select class="form-control" style="width:auto;margin-right:5px" ng-model="atraccion.idiomaSelected"
+                        ng-options="idioma for idioma in atraccion.idiomas">
+                </select>
+            </span>
+        </div>
     </div>
 
     <!-- Error header -->
