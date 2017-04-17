@@ -54,4 +54,4 @@
 
 Para poder conectar la aplicación móvil con el servidor, ingresar a Configuración por medio del panel lateral.
 
-En el textbox, se debe ingresar la ip del servidor, por ejemplo: ```http://localhost:3000/api```.
+En el textbox, se debe ingresar la ip del servidor, por ejemplo: ```http://localhost:3000/api```. En caso de que se realice la descarga de la apk en el celular, tanto el celular como el servidor deberán estar sobre la misma red. De esta forma, obteniendo la ip privada del servidor, podemos conectar la aplicación móvil al mismo.
