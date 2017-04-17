@@ -316,6 +316,28 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
             });
     };
 
+    this.uploadPlanosAtraccion = function(atraccion, callback) {
+        var url = '/api/atraccion/' + atraccion._id + '/plano';
+        var requests = [];
+
+        for (var i = 0; i < atraccion.planos.length; i++) {
+            var imgFile = atraccion.planos[i].imgFile;
+            if (imgFile) {
+                requests.push(this._uploadFormData(url, {
+                    plano: imgFile
+                }));
+            }
+        }
+
+        return $q
+            .all(requests)
+            .then(function success(values) {
+                callback(null,null);
+            }, function error() {
+                callback(null, {msg:"No fue posible subir los planos." });
+            });
+    };
+
     this.deleteAudioAtraccion = function(atraccion, atraccionAudio, callback) {
         var audUrl = atraccionAudio.audSrc;
         return $http.delete(audUrl).then(
@@ -350,6 +372,19 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
             },
             function error() {
                 callback(null, {msg:"No se pudo borrar la image de la atracción" });
+            }
+        );
+    };
+
+    this.deletePlanoAtraccion = function(atraccion, atraccionPlano, callback) {
+        var imgUrl = atraccionPlano.imgSrc;
+
+        return $http.delete(imgUrl).then(
+            function success() {
+                callback(null, null);
+            },
+            function error() {
+                callback(null, {msg:"No se pudo borrar el plano de la atracción" });
             }
         );
     };

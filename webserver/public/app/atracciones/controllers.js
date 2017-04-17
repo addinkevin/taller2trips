@@ -219,6 +219,18 @@ atraccionesApp.controller('atraccionesAddEditController',
                 );
             };
 
+            $scope.loadAtraccionPlanos = function(data) {
+                var imgUrl = '/api/atraccion/'+ $scope.atraccion._id + '/plano';
+                $http.get(imgUrl).then(
+                    function success(res) {
+                        $scope.atraccion.planos.push({imgSrc:imgUrl});
+                    },
+                    function error(res) {
+                        $scope.atraccion.planos = [];
+                    }
+                );
+            };
+
             $scope.loadAtraccionImagenes = function(data) {
                 for (var i = 0; i < data.imagenes.length; i++) {
                     var imgUrl = '/api/atraccion/'+ $scope.atraccion._id + '/imagen?filename='+data.imagenes[i];
@@ -262,6 +274,7 @@ atraccionesApp.controller('atraccionesAddEditController',
                             }
                         );
 
+                        $scope.loadAtraccionPlanos(data);
                         $scope.loadAtraccionImagenes(data);
                         $scope.loadAtraccionVideos(data);
                         $scope.loadAtraccionAudios(data);
@@ -336,6 +349,21 @@ atraccionesApp.controller('atraccionesAddEditController',
                 }
             };
 
+            $scope.deletePlano = function(id, atraccionPlano) {
+                $scope.atraccion.planos.splice(id,1);
+                if (!atraccionPlano.imgFile) { // Alojada en el server hay que mandar el request de delete.
+                    $scope.deleteRequests.push(
+                        function() {
+                            return ServerService.deletePlanoAtraccion($scope.atraccion, atraccionPlano, function(data, error) {
+                                if (error) {
+                                    console.log(error.msg);
+                                }
+                            });
+                        }
+                    );
+                }
+            };
+
             $scope.deleteImage = function(id, atraccionImagen) {
                 $scope.atraccion.imagenes.splice(id,1);
                 if (!atraccionImagen.imgFile) { // Alojada en el server hay que mandar el request de delete.
@@ -378,10 +406,13 @@ atraccionesApp.controller('atraccionesAddEditController',
 
             $scope.uploadVideoClick = function(event) {
                 if (!event.target.files[0]) return;
-                $scope.atraccion.videos[0] = {
+                if ($scope.atraccion.videos[0]) {
+                    $scope.deleteVideo(0,$scope.atraccion.videos[0]);
+                }
+                $scope.atraccion.videos.push({
                     vidSrc: window.URL.createObjectURL(event.target.files[0]),
                     vidFile: event.target.files[0]
-                };
+                });
                 $scope.$digest();
             };
 
@@ -413,7 +444,15 @@ atraccionesApp.controller('atraccionesAddEditController',
 
             $scope.uploadPlanoClick = function(event) {
                 if (!event.target.files[0]) return;
-                $scope.atraccion.planos.push({imgSrc: window.URL.createObjectURL(event.target.files[0])});
+
+                if ($scope.atraccion.planos[0]) {
+                    $scope.deletePlano(0, $scope.atraccion.planos[0]);
+                }
+
+                $scope.atraccion.planos.push({
+                    imgSrc: window.URL.createObjectURL(event.target.files[0]),
+                    imgFile: event.target.files[0]
+                });
                 $scope.$digest();
             };
 
@@ -424,6 +463,14 @@ atraccionesApp.controller('atraccionesAddEditController',
                     } else {
                         $scope.ciudades = data;
                         $scope.atraccion.ciudadSelected = $scope.ciudades[0];
+                    }
+                });
+            };
+
+            $scope.addRecursosPlanos = function(atraccion) {
+                return ServerService.uploadPlanosAtraccion(atraccion, function(data,err) {
+                    if (err) {
+                        console.log(err.msg);
                     }
                 });
             };
@@ -453,11 +500,12 @@ atraccionesApp.controller('atraccionesAddEditController',
             };
 
             $scope.addRecursos = function(atraccion) {
+                var promisePlanos = $scope.addRecursosPlanos(atraccion);
                 var promiseImagenes = $scope.addRecursosImagenes(atraccion);
                 var promiseVideos = $scope.addRecursosVideos(atraccion);
                 var promiseAudios = $scope.addRecursosAudios(atraccion);
 
-                return $q.all([ promiseImagenes, promiseAudios, promiseVideos]);
+                return $q.all([ promisePlanos, promiseImagenes, promiseAudios, promiseVideos]);
             };
 
             $scope.addAtraccion = function(atraccion) {
