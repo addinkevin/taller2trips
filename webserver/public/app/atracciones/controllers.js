@@ -201,7 +201,7 @@ atraccionesApp.controller('atraccionesAddEditController',
             $scope.loadAtraccionAudios = function(data) {
                 for (var i = 0; i < data.idiomas_audio.length; i++) {
                     var idioma = data.idiomas_audio[i];
-                    var audUrl = '/api/atraccion/'+ $scope.atraccion._id + '/audio?idioma=' + idioma;
+                    var audUrl = '/api/atraccion/'+ $scope.atraccion._id + '/audio?idioma=' + idioma + '&date=' + new Date().getTime();
                     $scope.atraccion.audios.push({audSrc:audUrl, idiomaAudio:idioma});
                 }
             };
