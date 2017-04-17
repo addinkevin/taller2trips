@@ -43,3 +43,15 @@
  
 ### Cliente Android
 
+* Alternativa 1
+
+  1. [Descargar Android Studio](https://developer.android.com/studio/index.html?hl=es-419)
+  2. Levantar el proyecto alojado en cliente/MyApplication
+  
+* Alternativa 2
+
+  Descargar en el celular la apk ```app-debug.apk``` ubicada en client/ en el celular, instalarla y ejecutarla.
+
+Para poder conectar la aplicación móvil con el servidor, ingresar a Configuración por medio del panel lateral.
+
+En el textbox, se debe ingresar la ip del servidor, por ejemplo: ```http://localhost:3000/api```.
