@@ -124,6 +124,7 @@ router.delete('/atraccion/:id_atraccion', function(req,res) {
         }
         else {
             res.status(200).json({"msj": "exito"});
+            almacen.borrarMediaAtracciones(req.params.id_atraccion);
         }
     });
 });
