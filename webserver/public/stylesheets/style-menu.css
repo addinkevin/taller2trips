@@ -153,13 +153,27 @@ code {
     z-index: 9999;
 }
 
-.titulo {
-    display:inline-block;
-    margin-top:-2%;
-    float:left;
+.row-eq-height {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
 }
 
-.titulo-select {
-    margin-left:5px;
-    display:inline-block;
+.button-wrapper {
+    position:relative;
+    top:25%;
+}
+
+.select-wrapper {
+    position:relative;
+    top:25%;
+}
+
+.idiomaRellenado {
+    background-color: #33CC33;
+}
+
+.idiomaNoRellenado {
+    background-color: #E60000;
 }
