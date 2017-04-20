@@ -6,7 +6,10 @@ var userSchema = mongoose.Schema({
     email:    String,
     nombre:   String,
     apellido: String,
-    bloqueado: Boolean
+    bloqueado: {
+        type: Boolean,
+        default: false
+    }
 });
 
 userSchema.methods.validPassword = function(password) {
