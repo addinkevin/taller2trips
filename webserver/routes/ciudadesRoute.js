@@ -3,7 +3,7 @@ var constants = require('../config/constants');
 var router = express.Router();
 var Ciudad = require('../models/ciudades');
 var Atraccion = require('../models/atracciones');
-var almacen = require('../config/helperAlmacenamiento');
+var almacen = require('../utils/helperAlmacenamiento');
 
 router.get('/ciudad', function(req, res) {
     Ciudad.find(function (err, ciudades) {

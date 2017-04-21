@@ -3,7 +3,7 @@ var fs = require('fs');
 var constants = require('../config/constants');
 var router = express.Router();
 var Atraccion = require('../models/atracciones');
-var almacen = require('../config/helperAlmacenamiento');
+var almacen = require('../utils/helperAlmacenamiento');
 var haversine = require('../utils/haversine');
 
 router.get('/atraccion', function(req, res) {
