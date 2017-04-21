@@ -32,10 +32,11 @@ router.get('/ciudad/:id_ciudad', function(req, res) {
 
 
 router.post('/ciudad', function(req, res) {
+    req.body.descripcion = JSON.parse(req.body.descripcion);
     var ciudad = new Ciudad({
         nombre: req.body.nombre,
-        descripcion: req.body.descripcion,
-        pais: req.body.pais
+        pais: req.body.pais,
+        descripcion: req.body.descripcion
     });
 
     ciudad.save(function(err, ciudad) {
@@ -50,6 +51,7 @@ router.post('/ciudad', function(req, res) {
 });
 
 router.put('/ciudad', function(req, res) {
+    req.body.descripcion = JSON.parse(req.body.descripcion);
     var ciudad = {
         nombre: req.body.nombre,
         descripcion: req.body.descripcion,

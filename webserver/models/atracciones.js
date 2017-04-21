@@ -3,7 +3,11 @@ var mongoose = require('mongoose');
 var atraccionSchema = mongoose.Schema({
     // mongoose automaticamente agrega el campo id que corresponde al _id de mongodb
     nombre: String,
-    descripcion: String,
+    descripcion: {
+        es: String,
+        en: String,
+        pt: String
+    }
     id_ciudad: String,
     costo_monto: Number,
     costo_moneda: String,

@@ -67,6 +67,7 @@ router.get('/atraccion/:id_atraccion', function(req, res) {
         
 
 router.post('/atraccion', function(req, res) {
+    req.body.descripcion = JSON.parse(req.body.descripcion);
     var atraccion = new Atraccion({
         nombre: req.body.nombre,
         descripcion: req.body.descripcion,
@@ -93,6 +94,7 @@ router.post('/atraccion', function(req, res) {
 });
 
 router.put('/atraccion', function(req, res) {
+    req.body.descripcion = JSON.parse(req.body.descripcion);
     var atraccion = {
         nombre: req.body.nombre,
         descripcion: req.body.descripcion,
