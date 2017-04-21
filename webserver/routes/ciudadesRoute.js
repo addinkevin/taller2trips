@@ -41,6 +41,7 @@ router.post('/ciudad', function(req, res) {
 
     ciudad.save(function(err, ciudad) {
         if (err) {
+            console.log(err);
             res.status(405).json({"msj": "input invalido"});
         }
         else {

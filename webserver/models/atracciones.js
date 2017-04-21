@@ -7,7 +7,7 @@ var atraccionSchema = mongoose.Schema({
         es: String,
         en: String,
         pt: String
-    }
+    },
     id_ciudad: String,
     costo_monto: Number,
     costo_moneda: String,

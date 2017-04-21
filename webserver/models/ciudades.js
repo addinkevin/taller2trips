@@ -11,4 +11,6 @@ var ciudadSchema = mongoose.Schema({
     pais: String
 });
 
+ciudadSchema.index({nombre: 1, pais: 1}, {unique: true});
+
 module.exports = mongoose.model('Ciudad', ciudadSchema);
