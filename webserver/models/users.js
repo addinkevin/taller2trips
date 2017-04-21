@@ -6,6 +6,12 @@ var userSchema = mongoose.Schema({
     email:    String,
     nombre:   String,
     apellido: String,
+    ids_sociales: [
+        {
+            provider: String,
+            id_social: String
+        }
+    ],
     bloqueado: {
         type: Boolean,
         default: false

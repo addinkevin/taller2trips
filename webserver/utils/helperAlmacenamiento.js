@@ -1,4 +1,4 @@
-var constants = require('./constants');
+var constants = require('../config/constants');
 var multer = require('multer');
 var mkdirp = require('mkdirp');
 var fs = require('fs');

@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var User = require('../models/users');
+var login = require('../utils/helperLogin');
 
 router.get('/usuario', function(req, res) {
     User.find(function (err, usuarios) {
@@ -27,7 +28,13 @@ router.get('/usuario/:id_usuario', function(req, res) {
     });
 });
 
+router.post('/signin', function(req, res) {
+    //var auth_token =
+    var auth_token = req.get('Authorization').split(" ")[1];
+    login.procesarLogin(auth_token, req, res);
+});
 
+/*
 router.post('/usuario', function(req, res) {
     var usuario = new User({
         username: req.body.username,
@@ -46,6 +53,7 @@ router.post('/usuario', function(req, res) {
     });
 
 });
+*/
 
 router.put('/usuario', function(req, res) {
     var usuario = {
