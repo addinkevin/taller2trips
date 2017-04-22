@@ -83,7 +83,8 @@ ciudadesApp.controller('ciudadesAddController',
                     } else {
                         ServerService.updateCiudadImage($scope.ciudad, function (data, error) {
                             if (error) {
-                                $scope.setErrorMsg(error.msg);
+                                // TODO Chequear error aqui.
+                                $location.url('/ciudades/');
                             } else {
                                 $location.url('/ciudades/');
                             }
@@ -132,6 +133,14 @@ ciudadesApp.controller('ciudadesEditController',
                 }
             };
 
+            $scope.setErrorMsg = function(msgError) {
+                var msg = "<div class='alert alert-danger alert-fixed text-center'>" +
+                    "<button type='button' class='close' data-dismiss='alert'>&times;</button>" +
+                    msgError +
+                    "</div>";
+                $("#errorContainer").html(msg);
+            };
+
             $scope.validateCiudad = function(ciudad) {
                 var validateList = [
                     {
@@ -170,8 +179,7 @@ ciudadesApp.controller('ciudadesEditController',
 
                 ServerService.updateCiudadInfo(ciudadObject, function (data, error) {
                     if (error) {
-                        console.log(error);
-                        $location.url('/ciudades/');
+                        $scope.setErrorMsg(error.msg);
                     } else {
                         if (!ciudadObject.imgFile) {
                             $location.url('/ciudades/');
