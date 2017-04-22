@@ -141,7 +141,11 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
                 ciudadObject._id = res.data._id;
                 callback(ciudadObject, null);
             }, function error(res) {
-                callback(ciudadObject, {msg:"No se pudo agregar la ciudad"});
+                if (res.status == 405) {
+                    callback(null, { msg: "No puedes agregar la ciudad de dicho país debido a que ya fue agregada." });
+                } else {
+                    callback(ciudadObject, {msg:"No se pudo agregar la ciudad"});
+                }
             });
     };
 

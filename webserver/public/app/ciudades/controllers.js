@@ -13,6 +13,13 @@ ciudadesApp.controller('ciudadesAddController',
                 msg: ''
             };
 
+            $scope.setErrorMsg = function(msgError) {
+                var msg = "<div class='alert alert-danger alert-fixed text-center'>" +
+                    "<button type='button' class='close' data-dismiss='alert'>&times;</button>" +
+                    msgError +
+                    "</div>";
+                $("#errorContainer").html(msg);
+            };
 
             $scope.updateImageClick = function(event) {
                 $scope.ciudad.imgFile = event.target.files[0];
@@ -72,13 +79,11 @@ ciudadesApp.controller('ciudadesAddController',
                 }
                 ServerService.addCiudad($scope.ciudad, function (data, error) {
                     if (error) {
-                        console.log(error.msg);
-                        $location.url('/ciudades/');
+                        $scope.setErrorMsg(error.msg);
                     } else {
                         ServerService.updateCiudadImage($scope.ciudad, function (data, error) {
                             if (error) {
-                                console.log(error.msg);
-                                $location.url('/ciudades/');
+                                $scope.setErrorMsg(error.msg);
                             } else {
                                 $location.url('/ciudades/');
                             }
