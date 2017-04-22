@@ -1,6 +1,8 @@
-var constants = require('./constants');
+var constants = require('../config/constants');
 var multer = require('multer');
 var mkdirp = require('mkdirp');
+var fs = require('fs');
+var glob = require('glob');
 
 exports.crearDirectorioPlanosAtracciones = function() {
     mkdirp(constants.dirPlanosAtracciones, function(err) {
@@ -108,3 +110,23 @@ exports.uploadImagenesAtracciones = multer({
 exports.uploadImagenesCiudad = multer({
     storage: storageImagenesCiudad
 });
+
+exports.borrarMediaAtracciones = function(idAtraccion) {
+    fs.unlink(constants.dirVideosAtracciones + idAtraccion + "_video.mp4", function(err) {
+             if (err) console.log(err)} );
+    fs.unlink(constants.dirPlanosAtracciones + idAtraccion + "_plano.png", function(err) {
+             if (err) console.log(err)} );
+    glob.glob(constants.dirAudiosAtracciones + idAtraccion + "*", function(err, files) {
+        for (var i = 0; i < files.length; i++) {
+            fs.unlink(files[i], function(err) {
+                if (err) console.log(err)} );
+        }
+    });
+    glob.glob(constants.dirImagenesAtracciones + idAtraccion + "*", function(err, files) {
+        for (var i = 0; i < files.length; i++) {
+            fs.unlink(files[i], function(err) {
+                     if (err) console.log(err)} );
+        }
+    });
+};
+
