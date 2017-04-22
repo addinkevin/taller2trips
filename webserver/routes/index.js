@@ -2,6 +2,8 @@ var express = require('express');
 var constants = require('../config/constants');
 var ciudadesRoute = require('./ciudadesRoute');
 var atraccionesRoute = require('./atraccionesRoute');
+var reseniasRoute = require('./reseniasRoute');
+var usuariosRoute = require('./usuariosRoute');
 
 module.exports = function(app, passport) {
     var router = express.Router();
@@ -38,4 +40,6 @@ module.exports = function(app, passport) {
     app.use('/', router);
     app.use('/api', ciudadesRoute);
     app.use('/api', atraccionesRoute);
+    app.use('/api', reseniasRoute);
+    app.use('/api', usuariosRoute);
 };
