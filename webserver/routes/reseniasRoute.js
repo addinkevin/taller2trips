@@ -48,6 +48,8 @@ router.post('/resenia', function(req, res) {
         descripcion: req.body.descripcion,
         id_ciudad: req.body.id_ciudad,
         id_atraccion: req.body.id_atraccion,
+		id_userSocial: req.body.id_userSocial,
+		provider: req.body.provider,
         calificacion: req.body.calificacion,
         idioma: req.body.idioma
     });
