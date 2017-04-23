@@ -2,29 +2,22 @@
 <div class="container">
     <div class='page-header'>
         <div class="row row-eq-height">
-            <div class="col-sm-4">
-                <div class="row row-eq-height">
-                    <div class="col-sm-10">
-                        <h1>{{title}}</h1>
-                    </div>
-                    <div class="col-sm-2">
-                        <select class="form-control button-wrapper">
-                            <optgroup label="Idiomas cargados">
-                                <option>es</option>
-                                <option>en</option>
-                            </optgroup>
-                            <optgroup label="Idiomas no cargados">
-                                <option>jp</option>
-                            </optgroup>
-                        </select>
-                    </div>
+            <div class="col-sm-8">
+                <div style="float:left;">
+                    <h1>{{title}}</h1>
+                </div>
+                <div style="float:left;" class="select-wrapper">
+                    <select class="form-control" style="width:120px;"
+                            ng-model="idiomaFormulario"
+                            ng-options="idioma as (idioma.nombre + '' + getIndicativo(idioma)) group by getStatusIdioma(idioma) for idioma in atraccion.idiomas">
+                    </select>
                 </div>
             </div>
             <div class="col-sm-4">
-            </div>
-            <div class="col-sm-4">
-                <div class="button-wrapper">
-                    <a href="#/atracciones" class="btn btn-primary pull-right" role="button">Volver al listado de atracciones</a>
+                <div class='btn-toolbar pull-right button-wrapper'>
+                    <div class='btn-group'>
+                        <a href="#/atracciones" class="btn btn-primary" role="button">Volver al listado de atracciones</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -36,10 +29,6 @@
 
     <div class="panel-custom" ng-show="ciudades.length == 0">
         <h3 class="subheader">No hay ciudades agregadas. Agrega una ciudad primero.</h3>
-    </div>
-
-    <div ng-show="ciudades.length > 0">
-        <label class="col-form-label"> Idioma seleccionado</label>
     </div>
 
     <div class="panel panel-default" ng-show="ciudades.length > 0">
@@ -63,7 +52,8 @@
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Descripción de la atracción</label>
                     <div class="col-sm-10">
-                        <textarea class="form-control" ng-model="atraccion.descripcion" rows="5" style="resize: none;" id="descripcionAtraccion" placeholder="Descripción de la atracción"></textarea>
+                        <textarea class="form-control" ng-change="updateDescripcion()" ng-model="atraccion.descripcion[idiomaFormulario.code]"
+                                  rows="5" style="resize: none;" id="descripcionAtraccion" placeholder="Descripción de la atracción"></textarea>
                     </div>
                 </div>
 
@@ -146,20 +136,15 @@
                         <h4>Información</h4>
                         <p>El formato del audio debe ser mp3.</p>
                         <div class="input-group">
-                            <span>
-                                <select class="form-control" style="width:auto;margin-right:5px" ng-model="atraccion.idiomaSelected"
-                                        ng-options="idioma for idioma in atraccion.idiomas">
-                                </select>
-                            </span>
                             <label class="btn btn-primary" >
-                                <input type="file" custom-on-change="uploadAudioClick" style="display:none;" multiple="multiple" accept="audio/mp3">
+                                <input type="file" custom-on-change="uploadAudioClick" style="display:none;" accept="audio/mp3">
                                 Subir audio
                             </label>
 
                         </div>
 
                         <div class="previewDeAudios">
-                            <div class="audioPreview" ng-repeat="(id,atraccionAudio) in atraccion.audios">
+                            <div class="audioPreview" ng-repeat="(id,atraccionAudio) in atraccion.audios[idiomaFormulario.code]">
                                 <span class="label label-info" style="min-width: 30px; display: inline-block;">{{atraccionAudio.idiomaAudio}}</span>
                                 <audio class="media-middle" controls>
                                     <source ng-src="{{atraccionAudio.audSrc}}">

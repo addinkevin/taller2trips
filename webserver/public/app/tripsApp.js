@@ -148,7 +148,7 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
     this.addAtraccion = function(atraccion, callback) {
         var data = {
             "nombre": atraccion.nombre,
-            "descripcion": atraccion.descripcion,
+            "descripcion": JSON.stringify(atraccion.descripcion),
             "costo_monto": atraccion.montoCosto,
             "costo_moneda": atraccion.monedaCosto,
             "hora_apertura": atraccion.horaApertura,
@@ -178,7 +178,7 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
         var data = {
             "_id": atraccion._id,
             "nombre": atraccion.nombre,
-            "descripcion": atraccion.descripcion,
+            "descripcion": JSON.stringify(atraccion.descripcion),
             "costo_monto": atraccion.montoCosto,
             "costo_moneda": atraccion.monedaCosto,
             "hora_apertura": atraccion.horaApertura,
@@ -246,26 +246,31 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
     };
 
     this.uploadAudiosAtraccion = function(atraccion, callback) {
+        var self = this;
         var url = 'api/atraccion/' + atraccion._id + '/audio';
 
         var requests = [];
 
-        for (var i = 0; i < atraccion.audios.length; i++) {
-            var audFile = atraccion.audios[i].audFile;
-            if (audFile) {
-                requests.push(this._uploadFormData(url, {
-                    idioma: atraccion.audios[i].idiomaAudio,
-                    audio: audFile
-                }));
+        var audios = [];
+
+        Object.keys(atraccion.audios).forEach(function(key) {
+            for (var i = 0; i < atraccion.audios[key].length; i++) {
+                var audFile = atraccion.audios[key][i].audFile;
+                if (audFile) {
+                    requests.push(self._uploadFormData(url, {
+                        idioma: atraccion.audios[key][i].idiomaAudio,
+                        audio: audFile
+                    }));
+                }
             }
-        }
+        });
 
         return $q
             .all(requests)
             .then(function success(values) {
                 callback(null,null);
             }, function error() {
-                callback(null, {msg:"No fue posible subir todos los videos." } );
+                callback(null, {msg:"No fue posible subir todos los audios." } );
             });
     };
 
