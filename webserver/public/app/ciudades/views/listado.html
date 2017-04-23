@@ -43,12 +43,11 @@
                         </div>
                     </div>
                     <div class="row">
-                        <label class="col-sm-2 col-form-label">Descripción</label>
+                        <label class="col-sm-2 col-form-label">Idiomas</label>
                         <div class="col-sm-10">
-                            {{ciudad.descripcion}}
+                            <span class="label label-info" style="margin-right:3px;" ng-repeat="idioma in ciudad.idiomasCargados">{{idioma.nombre}}</span>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>

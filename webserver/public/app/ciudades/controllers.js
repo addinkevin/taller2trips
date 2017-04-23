@@ -4,15 +4,36 @@ ciudadesApp.controller('ciudadesController', [ '$scope', function ciudadesContro
 }]);
 
 ciudadesApp.controller('ciudadesAddController',
-    [ '$scope', '$location', '$http', 'ServerService',
-        function ($scope, $location, $http, ServerService) {
-            $scope.ciudad = {};
+    [ '$scope', '$location', '$http', 'ServerService', 'CiudadService',
+        function ($scope, $location, $http, ServerService, CiudadService) {
+            $scope.ciudad = CiudadService.createNewCiudad();
+
+            $scope.idiomaFormulario = $scope.ciudad.idiomas[0];
+
+            $scope.updateDescripcion = function() {
+                $scope.idiomaFormulario.statusModificado = true;
+            };
 
             $scope.alert = {
                 class : 'hide',
                 msg: ''
             };
 
+            $scope.getStatusIdioma = function(idioma) {
+                if ( idioma.statusCargado ) {
+                    return "Idiomas cargados";
+                }
+
+                return "Idiomas no cargados";
+            };
+
+            $scope.getIndicativo = function(idioma) {
+                if (idioma.statusModificado) {
+                    return " *";
+                } else {
+                    return "";
+                }
+            };
 
             $scope.updateImageClick = function(event) {
                 $scope.ciudad.imgFile = event.target.files[0];
@@ -45,10 +66,6 @@ ciudadesApp.controller('ciudadesAddController',
 
                     },
                     {
-                        parametro: 'descripcion',
-                        msg: "Debes especificar la descripción de la ciudad"
-                    },
-                    {
                         parametro: 'imgFile',
                         msg: "Debes subir una imagen!"
                     }
@@ -62,6 +79,21 @@ ciudadesApp.controller('ciudadesAddController',
                         return false;
                     }
                 }
+
+                var alMenosUnIdioma = false;
+                for (var i = 0; i < ciudad.idiomas.length; i++) {
+                    var idioma = ciudad.idiomas[i];
+                    if (ciudad.descripcion[idioma.code] != "") {
+                        alMenosUnIdioma = true;
+                        break;
+                    }
+                }
+
+                if (!alMenosUnIdioma) {
+                    $scope.alert.msg = "Debes ingresar la descripción para al menos un idioma.";
+                    return false;
+                }
+
                 return true;
             };
 
@@ -92,18 +124,39 @@ ciudadesApp.controller('ciudadesAddController',
 );
 
 ciudadesApp.controller('ciudadesEditController',
-    [ '$scope', '$location', '$http', '$routeParams', 'ServerService',
-        function ($scope, $location, $http, $routeParams, ServerService) {
+    [ '$scope', '$location', '$http', '$routeParams', 'ServerService', 'CiudadService',
+        function ($scope, $location, $http, $routeParams, ServerService, CiudadService) {
             $scope.ciudad = {};
 
             $scope.alert = { class: 'hide', msg: '' };
+
+            $scope.updateDescripcion = function() {
+                $scope.idiomaFormulario.statusModificado = true;
+            };
+
+            $scope.getStatusIdioma = function(idioma) {
+                if ( idioma.statusCargado ) {
+                    return "Idiomas cargados";
+                }
+
+                return "Idiomas no cargados";
+            };
+
+            $scope.getIndicativo = function(idioma) {
+                if (idioma.statusModificado) {
+                    return " *";
+                } else {
+                    return "";
+                }
+            };
 
             $scope.getCiudad = function(idCiudad) {
                 ServerService.getCiudad(idCiudad, function(data, error) {
                     if (error) {
                         console.log(error.msg);
                     } else {
-                        $scope.ciudad = data;
+                        $scope.ciudad = CiudadService.cargarInformacionAdicional(data);
+                        $scope.idiomaFormulario = $scope.ciudad.idiomasCargados[0];
                         $scope.ciudad.imgSrc = "/api/ciudad/"+idCiudad+"/imagen";
                     }
                 });
@@ -137,10 +190,6 @@ ciudadesApp.controller('ciudadesEditController',
                         parametro: 'pais',
                         msg: "Debes especificar el país de la ciudad"
 
-                    },
-                    {
-                        parametro: 'descripcion',
-                        msg: "Debes especificar la descripción de la ciudad"
                     }
                 ];
 
@@ -152,6 +201,21 @@ ciudadesApp.controller('ciudadesEditController',
                         return false;
                     }
                 }
+
+                var alMenosUnIdioma = false;
+                for (var i = 0; i < ciudad.idiomas.length; i++) {
+                    var idioma = ciudad.idiomas[i];
+                    if (ciudad.descripcion[idioma.code] != "") {
+                        alMenosUnIdioma = true;
+                        break;
+                    }
+                }
+
+                if (!alMenosUnIdioma) {
+                    $scope.alert.msg = "Debes ingresar la descripción para al menos un idioma.";
+                    return false;
+                }
+
                 return true;
             };
 
@@ -188,8 +252,8 @@ ciudadesApp.controller('ciudadesEditController',
 );
 
 ciudadesApp.controller('ciudadesListadoController',
-    [ '$scope' , '$http', '$location', 'ServerService',
-    function($scope, $http, $location, ServerService) {
+    [ '$scope' , '$http', '$location', 'ServerService', 'IdiomaService',
+    function($scope, $http, $location, ServerService, IdiomaService) {
 
         $scope.ciudades = [];
 
@@ -211,16 +275,35 @@ ciudadesApp.controller('ciudadesListadoController',
             });
         };
 
+        $scope.processList = function(data) {
+            var idiomas = IdiomaService.getIdiomas();
+            for (var i = 0; i < data.length; i++) {
+                var ciudad = data[i];
+
+                ciudad.idiomasCargados = [];
+                ciudad.idiomasNoCargados = [];
+
+                for (var j = 0; j < idiomas.length; j++) {
+                    var idioma = idiomas[j];
+                    if (ciudad.descripcion[idioma.code] != "") {
+                        ciudad.idiomasCargados.push(idioma);
+                    } else {
+                        ciudad.idiomasNoCargados.push(idioma);
+                    }
+                }
+            }
+        };
+
         $scope.getCiudades = function() {
             ServerService.getCiudades(function(data, err) {
                 if (err) {
                     console.log(err.msg);
                 } else {
+                    $scope.processList(data);
                     $scope.ciudades = data;
                 }
             });
         };
 
         $scope.getCiudades();
-
 }]);
