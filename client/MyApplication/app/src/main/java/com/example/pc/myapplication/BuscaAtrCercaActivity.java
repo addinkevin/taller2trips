@@ -59,7 +59,7 @@ public class BuscaAtrCercaActivity extends AppCompatActivity implements AdapterV
                 "?" + Consts.LATITUD + "=" + pos.latitude +
                 "&" + Consts.LONGITUD + "=" + pos.longitude +
                 "&" + Consts.RADIO + "=" + tripTP.getRadio();
-        InternetClient client = new InfoClient(this, view,
+        InternetClient client = new InfoClient(getApplicationContext(),
                 Consts.GET_ATR_CERC, url, null, Consts.GET, null, true);
         client.runInBackground();
 

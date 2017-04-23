@@ -18,8 +18,8 @@ import java.util.Map;
 public class InfoClient extends InternetClient {
 
 
-    public InfoClient(Context context, View view, String toCall, String path, Map<String, String> headerM, String rMethod, String jBody, boolean response) {
-        super(context, view, toCall, path, headerM, rMethod, jBody ,response);
+    public InfoClient(Context context, String toCall, String path, Map<String, String> headerM, String rMethod, String jBody, boolean response) {
+        super(context, toCall, path, headerM, rMethod, jBody ,response);
     }
 
     @Override

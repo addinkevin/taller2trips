@@ -22,7 +22,6 @@ public abstract class InternetClient {
     private static final int timeOUT_R = 20000;
     private static final int timeOUT_C = 25000;
     protected final Context context;
-    private final View view;
     private final String toCall;
 
     protected InputStream is;
@@ -37,9 +36,8 @@ public abstract class InternetClient {
 
     public static final String CONNECTION = "Connection";
 
-    public InternetClient(Context context, View view, String toCall, String path, Map<String, String> headerM, String rMethod, String jBody, boolean response ) {
+    public InternetClient(Context context, String toCall, String path, Map<String, String> headerM, String rMethod, String jBody, boolean response) {
         this.context = context;
-        this.view = view;
         this.toCall = toCall;
         nURL = path;
         requestMethod = rMethod;

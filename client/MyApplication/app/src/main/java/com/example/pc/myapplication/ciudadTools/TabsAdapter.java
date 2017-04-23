@@ -11,25 +11,25 @@ import com.example.pc.myapplication.ciudadesTools.Ciudad;
 public class TabsAdapter extends FragmentPagerAdapter {
 
     final int PAGE_COUNT = 3;
-    private String tabTitles[];
-    private Fragment pagesLayout[] = new Fragment[3];
-    private Context context;
+        private String tabTitles[];
+        private Fragment pagesLayout[] = new Fragment[3];
+        private Context context;
 
     public TabsAdapter(FragmentManager fm, Context context, Ciudad ciudad) {
-        super(fm);
-        this.context = context;
+            super(fm);
+            this.context = context;
 
-        pagesLayout[0] = new MainFragment();
-        ((MainFragment)pagesLayout[0]).setCiudad(ciudad);
-        pagesLayout[1] = new AtraccionesFragment();
-        ((AtraccionesFragment)pagesLayout[1]).setCiudad(ciudad);
-        pagesLayout[2] = new RecorridosFragment();
-        ((RecorridosFragment)pagesLayout[2]).setCiudad(ciudad);
+            pagesLayout[0] = new MainFragment();
+            ((MainFragment)pagesLayout[0]).setCiudad(ciudad);
+            pagesLayout[1] = new AtraccionesFragment();
+            ((AtraccionesFragment)pagesLayout[1]).setCiudad(ciudad);
+            pagesLayout[2] = new RecorridosFragment();
+            ((RecorridosFragment)pagesLayout[2]).setCiudad(ciudad);
 
-        String info = context.getResources().getString(R.string.informacion);
-        String tours = context.getResources().getString(R.string.recorridos);
-        String atracciones = context.getResources().getString(R.string.atracciones);
-        tabTitles = new String[] { info,atracciones,tours };
+            String info = context.getResources().getString(R.string.informacion);
+            String tours = context.getResources().getString(R.string.recorridos);
+            String atracciones = context.getResources().getString(R.string.atracciones);
+            tabTitles = new String[] { info,atracciones,tours };
 
     }
 

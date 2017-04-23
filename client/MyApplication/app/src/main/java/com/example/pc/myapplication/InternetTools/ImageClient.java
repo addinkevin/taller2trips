@@ -13,18 +13,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Map;
 
-/**
- * Created by PC on 26/03/2017.
- */
-
 public class ImageClient extends InternetClient {
 
     private ByteArrayOutputStream out = null;
     private int imgID;
 
     //imgID < 0 entonces no se necesita el id de cada imagen
-    public ImageClient(Context context, View view, String toCall, String path, Map<String, String> headerM, String rMethod, String jBody, boolean response, int imgID) {
-        super(context, view, toCall, path, headerM, rMethod, jBody, response);
+    public ImageClient(Context context, String toCall, String path, Map<String, String> headerM, String rMethod, String jBody, boolean response, int imgID) {
+        super(context, toCall, path, headerM, rMethod, jBody, response);
         this.imgID = imgID;
     }
 

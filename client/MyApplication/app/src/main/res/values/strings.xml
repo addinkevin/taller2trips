@@ -5,6 +5,8 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <string name="probar">Try it</string>
+
     <string name="buscar_cercanos">Nearby</string>
     <string name="cercanoTitle">Nearby attractions</string>
     <string name="atracciones">Attractions</string>
@@ -29,10 +31,31 @@
     <string name="votos">Votes: </string>
     <string name="logout">Logout</string>
     <string name="config">Configuration</string>
+    <string name="add_social">Add social network</string>
+    <string name="link_fail">Association fail.</string>
+    <string name="link_succes">Association succes.</string>
     <string name="radio">Search radius</string>
     <string name="noPlano">There is no plan to show.</string>
     <string name="noAudio">There is no audio to show.</string>
     <string name="noVideo">There is no video to show.</string>
+    <string name="comment">Comment</string>
+    <string name="comments">Comments</string>
+    <string name="review">Comment</string>
+    <string name="comment_succes">Successful review.</string>
+    <string name="comment_fail">Fail review.</string>
+    <string name="share_dialog">¿Share in social networks?</string>
+    <string name="share_accounts_dialog">¿Share in all social networks?</string>
+    <string name="make_review">Make a review.</string>
+    <string name="share_button">Share</string>
+    <string name="share_hear_button">Share hear</string>
+    <string name="share_all_button">Share all</string>
+    <string name="ok">OK</string>
+    <string name="rate">Rate attraction:</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="banned_alert">You are banned, cannot make reviews.</string>
+    <string name="login_alert">You are not logged, cannot make reviews.</string>
+
+
 
 
 </resources>

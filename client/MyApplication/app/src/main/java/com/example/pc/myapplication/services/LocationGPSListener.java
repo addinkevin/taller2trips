@@ -3,19 +3,15 @@ package com.example.pc.myapplication.services;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
-import android.widget.Toast;
 
 import com.example.pc.myapplication.InternetTools.InfoClient;
 import com.example.pc.myapplication.InternetTools.InternetClient;
 import com.example.pc.myapplication.R;
-import com.example.pc.myapplication.application.TripTP;
 import com.example.pc.myapplication.commonfunctions.Consts;
 import com.example.pc.myapplication.singletons.GpsSingleton;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -23,10 +19,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
 
 
 public class LocationGPSListener implements LocationListener {
@@ -71,7 +63,7 @@ public class LocationGPSListener implements LocationListener {
             urlToAtr = urlToAtr + "?" + Consts.LATITUD + "=" + position.latitude +
                     "&" + Consts.LONGITUD + "=" + position.longitude +
                     "&" + Consts.RADIO + "=" + radio;
-            InternetClient client = new InfoClient(ctx, view,
+            InternetClient client = new InfoClient(ctx.getApplicationContext(),
                     Consts.GET_ATR_CERC, urlToAtr, null, Consts.GET, null, true);
             client.runInBackground();
         }

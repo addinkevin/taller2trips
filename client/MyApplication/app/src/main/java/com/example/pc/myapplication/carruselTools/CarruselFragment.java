@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.example.pc.myapplication.AtraccionActivity;
+import com.example.pc.myapplication.AtraccionTab;
 import com.example.pc.myapplication.FullScreenViewActivity;
 import com.example.pc.myapplication.R;
 import com.example.pc.myapplication.commonfunctions.Consts;
@@ -18,13 +19,13 @@ import com.example.pc.myapplication.singletons.ImagesSingleton;
 
 public class CarruselFragment extends Fragment {
 
-    public Fragment newInstance(AtraccionActivity context, int pos, float scale, Bitmap img) {
+    public Fragment newInstance(AtraccionTab context, int pos, float scale, Bitmap img) {
         Bundle b = new Bundle();
         b.putInt("pos", pos);
         b.putParcelable(Consts.IMG_OUT, img);
         b.putFloat("scale", scale);
 
-        return Fragment.instantiate(context, CarruselFragment.class.getName(), b);
+        return Fragment.instantiate(context.getContext(), CarruselFragment.class.getName(), b);
     }
 
     @Override

@@ -18,8 +18,6 @@ import com.example.pc.myapplication.application.TripTP;
 import com.example.pc.myapplication.atraccionesTools.AtraccionesListAdp;
 import com.example.pc.myapplication.ciudadesTools.Atraccion;
 import com.example.pc.myapplication.commonfunctions.Consts;
-import com.example.pc.myapplication.singletons.GpsSingleton;
-import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +52,7 @@ public class AtraccionesActivity extends AppCompatActivity implements AdapterVie
         atraccList.setOnItemClickListener(this);
 
         String url = tripTP.getUrl() + Consts.ATRACC;
-        InternetClient client = new InfoClient(this, view,
+        InternetClient client = new InfoClient(getApplicationContext(),
                 Consts.GET_ATRS, url, null, Consts.GET, null, true);
         client.runInBackground();
 
