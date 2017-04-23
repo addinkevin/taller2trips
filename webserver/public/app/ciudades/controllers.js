@@ -11,7 +11,7 @@ ciudadesApp.controller('ciudadesAddController',
             $scope.idiomaFormulario = $scope.ciudad.idiomas[0];
 
             $scope.updateDescripcion = function() {
-                $scope.idiomaFormulario.statusModificado = ($scope.ciudad.descripcion[$scope.idiomaFormulario.code].length > 0);
+                $scope.idiomaFormulario.statusModificado = true;
             };
 
             $scope.alert = {
@@ -66,10 +66,6 @@ ciudadesApp.controller('ciudadesAddController',
 
                     },
                     {
-                        parametro: 'descripcion',
-                        msg: "Debes especificar la descripción de la ciudad"
-                    },
-                    {
                         parametro: 'imgFile',
                         msg: "Debes subir una imagen!"
                     }
@@ -83,6 +79,21 @@ ciudadesApp.controller('ciudadesAddController',
                         return false;
                     }
                 }
+
+                var alMenosUnIdioma = false;
+                for (var i = 0; i < ciudad.idiomas.length; i++) {
+                    var idioma = ciudad.idiomas[i];
+                    if (ciudad.descripcion[idioma.code] != "") {
+                        alMenosUnIdioma = true;
+                        break;
+                    }
+                }
+
+                if (!alMenosUnIdioma) {
+                    $scope.alert.msg = "Debes ingresar la descripción para al menos un idioma.";
+                    return false;
+                }
+
                 return true;
             };
 
@@ -120,7 +131,7 @@ ciudadesApp.controller('ciudadesEditController',
             $scope.alert = { class: 'hide', msg: '' };
 
             $scope.updateDescripcion = function() {
-                $scope.idiomaFormulario.statusModificado = ($scope.ciudad.descripcion[$scope.idiomaFormulario.code].length > 0);
+                $scope.idiomaFormulario.statusModificado = true;
             };
 
             $scope.getStatusIdioma = function(idioma) {
@@ -179,10 +190,6 @@ ciudadesApp.controller('ciudadesEditController',
                         parametro: 'pais',
                         msg: "Debes especificar el país de la ciudad"
 
-                    },
-                    {
-                        parametro: 'descripcion',
-                        msg: "Debes especificar la descripción de la ciudad"
                     }
                 ];
 
@@ -194,6 +201,21 @@ ciudadesApp.controller('ciudadesEditController',
                         return false;
                     }
                 }
+
+                var alMenosUnIdioma = false;
+                for (var i = 0; i < ciudad.idiomas.length; i++) {
+                    var idioma = ciudad.idiomas[i];
+                    if (ciudad.descripcion[idioma.code] != "") {
+                        alMenosUnIdioma = true;
+                        break;
+                    }
+                }
+
+                if (!alMenosUnIdioma) {
+                    $scope.alert.msg = "Debes ingresar la descripción para al menos un idioma.";
+                    return false;
+                }
+
                 return true;
             };
 
