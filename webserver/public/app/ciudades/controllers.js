@@ -209,8 +209,8 @@ ciudadesApp.controller('ciudadesEditController',
 );
 
 ciudadesApp.controller('ciudadesListadoController',
-    [ '$scope' , '$http', '$location', 'ServerService',
-    function($scope, $http, $location, ServerService) {
+    [ '$scope' , '$http', '$location', 'ServerService', 'IdiomaService',
+    function($scope, $http, $location, ServerService, IdiomaService) {
 
         $scope.ciudades = [];
 
@@ -233,16 +233,21 @@ ciudadesApp.controller('ciudadesListadoController',
         };
 
         $scope.processList = function(data) {
+            var idiomas = IdiomaService.getIdiomas();
             for (var i = 0; i < data.length; i++) {
                 var ciudad = data[i];
-                var idiomasCargados = [];
-                Object.keys(ciudad.descripcion).forEach(function(key,index) {
-                    if (ciudad.descripcion[key] != "") {
-                        idiomasCargados.push(key);
-                    }
-                });
 
-                ciudad.idiomasCargados = idiomasCargados;
+                ciudad.idiomasCargados = [];
+                ciudad.idiomasNoCargados = [];
+
+                for (var j = 0; j < idiomas.length; j++) {
+                    var idioma = idiomas[j];
+                    if (ciudad.descripcion[idioma.code] != "") {
+                        ciudad.idiomasCargados.push(idioma);
+                    } else {
+                        ciudad.idiomasNoCargados.push(idioma);
+                    }
+                }
             }
         };
 
