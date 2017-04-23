@@ -5,6 +5,8 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <string name="probar">Probar</string>
+
     <string name="buscar_cercanos">Buscar atracciones cercanas</string>
     <string name="cercanoTitle">Atracciones cercanas</string>
     <string name="atracciones">Atracciones</string>
@@ -33,6 +35,23 @@
     <string name="noPlano">No hay ningún plano para mostrar.</string>
     <string name="noAudio">No hay ningún audio para escuchar.</string>
     <string name="noVideo">No hay ningún video para ver.</string>
+    <string name="comment">Comentar</string>
+    <string name="comment_succes">Reseña realizada con éxito.</string>
+    <string name="comment_fail">No se pudo realizar la reseña.</string>
+    <string name="link_fail">No se pudo realizar la asociación de cuentas.</string>
+    <string name="link_succes">Se asoció la cuenta correctamente.</string>
+    <string name="add_social">Agregar red social</string>
+    <string name="comments">Comentarios</string>
+    <string name="review">Comment</string>
+    <string name="banned_alert">Estas bloqueado, no puedes hacer reseñas.</string>
+    <string name="login_alert">No iniciaste sesión, no puedes hacer reseñas.</string>
+    <string name="rate">Califica esta atracción:</string>
+    <string name="share_dialog">¿Compartir en redes sociales?</string>
+    <string name="make_review">Has una reseña.</string>
+    <string name="ok">OK</string>
+    <string name="share_button">Compatir</string>
+    <string name="cancel_button">Cancelar</string>
+
 
 
 

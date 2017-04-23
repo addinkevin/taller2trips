@@ -17,7 +17,6 @@ import com.example.pc.myapplication.commonfunctions.Consts;
 public class CiudadActivity extends AppCompatActivity {
 
     ViewPager mViewPager;
-    private ReceiverOnCiudadImage onCiudadImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,14 +24,10 @@ public class CiudadActivity extends AppCompatActivity {
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         setContentView(R.layout.activity_ciudad);
 
-        View view = findViewById(R.id.ciudadL);
-
         Ciudad ciudad = new Ciudad (getIntent().getStringExtra(Consts.NOMBRE),
                 getIntent().getStringExtra(Consts.DESCRIPCION),
                 getIntent().getStringExtra(Consts.PAIS),
                 getIntent().getStringExtra(Consts._ID));
-
-
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.include);
         toolbar.setTitle("Taller2Trips");

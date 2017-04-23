@@ -1,15 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.pc.myapplication.LoginActivity">
+    android:id="@+id/relLogin"
+    tools:context="com.example.pc.myapplication.LoginActivity"
+    >
+
+    <com.twitter.sdk.android.core.identity.TwitterLoginButton
+        android:id="@+id/twitter_login_button"
+        android:layout_width="215dp"
+        android:layout_height="25dp"
+        android:layout_marginBottom="8dp"
+        android:layout_above="@+id/login_button"
+        android:layout_centerHorizontal="true" />
+
 
     <com.facebook.login.widget.LoginButton
         android:id="@+id/login_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="215dp"
+        android:layout_height="35dp"
+        android:layout_alignLeft="@+id/twitter_login_button"
+        android:layout_alignStart="@+id/twitter_login_button"
+        android:layout_centerVertical="true"
         android:layout_gravity="center" />
 
-</LinearLayout>
+    <Button
+        android:id="@+id/tryIt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/login_button"
+        android:layout_margin="8dp"
+        android:layout_centerHorizontal="true"
+        android:text="@string/probar" />
+
+</RelativeLayout>

@@ -7,10 +7,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.pc.myapplication.AtraccionActivity;
+import com.example.pc.myapplication.AtraccionTab;
 import com.example.pc.myapplication.InternetTools.ImageClient;
 import com.example.pc.myapplication.InternetTools.InternetClient;
-import com.example.pc.myapplication.InternetTools.ThumbnailRetriever;
 import com.example.pc.myapplication.application.TripTP;
 import com.example.pc.myapplication.ciudadesTools.Atraccion;
 import com.example.pc.myapplication.commonfunctions.Consts;
@@ -26,10 +25,10 @@ import java.util.List;
 
 public class ReceiverOnAtraccion extends BroadcastReceiver {
 
-    private AtraccionActivity atrAct;
+    private AtraccionTab atrAct;
     private View view;
 
-    public ReceiverOnAtraccion(AtraccionActivity atraccionActivity, View view) {
+    public ReceiverOnAtraccion(AtraccionTab atraccionActivity, View view) {
         this.atrAct = atraccionActivity;
         this.view = view;
     }
@@ -45,21 +44,21 @@ public class ReceiverOnAtraccion extends BroadcastReceiver {
                     atrAct.attachAtraccion(atraccion);
                     List fotos = atraccion.fotosPath;
 
-                    TripTP app = ((TripTP) atrAct.getApplication());
+                    TripTP app = ((TripTP) atrAct.getActivity().getApplication());
                     String urlConst = app.getUrl() + Consts.ATRACC + "/" + atraccion._id
                             + Consts.IMAGEN + "?" + Consts.FILENAME + "=";
 
                     for(int i = 0; i < fotos.size(); i++) {
                         String urlIMG = urlConst  + fotos.get(i);
 
-                        InternetClient client = new ImageClient(atrAct, view,
+                        InternetClient client = new ImageClient(atrAct.getActivity().getApplicationContext(),
                                 Consts.GET_ATR_IMG_S, urlIMG, null, Consts.GET, null, true, -1);
                         client.runInBackground();
                     }
 
                     String urlPlano = app.getUrl() + Consts.ATRACC + "/" + atraccion._id + Consts.PLANO;
                     Log.i("IMGConn", "Comienza descarga imagen Plano");
-                    InternetClient client = new ImageClient(atrAct, view,
+                    InternetClient client = new ImageClient(atrAct.getActivity().getApplicationContext(),
                             Consts.GET_ATR_PLANO, urlPlano, null, Consts.GET, null, true, -1);
                     client.runInBackground();
 

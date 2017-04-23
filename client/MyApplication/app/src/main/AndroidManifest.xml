@@ -44,6 +44,11 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="5a10bdb8732b9727753a3668530275dea78e69cf"
+            />
+
         <activity android:name=".MainActivity" />
         <activity
             android:name=".AtraccionActivity"

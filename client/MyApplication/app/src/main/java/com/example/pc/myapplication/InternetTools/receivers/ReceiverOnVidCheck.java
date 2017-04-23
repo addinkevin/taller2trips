@@ -13,12 +13,10 @@ public class ReceiverOnVidCheck extends BroadcastReceiver {
 
     private View view;
     private String urlConst;
-    private Context context;
 
-    public ReceiverOnVidCheck(View view, String urlConst, Context context) {
+    public ReceiverOnVidCheck(View view, String urlConst) {
         this.view = view;
         this.urlConst = urlConst;
-        this.context = context;
     }
 
     @Override
