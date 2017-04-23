@@ -4,15 +4,36 @@ ciudadesApp.controller('ciudadesController', [ '$scope', function ciudadesContro
 }]);
 
 ciudadesApp.controller('ciudadesAddController',
-    [ '$scope', '$location', '$http', 'ServerService',
-        function ($scope, $location, $http, ServerService) {
-            $scope.ciudad = {};
+    [ '$scope', '$location', '$http', 'ServerService', 'CiudadService',
+        function ($scope, $location, $http, ServerService, CiudadService) {
+            $scope.ciudad = CiudadService.createNewCiudad();
+
+            $scope.idiomaFormulario = $scope.ciudad.idiomas[0];
+
+            $scope.updateDescripcion = function() {
+                $scope.idiomaFormulario.statusModificado = ($scope.ciudad.descripcion[$scope.idiomaFormulario.code].length > 0);
+            };
 
             $scope.alert = {
                 class : 'hide',
                 msg: ''
             };
 
+            $scope.getStatusIdioma = function(idioma) {
+                if ( idioma.statusCargado ) {
+                    return "Idiomas cargados";
+                }
+
+                return "Idiomas no cargados";
+            };
+
+            $scope.getIndicativo = function(idioma) {
+                if (idioma.statusModificado) {
+                    return " *";
+                } else {
+                    return "";
+                }
+            };
 
             $scope.updateImageClick = function(event) {
                 $scope.ciudad.imgFile = event.target.files[0];
@@ -211,16 +232,30 @@ ciudadesApp.controller('ciudadesListadoController',
             });
         };
 
+        $scope.processList = function(data) {
+            for (var i = 0; i < data.length; i++) {
+                var ciudad = data[i];
+                var idiomasCargados = [];
+                Object.keys(ciudad.descripcion).forEach(function(key,index) {
+                    if (ciudad.descripcion[key] != "") {
+                        idiomasCargados.push(key);
+                    }
+                });
+
+                ciudad.idiomasCargados = idiomasCargados;
+            }
+        };
+
         $scope.getCiudades = function() {
             ServerService.getCiudades(function(data, err) {
                 if (err) {
                     console.log(err.msg);
                 } else {
+                    $scope.processList(data);
                     $scope.ciudades = data;
                 }
             });
         };
 
         $scope.getCiudades();
-
 }]);
