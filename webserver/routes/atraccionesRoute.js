@@ -3,7 +3,7 @@ var fs = require('fs');
 var constants = require('../config/constants');
 var router = express.Router();
 var Atraccion = require('../models/atracciones');
-var almacen = require('../config/helperAlmacenamiento');
+var almacen = require('../utils/helperAlmacenamiento');
 var haversine = require('../utils/haversine');
 
 router.get('/atraccion', function(req, res) {
@@ -67,6 +67,7 @@ router.get('/atraccion/:id_atraccion', function(req, res) {
         
 
 router.post('/atraccion', function(req, res) {
+    req.body.descripcion = JSON.parse(req.body.descripcion);
     var atraccion = new Atraccion({
         nombre: req.body.nombre,
         descripcion: req.body.descripcion,
@@ -93,6 +94,7 @@ router.post('/atraccion', function(req, res) {
 });
 
 router.put('/atraccion', function(req, res) {
+    req.body.descripcion = JSON.parse(req.body.descripcion);
     var atraccion = {
         nombre: req.body.nombre,
         descripcion: req.body.descripcion,
@@ -124,6 +126,7 @@ router.delete('/atraccion/:id_atraccion', function(req,res) {
         }
         else {
             res.status(200).json({"msj": "exito"});
+            almacen.borrarMediaAtracciones(req.params.id_atraccion);
         }
     });
 });

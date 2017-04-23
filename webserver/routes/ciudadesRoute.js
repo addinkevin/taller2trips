@@ -3,7 +3,7 @@ var constants = require('../config/constants');
 var router = express.Router();
 var Ciudad = require('../models/ciudades');
 var Atraccion = require('../models/atracciones');
-var almacen = require('../config/helperAlmacenamiento');
+var almacen = require('../utils/helperAlmacenamiento');
 
 router.get('/ciudad', function(req, res) {
     Ciudad.find(function (err, ciudades) {
@@ -32,14 +32,16 @@ router.get('/ciudad/:id_ciudad', function(req, res) {
 
 
 router.post('/ciudad', function(req, res) {
+    req.body.descripcion = JSON.parse(req.body.descripcion);
     var ciudad = new Ciudad({
         nombre: req.body.nombre,
-        descripcion: req.body.descripcion,
-        pais: req.body.pais
+        pais: req.body.pais,
+        descripcion: req.body.descripcion
     });
 
     ciudad.save(function(err, ciudad) {
         if (err) {
+            console.log(err);
             res.status(405).json({"msj": "input invalido"});
         }
         else {
@@ -50,6 +52,7 @@ router.post('/ciudad', function(req, res) {
 });
 
 router.put('/ciudad', function(req, res) {
+    req.body.descripcion = JSON.parse(req.body.descripcion);
     var ciudad = {
         nombre: req.body.nombre,
         descripcion: req.body.descripcion,
