@@ -115,7 +115,7 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
             data: {
                     _id:ciudadObject._id,
                     nombre:ciudadObject.nombre,
-                    descripcion:ciudadObject.descripcion,
+                    descripcion:JSON.stringify(ciudadObject.descripcion),
                     pais:ciudadObject.pais
             }
         })

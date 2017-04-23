@@ -113,18 +113,39 @@ ciudadesApp.controller('ciudadesAddController',
 );
 
 ciudadesApp.controller('ciudadesEditController',
-    [ '$scope', '$location', '$http', '$routeParams', 'ServerService',
-        function ($scope, $location, $http, $routeParams, ServerService) {
+    [ '$scope', '$location', '$http', '$routeParams', 'ServerService', 'CiudadService',
+        function ($scope, $location, $http, $routeParams, ServerService, CiudadService) {
             $scope.ciudad = {};
 
             $scope.alert = { class: 'hide', msg: '' };
+
+            $scope.updateDescripcion = function() {
+                $scope.idiomaFormulario.statusModificado = ($scope.ciudad.descripcion[$scope.idiomaFormulario.code].length > 0);
+            };
+
+            $scope.getStatusIdioma = function(idioma) {
+                if ( idioma.statusCargado ) {
+                    return "Idiomas cargados";
+                }
+
+                return "Idiomas no cargados";
+            };
+
+            $scope.getIndicativo = function(idioma) {
+                if (idioma.statusModificado) {
+                    return " *";
+                } else {
+                    return "";
+                }
+            };
 
             $scope.getCiudad = function(idCiudad) {
                 ServerService.getCiudad(idCiudad, function(data, error) {
                     if (error) {
                         console.log(error.msg);
                     } else {
-                        $scope.ciudad = data;
+                        $scope.ciudad = CiudadService.cargarInformacionAdicional(data);
+                        $scope.idiomaFormulario = $scope.ciudad.idiomasCargados[0];
                         $scope.ciudad.imgSrc = "/api/ciudad/"+idCiudad+"/imagen";
                     }
                 });
