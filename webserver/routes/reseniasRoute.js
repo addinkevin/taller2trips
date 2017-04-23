@@ -13,6 +13,25 @@ router.get('/resenia', function(req, res) {
     })
 });
 
+router.get('/resenia/paginas', function(req, res) {
+	var query = req.query;
+	console.log(query);
+	if(query.cantidad && query.salto && !isNaN(query.cantidad) && !isNaN(query.salto)) { 
+		Resenia.find(function (err, resenias) {
+			if (err) {
+				res.send(err);
+			}
+			else {
+				res.status(200).json(resenias);
+			}
+		}).sort({"created_at": 1})
+		.limit(Number(query.cantidad))
+		.skip(Number(query.salto));
+	} else {
+		res.status(400).json({"msj": "param err"});
+	}
+});
+
 router.get('/resenia/buscar', function(req, res) {
     var query = req.query
     if (req.query.descripcion !== undefined) query.descripcion = new RegExp(req.query.descripcion);
