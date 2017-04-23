@@ -8,17 +8,15 @@
                         <h1>{{title}}</h1>
                     </div>
                     <div class="col-sm-2">
-                        <div class="dropdown button-wrapper">
-                            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">es
-                                <span class="caret"></span></button>
-                            <ul class="dropdown-menu">
-                                <li class="dropdown-header">Idiomas cargados</li>
-                                <li><a href="#">es</a></li>
-                                <li><a href="#">en</a></li>
-                                <li class="dropdown-header">Idiomas no cargados</li>
-                                <li><a href="#">jp</a></li>
-                            </ul>
-                        </div>
+                        <select class="form-control button-wrapper">
+                            <optgroup label="Idiomas cargados">
+                                <option>es</option>
+                                <option>en</option>
+                            </optgroup>
+                            <optgroup label="Idiomas no cargados">
+                                <option>jp</option>
+                            </optgroup>
+                        </select>
                     </div>
                 </div>
             </div>
