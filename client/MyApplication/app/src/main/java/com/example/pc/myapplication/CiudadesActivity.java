@@ -25,14 +25,12 @@ public class CiudadesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ciudades);
-        View view  = findViewById(R.id.ciudadesV);
-
 
         AutoCompleteTextView autoTxtV = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
         List<Ciudad> ciudades = new ArrayList<>();
         onCiudades = new ReceiverOnCiudades(getApplicationContext(),autoTxtV,ciudades);
 
-        InternetClient client = new InfoClient(getApplicationContext(), view,
+        InternetClient client = new InfoClient(getApplicationContext(),
                 Consts.GET_CITY_NAME, ((TripTP)getApplication()).getUrl() + Consts.CIUDAD, null, Consts.GET, null, true);
         client.runInBackground();
     }

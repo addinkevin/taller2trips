@@ -48,7 +48,7 @@ public class ReceiverOnCiudadAtracc extends BroadcastReceiver {
                             String firstImg = atraccion.fotosPath.get(0); //primer imagen para mostrar
                             String url = urlConst + firstImg;
 
-                            InternetClient client = new ImageClient(act, view,
+                            InternetClient client = new ImageClient(act.getApplicationContext(),
                                     Consts.GET_ATR_IMG, url, null, Consts.GET, null, true, i);
                             client.runInBackground();
                         }

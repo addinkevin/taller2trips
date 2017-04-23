@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.pc.myapplication.AtraccionTab;
 import com.example.pc.myapplication.R;
 import com.example.pc.myapplication.commonfunctions.Consts;
 
@@ -17,13 +18,11 @@ public class ReceiverOnVidThumbnail extends BroadcastReceiver {
     private View view;
     private StringBuilder heightVideo;
     private StringBuilder weigthVideo;
-    private Context context;
 
-    public ReceiverOnVidThumbnail(View img, StringBuilder heightVideo, StringBuilder weigthVideo, Context context) {
+    public ReceiverOnVidThumbnail(View img, StringBuilder heightVideo, StringBuilder weigthVideo) {
         this.view = img;
         this.heightVideo = heightVideo;
         this.weigthVideo = weigthVideo;
-        this.context = context;
     }
 
     @Override

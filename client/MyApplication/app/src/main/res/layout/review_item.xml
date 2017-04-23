@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:id="@+id/profPic" />
+
+    <TextView
+        android:id="@+id/userName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/profPic"
+        android:layout_toRightOf="@+id/profPic"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@color/com_facebook_blue"
+        android:textStyle="bold" />
+
+    <RatingBar
+        android:id="@+id/calificacion"
+        style="@style/Widget.AppCompat.RatingBar.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/userName"
+        android:layout_toRightOf="@+id/userName"
+        android:isIndicator="true"
+        android:numStars="5" />
+
+    <TextView
+        android:id="@+id/comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/profPic"
+        android:layout_toRightOf="@+id/profPic"
+        android:layout_below="@+id/calificacion" />
+
+</RelativeLayout>
