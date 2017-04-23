@@ -15,8 +15,10 @@ router.get('/resenia', function(req, res) {
 
 router.get('/resenia/paginas', function(req, res) {
 	var query = req.query;
-	console.log(query);
-	if(query.cantidad && query.salto && !isNaN(query.cantidad) && !isNaN(query.salto)) { 
+	var cantidad = req.headers["cantidad"];
+	var salto = req.headers["salto"];
+	
+	if(cantidad && salto && !isNaN(cantidad) && !isNaN(salto)) { 
 		Resenia.find(function (err, resenias) {
 			if (err) {
 				res.send(err);
@@ -25,10 +27,33 @@ router.get('/resenia/paginas', function(req, res) {
 				res.status(200).json(resenias);
 			}
 		}).sort({"created_at": 1})
-		.limit(Number(query.cantidad))
-		.skip(Number(query.salto));
+		.limit(Number(cantidad))
+		.skip(Number(salto));
 	} else {
 		res.status(400).json({"msj": "param err"});
+	}
+});
+
+router.get('/resenia/buscar/paginas', function(req, res) {
+    var query = req.query
+	var cantidad = req.headers["cantidad"];
+	var salto = req.headers["salto"];
+	
+	if(cantidad && salto && !isNaN(cantidad) && !isNaN(salto)) { 
+		if (req.query.descripcion !== undefined) query.descripcion = new RegExp(req.query.descripcion);
+		console.log(query);
+		Resenia.find(query, function(err, resenias) {
+			if (err) {
+				res.send(err);
+			}
+			else {
+				res.status(200).json(resenias);
+			}
+		}).sort({"created_at": 1})
+		.limit(Number(cantidad))
+		.skip(Number(salto));
+	} else {
+	res.status(400).json({"msj": "param err"});
 	}
 });
 
