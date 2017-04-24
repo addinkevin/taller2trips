@@ -39,10 +39,6 @@ resenias.controller('reseniasController', [ '$scope', 'HelperResenias', function
             'descripcion': 'Calificación (1 - 5)'
         },
         {
-            'filtroName': 'descripcion',
-            'descripcion': 'Descripción'
-        },
-        {
             'filtroName': 'id_usuario',
             'descripcion': 'ID Usuario'
         },
@@ -82,11 +78,11 @@ resenias.controller('reseniasController', [ '$scope', 'HelperResenias', function
     };
 
     $scope.getCiudad = function(id, resultado) {
-        return resultado.nombre_ciudad;
+        return resultado.id_ciudad.nombre;
     };
 
     $scope.getAtraccion = function(id, resultado) {
-        return resultado.nombre_atraccion;
+        return resultado.id_atraccion.nombre;
     };
 
     $scope.getNombreDeUsuario = function(id, resultado) {
