@@ -43,6 +43,8 @@ router.get('/resenia/buscar/paginas', function(req, res) {
 	
 	if(cantidad && salto && !isNaN(cantidad) && !isNaN(salto)) { 
 		if (req.query.descripcion !== undefined) query.descripcion = new RegExp(req.query.descripcion);
+        if (req.query.nombre_ciudad !== undefined) query.nombre_ciudad = new RegExp(req.query.nombre_ciudad);
+        if (req.query.descripcion !== undefined) query.nombre_atraccion = new RegExp(req.query.nombre_atraccion);
 		console.log(query);
 		Resenia.find(query, function(err, resenias) {
 			if (err) {
