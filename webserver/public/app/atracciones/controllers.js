@@ -105,14 +105,14 @@ function Atraccion() {
 }
 
 atraccionesApp.controller('atraccionesAddEditController',
-    [ '$scope', '$location', '$http','$routeParams', 'ServerService', '$q', 'IdiomaService',
-        function ($scope, $location, $http, $routeParams, ServerService, $q, IdiomaService) {
+    [ '$scope', '$location', '$http','$routeParams', 'ServerService', '$q', 'IdiomaService', '$timeout',
+        function ($scope, $location, $http, $routeParams, ServerService, $q, IdiomaService, $timeout) {
 
             $scope.sendingInformation = false;
             $scope.editForm = $routeParams.id;
             $scope.ciudades = [];
             $scope.atraccion = new Atraccion();
-            $scope.atraccion.idiomas = IdiomaService.getIdiomas();
+            $scope.atraccion.idiomas = [];
             $scope.idiomaFormulario = $scope.atraccion.idiomas[0];
             $scope.deleteRequests = [];
 
@@ -233,7 +233,31 @@ atraccionesApp.controller('atraccionesAddEditController',
                 $("#infoContainer").html(msg);
             };
 
+
+            $scope.createInfoInternacionalizacionAtraccionExistente = function() {
+                $scope.atraccion.idiomas = IdiomaService.getIdiomas();
+                $scope.idiomaFormulario = $scope.atraccion.idiomas[0];
+                $scope.atraccion.idiomasCargados = [];
+                $scope.atraccion.idiomasNoCargados = [];
+
+                for (var i = 0; i < $scope.atraccion.idiomas.length; i++) {
+                    var idioma = $scope.atraccion.idiomas[i];
+                    idioma.statusModificado = false;
+
+                    if ($scope.atraccion.descripcion[idioma.code] != "") {
+                        idioma.statusCargado = true;
+                        $scope.atraccion.idiomasCargados.push(idioma);
+                    } else {
+                        idioma.statusCargado = false;
+                        $scope.atraccion.idiomasNoCargados.push(idioma);
+                    }
+                }
+
+            };
+
             $scope.createInfoInternacionalizacionAtraccionNueva = function() {
+                $scope.atraccion.idiomas = IdiomaService.getIdiomas();
+                $scope.idiomaFormulario = $scope.atraccion.idiomas[0];
                 $scope.atraccion.descripcion = {};
                 $scope.atraccion.idiomasCargados = [];
                 $scope.atraccion.idiomasNoCargados = [];
@@ -334,12 +358,13 @@ atraccionesApp.controller('atraccionesAddEditController',
                             }
                         );
 
+                        $timeout($scope.createInfoInternacionalizacionAtraccionExistente, 1);
+
                         $scope.atraccion.ciudadSelected = $scope.ciudades.find(
                             function(element) {
                                 return element._id == data.id_ciudad;
                             }
                         );
-
                         $scope.loadAtraccionPlanos(data);
                         $scope.loadAtraccionImagenes(data);
                         $scope.loadAtraccionVideos(data);
