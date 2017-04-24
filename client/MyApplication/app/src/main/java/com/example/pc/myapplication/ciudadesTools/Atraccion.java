@@ -47,6 +47,7 @@ public class Atraccion {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+
         JSONArray descrip = jsonO.getJSONArray(Consts.DESCRIPCION);
         if (idioma != null) {
             int i = 0;

@@ -44,10 +44,7 @@ public class ReceiverOnCiudades extends BroadcastReceiver {
 
                     for (int i = 0; i < jsonA.length(); i++) {
                         JSONObject jsonO = jsonA.getJSONObject(i);
-                        Ciudad ciudad = new Ciudad(jsonO.getString(Consts.NOMBRE),
-                                jsonO.getString(Consts.DESCRIPCION),
-                                jsonO.getString(Consts.PAIS),
-                                jsonO.getString(Consts._ID));
+                        Ciudad ciudad = new Ciudad(jsonO);
                         ciudades.add(ciudad);
 
                     }
