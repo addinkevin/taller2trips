@@ -122,7 +122,11 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
             .then(function success(res) {
                 callback(null, null);
             }, function error(res) {
-                callback(null, {msg:"No se pudo hacer el update de la ciudad:"+ciudadObject._id});
+                if (res.status == 405) {
+                    callback(null, { msg: "No puedes repetir el par (ciudad, pais) debido a que ya existe. " });
+                } else {
+                    callback(null, {msg:"No se pudo hacer el update de la ciudad:"+ciudadObject._id});
+                }
             });
     };
 

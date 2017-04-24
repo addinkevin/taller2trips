@@ -58,11 +58,13 @@ router.put('/ciudad', function(req, res) {
         descripcion: req.body.descripcion,
         pais: req.body.pais,
         foto: req.body.foto
-    }
+    };
 
     Ciudad.update({_id: req.body._id}, ciudad, function (err) {
         if (err) {
-            res.send(err);
+            console.log(err);
+            res.status(405).json({"msj": "input invalido"});
+            //res.send(err);
         }
         else {
             res.status(200).json({"msj": "exito"})
