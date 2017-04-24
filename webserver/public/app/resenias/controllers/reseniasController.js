@@ -12,9 +12,10 @@ resenias.controller('reseniasController', [ '$scope', 'HelperResenias', function
         $("#errorContainer").html(msg);
     };
 
-    $scope.setInfoMsg = function(msgError) {
+    $scope.setInfoMsg = function(msgInfo) {
         var msg = "<div class='alert alert-info alert-fixed text-center'>" +
-            msgError +
+            "<button type='button' class='close' data-dismiss='alert'>&times;</button>" +
+            msgInfo +
             "</div>";
         $("#infoContainer").html(msg);
     };
@@ -22,11 +23,11 @@ resenias.controller('reseniasController', [ '$scope', 'HelperResenias', function
     $scope.showTable = false;
     $scope.opcionesDeFiltro = [
         {
-            'filtroName': 'id_atraccion',
+            'filtroName': 'nombre_atraccion',
             'descripcion': 'Atraccion'
         },
         {
-            'filtroName': 'id_ciudad',
+            'filtroName': 'nombre_ciudad',
             'descripcion': 'Ciudad'
         },
         {
@@ -81,11 +82,11 @@ resenias.controller('reseniasController', [ '$scope', 'HelperResenias', function
     };
 
     $scope.getCiudad = function(id, resultado) {
-        return resultado.id_ciudad;
+        return resultado.nombre_ciudad;
     };
 
     $scope.getAtraccion = function(id, resultado) {
-        return resultado.id_atraccion;
+        return resultado.nombre_atraccion;
     };
 
     $scope.getNombreDeUsuario = function(id, resultado) {

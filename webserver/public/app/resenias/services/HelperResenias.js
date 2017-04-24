@@ -38,7 +38,7 @@ resenias.service('HelperResenias', [ '$http', '$q', function($http, $q) {
         return $http({
             method: 'GET',
             url : '/api/resenia/buscar',
-            data: data
+            params: data
         });
     };
 
@@ -65,7 +65,7 @@ resenias.service('HelperResenias', [ '$http', '$q', function($http, $q) {
         return $http({
             method: 'DELETE',
             url : '/api/resenia/' + resenia._id,
-            data: {
+            params: {
                 id_resenia : resenia._id
             }
         });
