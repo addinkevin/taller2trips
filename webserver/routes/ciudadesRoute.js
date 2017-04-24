@@ -3,7 +3,7 @@ var constants = require('../config/constants');
 var router = express.Router();
 var Ciudad = require('../models/ciudades');
 var Atraccion = require('../models/atracciones');
-var almacen = require('../config/helperAlmacenamiento');
+var almacen = require('../utils/helperAlmacenamiento');
 
 router.get('/ciudad', function(req, res) {
     Ciudad.find(function (err, ciudades) {
@@ -19,7 +19,7 @@ router.get('/ciudad', function(req, res) {
 router.get('/ciudad/:id_ciudad', function(req, res) {
     Ciudad.findById(req.params.id_ciudad, function(err, ciudad) {
         if (err) {
-            res.send(err);
+            res.status(405).json({"msj": "input invalido"});
         }
         else if (ciudad === null) {
             res.status(404).json({"msj": "ciudad no encontrada"});
@@ -32,10 +32,11 @@ router.get('/ciudad/:id_ciudad', function(req, res) {
 
 
 router.post('/ciudad', function(req, res) {
+    req.body.descripcion = JSON.parse(req.body.descripcion);
     var ciudad = new Ciudad({
         nombre: req.body.nombre,
-        descripcion: req.body.descripcion,
-        pais: req.body.pais
+        pais: req.body.pais,
+        descripcion: req.body.descripcion
     });
 
     ciudad.save(function(err, ciudad) {
@@ -50,16 +51,19 @@ router.post('/ciudad', function(req, res) {
 });
 
 router.put('/ciudad', function(req, res) {
+    req.body.descripcion = JSON.parse(req.body.descripcion);
     var ciudad = {
         nombre: req.body.nombre,
         descripcion: req.body.descripcion,
         pais: req.body.pais,
         foto: req.body.foto
-    }
+    };
 
     Ciudad.update({_id: req.body._id}, ciudad, function (err) {
         if (err) {
-            res.send(err);
+            console.log(err);
+            res.status(405).json({"msj": "input invalido"});
+            //res.send(err);
         }
         else {
             res.status(200).json({"msj": "exito"})

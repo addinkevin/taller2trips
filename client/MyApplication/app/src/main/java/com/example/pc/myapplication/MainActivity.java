@@ -17,27 +17,34 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.example.pc.myapplication.InternetTools.InfoClient;
 import com.example.pc.myapplication.InternetTools.InternetClient;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAtrNearInMap;
+import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnUserAccounts;
+import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnUserImage;
+import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnUserInfo;
+import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnUserLogin;
 import com.example.pc.myapplication.application.TripTP;
 import com.example.pc.myapplication.ciudadesTools.Atraccion;
 import com.example.pc.myapplication.commonfunctions.Consts;
 import com.example.pc.myapplication.mapTools.MapInfoWindowAdapter;
 import com.example.pc.myapplication.services.LocationGPSListener;
-import com.example.pc.myapplication.singletons.GpsSingleton;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.twitter.sdk.android.Twitter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-public class MainActivity extends AppCompatActivity  implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity  implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener, GoogleMap.OnInfoWindowClickListener {
 
     private LocationManager locationManager;
     private LocationListener listener;
@@ -46,6 +53,11 @@ public class MainActivity extends AppCompatActivity  implements OnMapReadyCallba
 
     private Toolbar toolbar;
     private View view;
+    private ReceiverOnUserAccounts onUserAccounts;
+    private ReceiverOnUserInfo onUserInfo;
+    private ReceiverOnUserImage onUserImage;
+    private ReceiverOnUserLogin onUserLogin;
+    private TripTP tripTP;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,9 +70,25 @@ public class MainActivity extends AppCompatActivity  implements OnMapReadyCallba
         toolbar.setTitle("Taller2Trips");
         setSupportActionBar(toolbar);
 
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        View headerView = navigationView.getHeaderView(0);
         view = findViewById(R.id.mainLayout);
         atraccionItems = new ArrayList<>();
         onArtNearInMap = new ReceiverOnAtrNearInMap(atraccionItems);
+        onUserAccounts = new ReceiverOnUserAccounts(this,headerView,view);
+        onUserInfo = new ReceiverOnUserInfo(this);
+        onUserImage = new ReceiverOnUserImage(this,headerView);
+        onUserLogin = new ReceiverOnUserLogin(this);
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(onUserAccounts,
+                new IntentFilter(Consts.GET_USER_ACCOUNTS));
+        LocalBroadcastManager.getInstance(this).registerReceiver(onUserInfo,
+                new IntentFilter(Consts.GET_USER_INFO));
+        LocalBroadcastManager.getInstance(this).registerReceiver(onUserImage,
+                new IntentFilter(Consts.GET_USER_IMG));
+        LocalBroadcastManager.getInstance(this).registerReceiver(onUserLogin,
+                new IntentFilter(Consts.POST_SIGNIN));
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -70,9 +98,23 @@ public class MainActivity extends AppCompatActivity  implements OnMapReadyCallba
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
 
+        tripTP = (TripTP) getApplication();
+        Menu menu = navigationView.getMenu();
+        if (!tripTP.getSocialDef().isEmpty()) {
+            menu.findItem(R.id.login).setVisible(false);
+            String urlSplex = Consts.SPLEX_URL + Consts.SOCIAL_ACC;
+
+            Map<String, String> header = Consts.getSplexHeader(getApplication());
+
+            InternetClient client = new InfoClient(getApplicationContext(),
+                    Consts.GET_USER_ACCOUNTS, urlSplex, header, Consts.GET, null, true);
+            client.runInBackground();
+        } else {
+            menu.findItem(R.id.logout).setVisible(false);
+            menu.findItem(R.id.link).setVisible(false);
+
+        }
     }
 
     void locationConfig(){
@@ -104,7 +146,6 @@ public class MainActivity extends AppCompatActivity  implements OnMapReadyCallba
         LocalBroadcastManager.getInstance(this).registerReceiver(onArtNearInMap,
                 new IntentFilter(Consts.GET_ATR_CERC));
         super.onStart();
-
     }
 
     public void onStop() {
@@ -112,11 +153,21 @@ public class MainActivity extends AppCompatActivity  implements OnMapReadyCallba
         super.onStop();
     }
 
+    public void onDestroy() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(onUserAccounts);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(onUserInfo);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(onUserImage);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(onUserLogin);
+
+        super.onDestroy();
+    }
+
     @Override
     public void onMapReady(GoogleMap map) {
         onArtNearInMap.setMap(map);
+
         map.setInfoWindowAdapter(new MapInfoWindowAdapter(getLayoutInflater()));
-        TripTP tripTP = (TripTP) getApplication();
+        map.setOnInfoWindowClickListener(this);
         String url = tripTP.getUrl() + Consts.ATRACC + Consts.CERCANIA;
         listener = new LocationGPSListener(this,map, url, tripTP.getRadio(), view);
         locationConfig();
@@ -145,6 +196,23 @@ public class MainActivity extends AppCompatActivity  implements OnMapReadyCallba
             Intent atraccionesAct = new Intent(this, AtraccionesActivity.class);
             atraccionesAct.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(atraccionesAct);
+        } else if ( id == R.id.logout ) {
+            LoginManager.getInstance().logOut();
+            Twitter.logOut();
+            Intent loginAct = new Intent(this, LoginActivity.class);
+            loginAct.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(loginAct);
+            this.finish();
+        } else if (id == R.id.link){
+            Intent loginAct = new Intent(this, LoginActivity.class);
+            loginAct.putExtra(Consts.IS_LINKING, true);
+            loginAct.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(loginAct);
+        } else if (id == R.id.login) {
+            Intent loginAct = new Intent(this, LoginActivity.class);
+            loginAct.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(loginAct);
+            this.finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -153,5 +221,13 @@ public class MainActivity extends AppCompatActivity  implements OnMapReadyCallba
     }
 
 
-
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        Intent imageFull = new Intent(this, FullImageMapActivity.class);
+        imageFull.putExtra(Consts.DESCRIPCION,marker.getSnippet());
+        imageFull.putExtra(Consts.NOMBRE,marker.getTitle());
+        imageFull.putExtra(Consts.POS,marker.getPosition());
+        imageFull.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(imageFull);
+    }
 }

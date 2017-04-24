@@ -27,6 +27,14 @@
             android:icon="@drawable/ic_build_black_24dp"
             android:title="@string/config"/>
         <item
+        android:id="@+id/link"
+        android:icon="@drawable/link"
+        android:title="@string/add_social"/>
+        <item
+            android:id="@+id/login"
+            android:icon="@drawable/login"
+            android:title="@string/login"/>
+        <item
             android:id="@+id/logout"
             android:icon="@drawable/logout"
             android:title="@string/logout"/>

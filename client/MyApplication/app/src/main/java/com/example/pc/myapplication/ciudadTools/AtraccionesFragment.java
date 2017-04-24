@@ -52,7 +52,7 @@ public class AtraccionesFragment extends Fragment implements AdapterView.OnItemC
 
             String url = ((TripTP)getActivity().getApplication()).getUrl() + Consts.ATRACC + "?" + Consts.ID_CIUDAD + "=" + ciudad._id;
 
-            InternetClient client = new InfoClient(getContext(), myFragmentView,
+            InternetClient client = new InfoClient(getActivity().getApplicationContext(),
                     Consts.GET_CITY_ATR, url, null, Consts.GET, null, true);
             client.runInBackground();
         } else {

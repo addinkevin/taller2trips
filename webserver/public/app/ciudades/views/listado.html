@@ -43,19 +43,18 @@
                         </div>
                     </div>
                     <div class="row">
-                        <label class="col-sm-2 col-form-label">Descripción</label>
+                        <label class="col-sm-2 col-form-label">Idiomas</label>
                         <div class="col-sm-10">
-                            {{ciudad.descripcion}}
+                            <span class="label label-info" style="margin-right:3px;" ng-repeat="idioma in ciudad.idiomasCargados">{{idioma.nombre}}</span>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
         <div class="panel-footer">
             <div class="btn-group" role="group" aria-label="edit-remove">
-                <a href="#/ciudades/edit/{{ciudad._id}}" class="btn btn-default" role="button">Edit</a>
-                <button type="button" class="btn btn-default" ng-click="deleteCiudad(ciudad._id)">Remove</button>
+                <a href="#/ciudades/edit/{{ciudad._id}}" class="btn btn-default" role="button">Editar</a>
+                <button type="button" class="btn btn-default" ng-click="deleteCiudad(ciudad._id)">Borrar</button>
             </div>
         </div>
     </div>

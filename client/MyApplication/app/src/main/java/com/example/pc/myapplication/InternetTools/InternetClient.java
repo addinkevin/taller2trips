@@ -22,7 +22,6 @@ public abstract class InternetClient {
     private static final int timeOUT_R = 20000;
     private static final int timeOUT_C = 25000;
     protected final Context context;
-    private final View view;
     private final String toCall;
 
     protected InputStream is;
@@ -33,13 +32,12 @@ public abstract class InternetClient {
     private String requestMethod;
     private Map<String, String> headers; //headers de la consulta HTTP
     private boolean expectResponse;
-    private int responseCode;
+    protected int responseCode;
 
     public static final String CONNECTION = "Connection";
 
-    public InternetClient(Context context, View view, String toCall, String path, Map<String, String> headerM, String rMethod, String jBody, boolean response ) {
+    public InternetClient(Context context, String toCall, String path, Map<String, String> headerM, String rMethod, String jBody, boolean response) {
         this.context = context;
-        this.view = view;
         this.toCall = toCall;
         nURL = path;
         requestMethod = rMethod;
@@ -84,12 +82,12 @@ public abstract class InternetClient {
 
             Intent activityMsg = new Intent(toCall);
 
-            if ( responseCode < 300 && responseCode >= 200 ) {
+            if ( (responseCode < 300 && responseCode >= 200) || responseCode == 302 ) {
                 if (expectResponse) {
                     readMedia(activityMsg);
                 }
                 activityMsg.putExtra(Consts.SUCESS, true);
-            }else {
+            } else {
                 activityMsg.putExtra(Consts.SUCESS, false);
             }
             LocalBroadcastManager.getInstance(context).sendBroadcast(activityMsg);

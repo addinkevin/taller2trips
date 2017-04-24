@@ -152,3 +152,40 @@ code {
     width: 50%;
     z-index: 9999;
 }
+
+.row-eq-height {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+}
+
+.button-wrapper {
+    position:relative;
+    top:25%;
+}
+
+.select-wrapper {
+    position:relative;
+    top:25%;
+}
+
+.idiomaRellenado {
+    background-color: #33CC33;
+}
+
+.idiomaNoRellenado {
+    background-color: #E60000;
+}
+
+.reseniaRow {
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.box-filtro {
+    height: 100px;
+    overflow:auto;
+}
+
+.link { background:none;border:none; }

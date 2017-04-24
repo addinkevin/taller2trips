@@ -17,10 +17,15 @@
 
     <script type="text/javascript" src="app/tripsApp.js"></script>
     <script type="text/javascript" src="app/controllers.js"></script>
+    <script type="text/javascript" src="app/common/services/IdiomaService.js"></script>
     <script type="text/javascript" src="app/ciudades/module.js"></script>
     <script type="text/javascript" src="app/ciudades/controllers.js"></script>
+    <script type="text/javascript" src="app/ciudades/services/CiudadService.js"></script>
     <script type="text/javascript" src="app/atracciones/module.js"></script>
     <script type="text/javascript" src="app/atracciones/controllers.js"></script>
+    <script type="text/javascript" src="app/resenias/module.js"></script>
+    <script type="text/javascript" src="app/resenias/controllers/reseniasController.js"></script>
+    <script type="text/javascript" src="app/resenias/services/HelperResenias.js"></script>
 </head>
 <body ng-app="tripsApp" ng-controller="tripsAppController">
 
@@ -44,7 +49,7 @@
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="/logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+                <li><a href="/logout"><span class="glyphicon glyphicon-log-in"></span> Salir</a></li>
             </ul>
         </div><!--/.nav-collapse -->
     </div>

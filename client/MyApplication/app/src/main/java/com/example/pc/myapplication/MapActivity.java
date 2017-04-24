@@ -1,6 +1,7 @@
 package com.example.pc.myapplication;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -14,9 +15,10 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapActivity extends Activity implements OnMapReadyCallback {
+public class MapActivity extends Activity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
     private float latitud;
     private float longitud;
@@ -79,6 +81,7 @@ public class MapActivity extends Activity implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         LatLng latLng = new LatLng(latitud, longitud);
         googleMap.setInfoWindowAdapter(new MapInfoWindowAdapter(getLayoutInflater()));
+        googleMap.setOnInfoWindowClickListener(this);
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));
         googleMap.addMarker(new MarkerOptions()
                 .title(nombre)
@@ -95,4 +98,14 @@ public class MapActivity extends Activity implements OnMapReadyCallback {
 
     }
 
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        Intent imageFull = new Intent(this, FullImageMapActivity.class);
+        imageFull.putExtra(Consts.DESCRIPCION,marker.getSnippet());
+        imageFull.putExtra(Consts.NOMBRE,marker.getTitle());
+        imageFull.putExtra(Consts.POS,marker.getPosition());
+        imageFull.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(imageFull);
+    }
 }
+

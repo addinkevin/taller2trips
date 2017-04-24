@@ -10,17 +10,16 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.pc.myapplication.AtraccionActivity;
+import com.example.pc.myapplication.AtraccionTab;
 import com.example.pc.myapplication.carruselTools.CarruselPagerAdapter;
 import com.example.pc.myapplication.commonfunctions.Consts;
 
 public class ReceiverOnAtraccionImgs extends BroadcastReceiver {
-    private final AtraccionActivity atraccionActivity;
     private final View view;
     private CarruselPagerAdapter adapter;
     private ViewPager pager;
 
-    public ReceiverOnAtraccionImgs(AtraccionActivity atraccionActivity, View view, CarruselPagerAdapter adapter, ViewPager pager) {
-        this.atraccionActivity = atraccionActivity;
+    public ReceiverOnAtraccionImgs(View view, CarruselPagerAdapter adapter, ViewPager pager) {
         this.view = view;
         this.adapter = adapter;
         this.pager = pager;

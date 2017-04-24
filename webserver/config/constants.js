@@ -1,7 +1,7 @@
 module.exports = {
     loginMessageType: 'login-message',
-    wrongPassword: 'Wrong password.',
-    noUserFound: 'No user found',
+    wrongPassword: 'Contraseña incorrecta.',
+    noUserFound: 'No se encuentra el usuario',
     dirImagenesCiudad: "./contenido/imagenesCiudad/",
     dirPlanosAtracciones: "./contenido/planosAtracciones/",
     dirVideosAtracciones: "./contenido/videosAtracciones/",

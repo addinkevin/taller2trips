@@ -36,7 +36,7 @@ public class MainFragment extends Fragment {
 
             String url = ((TripTP)getActivity().getApplication()).getUrl() + Consts.CIUDAD + "/" + ciudad._id + Consts.IMAGEN;
 
-            InternetClient client = new ImageClient(getContext(), myFragmentView,
+            InternetClient client = new ImageClient(getActivity().getApplicationContext(),
                     Consts.GET_CITY_IMG, url, null, Consts.GET, null, true, -1);
             client.runInBackground();
         } else {

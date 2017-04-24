@@ -1,4 +1,4 @@
-var tripsApp = angular.module('tripsApp', ["ngRoute", 'tripsApp.ciudades', 'tripsApp.atracciones']);
+var tripsApp = angular.module('tripsApp', ["ngRoute", 'tripsApp.ciudades', 'tripsApp.atracciones', 'tripsApp.resenias']);
 
 tripsApp.config(function config($routeProvider, $locationProvider) {
     $routeProvider.when('/home', {
@@ -115,14 +115,18 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
             data: {
                     _id:ciudadObject._id,
                     nombre:ciudadObject.nombre,
-                    descripcion:ciudadObject.descripcion,
+                    descripcion:JSON.stringify(ciudadObject.descripcion),
                     pais:ciudadObject.pais
             }
         })
             .then(function success(res) {
                 callback(null, null);
             }, function error(res) {
-                callback(null, {msg:"No se pudo hacer el update de la ciudad:"+ciudadObject._id});
+                if (res.status == 405) {
+                    callback(null, { msg: "No puedes repetir el par (ciudad, pais) debido a que ya existe. " });
+                } else {
+                    callback(null, {msg:"No se pudo hacer el update de la ciudad:"+ciudadObject._id});
+                }
             });
     };
 
@@ -133,7 +137,7 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
             data:
             {
                 nombre: ciudadObject.nombre,
-                descripcion: ciudadObject.descripcion,
+                descripcion: JSON.stringify(ciudadObject.descripcion),
                 pais: ciudadObject.pais
             }
         })
@@ -141,14 +145,18 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
                 ciudadObject._id = res.data._id;
                 callback(ciudadObject, null);
             }, function error(res) {
-                callback(ciudadObject, {msg:"No se pudo agregar la ciudad"});
+                if (res.status == 405) {
+                    callback(null, { msg: "No puedes agregar la ciudad de dicho país debido a que ya fue agregada." });
+                } else {
+                    callback(ciudadObject, {msg: "No se pudo agregar la ciudad"});
+                }
             });
     };
 
     this.addAtraccion = function(atraccion, callback) {
         var data = {
             "nombre": atraccion.nombre,
-            "descripcion": atraccion.descripcion,
+            "descripcion": JSON.stringify(atraccion.descripcion),
             "costo_monto": atraccion.montoCosto,
             "costo_moneda": atraccion.monedaCosto,
             "hora_apertura": atraccion.horaApertura,
@@ -178,7 +186,7 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
         var data = {
             "_id": atraccion._id,
             "nombre": atraccion.nombre,
-            "descripcion": atraccion.descripcion,
+            "descripcion": JSON.stringify(atraccion.descripcion),
             "costo_monto": atraccion.montoCosto,
             "costo_moneda": atraccion.monedaCosto,
             "hora_apertura": atraccion.horaApertura,
@@ -246,26 +254,31 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
     };
 
     this.uploadAudiosAtraccion = function(atraccion, callback) {
+        var self = this;
         var url = 'api/atraccion/' + atraccion._id + '/audio';
 
         var requests = [];
 
-        for (var i = 0; i < atraccion.audios.length; i++) {
-            var audFile = atraccion.audios[i].audFile;
-            if (audFile) {
-                requests.push(this._uploadFormData(url, {
-                    idioma: atraccion.audios[i].idiomaAudio,
-                    audio: audFile
-                }));
+        var audios = [];
+
+        Object.keys(atraccion.audios).forEach(function(key) {
+            for (var i = 0; i < atraccion.audios[key].length; i++) {
+                var audFile = atraccion.audios[key][i].audFile;
+                if (audFile) {
+                    requests.push(self._uploadFormData(url, {
+                        idioma: atraccion.audios[key][i].idiomaAudio,
+                        audio: audFile
+                    }));
+                }
             }
-        }
+        });
 
         return $q
             .all(requests)
             .then(function success(values) {
                 callback(null,null);
             }, function error() {
-                callback(null, {msg:"No fue posible subir todos los videos." } );
+                callback(null, {msg:"No fue posible subir todos los audios." } );
             });
     };
 
@@ -316,6 +329,28 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
             });
     };
 
+    this.uploadPlanosAtraccion = function(atraccion, callback) {
+        var url = '/api/atraccion/' + atraccion._id + '/plano';
+        var requests = [];
+
+        for (var i = 0; i < atraccion.planos.length; i++) {
+            var imgFile = atraccion.planos[i].imgFile;
+            if (imgFile) {
+                requests.push(this._uploadFormData(url, {
+                    plano: imgFile
+                }));
+            }
+        }
+
+        return $q
+            .all(requests)
+            .then(function success(values) {
+                callback(null,null);
+            }, function error() {
+                callback(null, {msg:"No fue posible subir los planos." });
+            });
+    };
+
     this.deleteAudioAtraccion = function(atraccion, atraccionAudio, callback) {
         var audUrl = atraccionAudio.audSrc;
         return $http.delete(audUrl).then(
@@ -350,6 +385,19 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
             },
             function error() {
                 callback(null, {msg:"No se pudo borrar la image de la atracción" });
+            }
+        );
+    };
+
+    this.deletePlanoAtraccion = function(atraccion, atraccionPlano, callback) {
+        var imgUrl = atraccionPlano.imgSrc;
+
+        return $http.delete(imgUrl).then(
+            function success() {
+                callback(null, null);
+            },
+            function error() {
+                callback(null, {msg:"No se pudo borrar el plano de la atracción" });
             }
         );
     };

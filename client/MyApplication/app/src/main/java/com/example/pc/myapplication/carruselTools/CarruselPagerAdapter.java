@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 
 import com.example.pc.myapplication.AtraccionActivity;
+import com.example.pc.myapplication.AtraccionTab;
 import com.example.pc.myapplication.R;
 import com.example.pc.myapplication.singletons.ImagesSingleton;
 
@@ -18,12 +19,12 @@ import com.example.pc.myapplication.singletons.ImagesSingleton;
 
     private CarruselLinearLayout cur = null;
     private CarruselLinearLayout next = null;
-    private AtraccionActivity context;
+    private AtraccionTab context;
     private FragmentManager fm;
     private ImagesSingleton imagenes;
     private float scale;
 
-    public CarruselPagerAdapter(AtraccionActivity context, FragmentManager fm) {
+    public CarruselPagerAdapter(AtraccionTab context, FragmentManager fm) {
         super(fm);
         this.fm = fm;
         this.context = context;
@@ -64,7 +65,7 @@ import com.example.pc.myapplication.singletons.ImagesSingleton;
 
         @Override
     public int getCount() {
-        return context.PAGES * AtraccionActivity.LOOPS;
+        return context.PAGES * AtraccionTab.LOOPS;
     }
 
     @Override

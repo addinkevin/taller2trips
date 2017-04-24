@@ -1,8 +1,8 @@
 var atraccionesApp = angular.module('tripsApp.atracciones');
 
 atraccionesApp.controller('atraccionesListadoController',
-    [ '$scope', '$http', '$location', 'ServerService',
-        function($scope, $http, $location, ServerService) {
+    [ '$scope', '$http', '$location', 'ServerService', 'IdiomaService',
+        function($scope, $http, $location, ServerService, IdiomaService) {
             $scope.deleteAtraccion = function(atraccionId) {
                 ServerService.deleteAtraccion(atraccionId, function(data, err) {
                     $location.url('/atracciones/');
@@ -13,6 +13,22 @@ atraccionesApp.controller('atraccionesListadoController',
 
             $scope.getNombreCiudad = function(idCiudad) {
                 return $scope.mapCiudades[idCiudad].nombre;
+            };
+
+            $scope.agregarListadoDeIdiomas = function(atraccion) {
+                atraccion.idiomasCargados = [];
+                atraccion.idiomasNoCargados = [];
+
+                var idiomas = IdiomaService.getIdiomas();
+
+                for (var i = 0; i < idiomas.length; i++) {
+                    var idioma = idiomas[i];
+                    if (atraccion.descripcion[idioma.code] != "") {
+                        atraccion.idiomasCargados.push(idioma);
+                    } else {
+                        atraccion.idiomasNoCargados.push(idioma);
+                    }
+                }
             };
 
             $scope.getAtracciones = function() {
@@ -36,6 +52,7 @@ atraccionesApp.controller('atraccionesListadoController',
                                         imgUrl = '/api/atraccion/'+atraccion._id+'/imagen?filename='+atraccion.imagenes[0];
                                     }
                                     atraccion.preview = imgUrl;
+                                    $scope.agregarListadoDeIdiomas(atraccion);
                                 }
 
                             }, function error(res) {
@@ -70,8 +87,6 @@ function Atraccion() {
         "Spas"
     ];
 
-    this.idiomas = ['es','en','fr','kr','jp'];
-    this.idiomaSelected = 'es';
     this.monedas = [ 'u$s', '$', 'R$', '€' ];
     this.monedaCosto = "u$s";
     this.montoCosto = 0;
@@ -82,7 +97,7 @@ function Atraccion() {
     this.ciudadSelected = "";
     this.idiomasAudio = [];
     this.imagenes = [];
-    this.audios = [];
+    this.audios = {};
     this.videos = [];
     this.planos = [];
     this.mapInfo = {};
@@ -90,19 +105,42 @@ function Atraccion() {
 }
 
 atraccionesApp.controller('atraccionesAddEditController',
-    [ '$scope', '$location', '$http','$routeParams', 'ServerService', '$q',
-        function ($scope, $location, $http, $routeParams, ServerService, $q) {
+    [ '$scope', '$location', '$http','$routeParams', 'ServerService', '$q', 'IdiomaService', '$timeout',
+        function ($scope, $location, $http, $routeParams, ServerService, $q, IdiomaService, $timeout) {
 
             $scope.sendingInformation = false;
             $scope.editForm = $routeParams.id;
             $scope.ciudades = [];
             $scope.atraccion = new Atraccion();
+            $scope.atraccion.idiomas = [];
+            $scope.idiomaFormulario = $scope.atraccion.idiomas[0];
             $scope.deleteRequests = [];
 
             $scope.alert = {
                 class : 'hide',
                 msg: ''
             };
+
+            $scope.updateDescripcion = function() {
+                $scope.idiomaFormulario.statusModificado = true;
+            };
+
+            $scope.getStatusIdioma = function(idioma) {
+                if ( idioma.statusCargado ) {
+                    return "Idiomas cargados";
+                }
+
+                return "Idiomas no cargados";
+            };
+
+            $scope.getIndicativo = function(idioma) {
+                if (idioma.statusModificado) {
+                    return " *";
+                } else {
+                    return "";
+                }
+            };
+
 
             $scope.validateAtraccion = function(atraccion) {
                 var validadorFormatoHora =  function(data) {
@@ -122,6 +160,19 @@ atraccionesApp.controller('atraccionesAddEditController',
                     return data.length > 0;
                 };
 
+                var validadorDescripcion = function(data) {
+                    var alMenosUnIdioma = false;
+                    for (var i = 0; i < $scope.atraccion.idiomas.length; i++) {
+                        var idioma = $scope.atraccion.idiomas[i];
+                        if ($scope.atraccion.descripcion[idioma.code] != "") {
+                            alMenosUnIdioma = true;
+                            break;
+                        }
+                    }
+
+                    return alMenosUnIdioma;
+                };
+
                 var validateList = [
                     {
                         parametro : 'nombre',
@@ -129,7 +180,8 @@ atraccionesApp.controller('atraccionesAddEditController',
                     },
                     {
                         parametro: 'descripcion',
-                        msg: "Debes especificar la descripción de la atracción!"
+                        msg: "Debes especificar la descripción para al menor un idioma!",
+                        validador: validadorDescripcion
                     },
                     {
                         parametro: 'imagenes',
@@ -181,9 +233,47 @@ atraccionesApp.controller('atraccionesAddEditController',
                 $("#infoContainer").html(msg);
             };
 
+
+            $scope.createInfoInternacionalizacionAtraccionExistente = function() {
+                $scope.atraccion.idiomas = IdiomaService.getIdiomas();
+                $scope.idiomaFormulario = $scope.atraccion.idiomas[0];
+                $scope.atraccion.idiomasCargados = [];
+                $scope.atraccion.idiomasNoCargados = [];
+
+                for (var i = 0; i < $scope.atraccion.idiomas.length; i++) {
+                    var idioma = $scope.atraccion.idiomas[i];
+                    idioma.statusModificado = false;
+
+                    if ($scope.atraccion.descripcion[idioma.code] != "") {
+                        idioma.statusCargado = true;
+                        $scope.atraccion.idiomasCargados.push(idioma);
+                    } else {
+                        idioma.statusCargado = false;
+                        $scope.atraccion.idiomasNoCargados.push(idioma);
+                    }
+                }
+
+            };
+
+            $scope.createInfoInternacionalizacionAtraccionNueva = function() {
+                $scope.atraccion.idiomas = IdiomaService.getIdiomas();
+                $scope.idiomaFormulario = $scope.atraccion.idiomas[0];
+                $scope.atraccion.descripcion = {};
+                $scope.atraccion.idiomasCargados = [];
+                $scope.atraccion.idiomasNoCargados = [];
+
+                for (var i = 0; i < $scope.atraccion.idiomas.length; i++) {
+                    $scope.atraccion.idiomas[i].statusCargado = false;
+                    $scope.atraccion.idiomas[i].statusModificado = false;
+                    $scope.atraccion.descripcion[$scope.atraccion.idiomas[i].code] = "";
+                    $scope.atraccion.idiomasNoCargados.push($scope.atraccion.idiomas[i]);
+                }
+            };
+
             $scope.initAdd = function() {
                 $scope.title = "Agregar atracción";
                 $scope.submitButton = "Agregar";
+                $scope.createInfoInternacionalizacionAtraccionNueva();
                 $scope.createMap();
             };
 
@@ -201,8 +291,8 @@ atraccionesApp.controller('atraccionesAddEditController',
             $scope.loadAtraccionAudios = function(data) {
                 for (var i = 0; i < data.idiomas_audio.length; i++) {
                     var idioma = data.idiomas_audio[i];
-                    var audUrl = '/api/atraccion/'+ $scope.atraccion._id + '/audio?idioma=' + idioma;
-                    $scope.atraccion.audios.push({audSrc:audUrl, idiomaAudio:idioma});
+                    var audUrl = '/api/atraccion/'+ $scope.atraccion._id + '/audio?idioma=' + idioma + '&date=' + new Date().getTime();
+                    $scope.atraccion.audios[idioma] = [{audSrc:audUrl, idiomaAudio:idioma}];
                 }
             };
 
@@ -215,6 +305,18 @@ atraccionesApp.controller('atraccionesAddEditController',
                     },
                     function error(res) {
                         $scope.atraccion.videos = [];
+                    }
+                );
+            };
+
+            $scope.loadAtraccionPlanos = function(data) {
+                var imgUrl = '/api/atraccion/'+ $scope.atraccion._id + '/plano';
+                $http.get(imgUrl).then(
+                    function success(res) {
+                        $scope.atraccion.planos.push({imgSrc:imgUrl});
+                    },
+                    function error(res) {
+                        $scope.atraccion.planos = [];
                     }
                 );
             };
@@ -256,12 +358,14 @@ atraccionesApp.controller('atraccionesAddEditController',
                             }
                         );
 
+                        $timeout($scope.createInfoInternacionalizacionAtraccionExistente, 1);
+
                         $scope.atraccion.ciudadSelected = $scope.ciudades.find(
                             function(element) {
                                 return element._id == data.id_ciudad;
                             }
                         );
-
+                        $scope.loadAtraccionPlanos(data);
                         $scope.loadAtraccionImagenes(data);
                         $scope.loadAtraccionVideos(data);
                         $scope.loadAtraccionAudios(data);
@@ -322,11 +426,28 @@ atraccionesApp.controller('atraccionesAddEditController',
             };
 
             $scope.deleteAudio = function(id, atraccionAudio) {
-                $scope.atraccion.audios.splice(id,1);
+                $scope.idiomaFormulario.statusModificado = true;
+
+                $scope.atraccion.audios[$scope.idiomaFormulario.code].splice(id,1);
                 if (!atraccionAudio.audFile) { // Alojada en el server hay que mandar el request de delete.
                     $scope.deleteRequests.push(
                         function() {
                             return ServerService.deleteAudioAtraccion($scope.atraccion, atraccionAudio, function(data, error) {
+                                if (error) {
+                                    console.log(error.msg);
+                                }
+                            });
+                        }
+                    );
+                }
+            };
+
+            $scope.deletePlano = function(id, atraccionPlano) {
+                $scope.atraccion.planos.splice(id,1);
+                if (!atraccionPlano.imgFile) { // Alojada en el server hay que mandar el request de delete.
+                    $scope.deleteRequests.push(
+                        function() {
+                            return ServerService.deletePlanoAtraccion($scope.atraccion, atraccionPlano, function(data, error) {
                                 if (error) {
                                     console.log(error.msg);
                                 }
@@ -378,42 +499,51 @@ atraccionesApp.controller('atraccionesAddEditController',
 
             $scope.uploadVideoClick = function(event) {
                 if (!event.target.files[0]) return;
-                $scope.atraccion.videos[0] = {
+                if ($scope.atraccion.videos[0]) {
+                    $scope.deleteVideo(0,$scope.atraccion.videos[0]);
+                }
+                $scope.atraccion.videos.push({
                     vidSrc: window.URL.createObjectURL(event.target.files[0]),
                     vidFile: event.target.files[0]
-                };
+                });
                 $scope.$digest();
             };
 
             $scope.uploadAudioClick = function(event) {
                 if (!event.target.files[0]) return;
-                var index = -1;
-                var oldAudio;
-                for (var i = 0; i < $scope.atraccion.audios.length; i++) {
-                    var audio = $scope.atraccion.audios[i];
-                    if ( audio.idiomaAudio == $scope.atraccion.idiomaSelected ) {
-                        index = i;
-                        oldAudio = audio;
-                        break;
-                    }
-                }
 
-                if (index >= 0) {
-                    $scope.deleteAudio(index, oldAudio);
-                }
+                $scope.idiomaFormulario.statusModificado = true;
+
                 var newAudio = {
                     audSrc: window.URL.createObjectURL(event.target.files[0]),
                     audFile: event.target.files[0],
-                    idiomaAudio: $scope.atraccion.idiomaSelected
+                    idiomaAudio: $scope.idiomaFormulario.code
                 };
 
-                $scope.atraccion.audios.push(newAudio);
+                if (!$scope.atraccion.audios[$scope.idiomaFormulario.code]) {
+                    $scope.atraccion.audios[$scope.idiomaFormulario.code] = [newAudio];
+                } else {
+                    if ($scope.atraccion.audios[$scope.idiomaFormulario.code][0]) {
+                        $scope.deleteAudio(0, $scope.atraccion.audios[$scope.idiomaFormulario.code][0]);
+                    }
+
+                    $scope.atraccion.audios[$scope.idiomaFormulario.code].push(newAudio);
+                }
+
                 $scope.$digest();
             };
 
             $scope.uploadPlanoClick = function(event) {
                 if (!event.target.files[0]) return;
-                $scope.atraccion.planos.push({imgSrc: window.URL.createObjectURL(event.target.files[0])});
+
+                if ($scope.atraccion.planos[0]) {
+                    $scope.deletePlano(0, $scope.atraccion.planos[0]);
+                }
+
+                $scope.atraccion.planos.push({
+                    imgSrc: window.URL.createObjectURL(event.target.files[0]),
+                    imgFile: event.target.files[0]
+                });
                 $scope.$digest();
             };
 
@@ -424,6 +554,14 @@ atraccionesApp.controller('atraccionesAddEditController',
                     } else {
                         $scope.ciudades = data;
                         $scope.atraccion.ciudadSelected = $scope.ciudades[0];
+                    }
+                });
+            };
+
+            $scope.addRecursosPlanos = function(atraccion) {
+                return ServerService.uploadPlanosAtraccion(atraccion, function(data,err) {
+                    if (err) {
+                        console.log(err.msg);
                     }
                 });
             };
@@ -453,11 +591,12 @@ atraccionesApp.controller('atraccionesAddEditController',
             };
 
             $scope.addRecursos = function(atraccion) {
+                var promisePlanos = $scope.addRecursosPlanos(atraccion);
                 var promiseImagenes = $scope.addRecursosImagenes(atraccion);
                 var promiseVideos = $scope.addRecursosVideos(atraccion);
                 var promiseAudios = $scope.addRecursosAudios(atraccion);
 
-                return $q.all([ promiseImagenes, promiseAudios, promiseVideos]);
+                return $q.all([ promisePlanos, promiseImagenes, promiseAudios, promiseVideos]);
             };
 
             $scope.addAtraccion = function(atraccion) {
@@ -487,7 +626,6 @@ atraccionesApp.controller('atraccionesAddEditController',
             };
 
             $scope.inicializar = function() {
-                console.log($scope.editForm);
                 $scope.loadCiudades();
                 if ($scope.editForm) {
                     $scope.initEdit();
