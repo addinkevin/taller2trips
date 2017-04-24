@@ -44,7 +44,7 @@ public class ReceiverOnCommentPost extends BroadcastReceiver{
         boolean succes = intent.getBooleanExtra(Consts.SUCESS, false);
         if (succes) {
             String jsonOut = intent.getStringExtra(Consts.JSON_OUT);
-            if (jsonOut != null) {
+            if (jsonOut != null && !jsonOut.equals(Consts.ERR)) {
                 try {
                     JSONObject res = new JSONObject(jsonOut);
                     Comentario comentario = new Comentario(res);
@@ -55,7 +55,7 @@ public class ReceiverOnCommentPost extends BroadcastReceiver{
                                 "?" + Consts.WIDTH + "=" + pixels + "&" + Consts.HEIGHT + "=" + pixels;
 
                         InternetClient client = new InfoClient(act.getApplicationContext(),
-                                Consts.GET_PROF, urlServ, null, Consts.GET, null, true, 0, 1);
+                                Consts.GET_PROF, urlServ, null, Consts.GET, null, true, 0);
                         client.runInBackground();
                     } else if (comentario.provider.equals(Consts.S_TWITTER)){
 
@@ -63,7 +63,7 @@ public class ReceiverOnCommentPost extends BroadcastReceiver{
                                 "?" + Consts.SIZE + "=" + Consts.ORIGINAL;
 
                         InternetClient client = new ImageClient(act.getApplicationContext(),
-                                Consts.GET_USER_IMG_PROF, urlServ, null, Consts.GET, null, true, 0, 1);
+                                Consts.GET_USER_IMG_PROF, urlServ, null, Consts.GET, null, true, 0);
                         client.runInBackground();
                     }
 
@@ -75,6 +75,8 @@ public class ReceiverOnCommentPost extends BroadcastReceiver{
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+            } else if (jsonOut != null && jsonOut.equals(Consts.ERR)){
+                AlertDialog.show(act, R.string.banned);
             } else {
                 AlertDialog.show(act, R.string.comment_fail);
             }

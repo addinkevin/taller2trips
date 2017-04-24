@@ -17,18 +17,11 @@ public class ImageClient extends InternetClient {
 
     private ByteArrayOutputStream out = null;
     private int imgID;
-    private Integer urlPack = null;
 
     //imgID < 0 entonces no se necesita el id de cada imagen
     public ImageClient(Context context, String toCall, String path, Map<String, String> headerM, String rMethod, String jBody, boolean response, int imgID) {
         super(context, toCall, path, headerM, rMethod, jBody, response);
         this.imgID = imgID;
-    }
-
-    public ImageClient(Context context, String toCall, String path, Map<String, String> headerM, String rMethod, String jBody, boolean response, int imgID, int urlPack) {
-        super(context, toCall, path, headerM, rMethod, jBody, response);
-        this.imgID = imgID;
-        this.urlPack = urlPack;
     }
 
     @Override
@@ -46,10 +39,6 @@ public class ImageClient extends InternetClient {
 
         if (imgID >= 0) {
             activityMsg.putExtra(Consts.IMG_ID, imgID);
-        }
-
-        if (urlPack != null) {
-            activityMsg.putExtra(Consts.URL_PACK, urlPack);
         }
 
     }

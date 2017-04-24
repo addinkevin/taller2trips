@@ -28,10 +28,9 @@ public class ReceiverOnProfPic extends BroadcastReceiver {
         if (succes) {
             String urlProfPic = intent.getStringExtra(Consts.URL_OUT);
             Integer identifier = intent.getIntExtra(Consts.URL_ID,-1);
-            Integer urlPack = intent.getIntExtra(Consts.URL_PACK,-1);
-            if (urlProfPic != null && identifier >= 0 && urlPack >= 0) {
+            if (urlProfPic != null && identifier >= 0 ) {
                 InternetClient profPic = new ImageClient(activity.getApplicationContext(),
-                        Consts.GET_USER_IMG_PROF, urlProfPic, null, Consts.GET, null, true, identifier, urlPack);
+                        Consts.GET_USER_IMG_PROF, urlProfPic, null, Consts.GET, null, true, identifier);
                 profPic.runInBackground();
             }
         }

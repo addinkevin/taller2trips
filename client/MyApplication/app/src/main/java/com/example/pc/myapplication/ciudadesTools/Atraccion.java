@@ -8,8 +8,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by PC on 26/03/2017.
@@ -37,7 +40,32 @@ public class Atraccion {
     public Atraccion(JSONObject jsonO) throws JSONException {
         this._id = jsonO.getString(Consts._ID);
         this.nombre = jsonO.getString(Consts.NOMBRE);
-        this.descripcion = jsonO.getString(Consts.DESCRIPCION);
+
+        String idioma = null;
+        try {
+            idioma = URLEncoder.encode(Locale.getDefault().getLanguage().toLowerCase(), "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        try {
+            JSONObject descrip = jsonO.getJSONObject(Consts.DESCRIPCION);
+            if (idioma != null) {
+                if (descrip.has(idioma)) {
+                    descripcion = descrip.getString(idioma);
+
+                } else if (descrip.has(Consts.DEF_IDIOMA)) {
+                    descripcion = descrip.getString(Consts.DEF_IDIOMA);
+                } else {
+                    descripcion = "";
+                }
+            } else {
+                descripcion = "";
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            descripcion = "";
+        }
+
         this.moneda = jsonO.getString(Consts.MONEDA);
         this.costo = (float) jsonO.getDouble(Consts.COSTO);
         this.rating = (float) jsonO.getDouble(Consts.RATING);

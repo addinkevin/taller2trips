@@ -40,8 +40,7 @@ public class ReceiverOnUserCommentImage extends BroadcastReceiver {
         if (succes) {
             Bitmap imageProf = intent.getParcelableExtra(Consts.IMG_OUT);
             int imgID = intent.getIntExtra(Consts.IMG_ID, -1);
-            int urlPack = intent.getIntExtra(Consts.URL_PACK, -1);
-            if (imageProf != null && imgID >= 0 && urlPack >= 0) {
+            if (imageProf != null && imgID >= 0) {
                 rowsItems.get( rowsItems.size() - imgID - 1).profPic = imageProf;
                 adapter.addRowItem(rowsItems);
             }

@@ -61,7 +61,7 @@ public class ReceiverOnCommentsGet extends BroadcastReceiver{
                                     "?" + Consts.WIDTH + "=" + pixels + "&" + Consts.HEIGHT + "=" + pixels;
 
                             InternetClient client = new InfoClient(activity.getApplicationContext(),
-                                    Consts.GET_PROF, urlServ, null, Consts.GET, null, true, rowsItems.size()-1, res.length());
+                                    Consts.GET_PROF, urlServ, null, Consts.GET, null, true, rowsItems.size()-1);
                             client.runInBackground();
                         } else if (comentario.provider.equals(Consts.S_TWITTER)){
 
@@ -69,7 +69,7 @@ public class ReceiverOnCommentsGet extends BroadcastReceiver{
                                     "?" + Consts.SIZE + "=" + Consts.ORIGINAL;
 
                             InternetClient client = new ImageClient(activity.getApplicationContext(),
-                                    Consts.GET_USER_IMG_PROF, urlServ, null, Consts.GET, null, true, rowsItems.size() -1, res.length());
+                                    Consts.GET_USER_IMG_PROF, urlServ, null, Consts.GET, null, true, rowsItems.size() -1);
                             client.runInBackground();
                         }
 

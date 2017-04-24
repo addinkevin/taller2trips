@@ -49,6 +49,7 @@
     <string name="rate">Califica esta atracción:</string>
     <string name="share_dialog">¿Compartir en redes sociales?</string>
     <string name="make_review">Has una reseña.</string>
+    <string name="banned">Estas bloqueado no puedes hacer reseñas.</string>
     <string name="ok">OK</string>
     <string name="share_button">Compatir</string>
     <string name="cancel_button">Cancelar</string>
