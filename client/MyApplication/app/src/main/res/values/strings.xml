@@ -53,6 +53,7 @@
     <string name="ok">OK</string>
     <string name="rate">Rate attraction:</string>
     <string name="cancel_button">Cancel</string>
+    <string name="banned">You are banned.</string>
     <string name="banned_alert">You are banned, cannot make reviews.</string>
     <string name="login_alert">You are not logged, cannot make reviews.</string>
 
