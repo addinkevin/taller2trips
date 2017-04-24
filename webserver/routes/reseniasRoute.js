@@ -4,6 +4,7 @@ var Resenia = require('../models/resenia');
 var Ciudad = require('../models/ciudades');
 var Atraccion = require('../models/atracciones');
 var User = require('../models/users');
+var helperAtracciones = require('../utils/helperAtracciones');
 
 router.get('/resenia', function(req, res) {
     Resenia.find(function (err, resenias) {
@@ -176,6 +177,7 @@ router.post('/resenia', function(req, res) {
                     res.status(201).json(resenia);
                 }
             });
+            helperAtracciones.actualizarCalificacion(req.body.id_atraccion, req.body.calificacion);
         }
     });
 });
