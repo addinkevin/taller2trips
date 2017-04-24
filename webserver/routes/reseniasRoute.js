@@ -3,6 +3,7 @@ var router = express.Router();
 var Resenia = require('../models/resenia');
 var Ciudad = require('../models/ciudades');
 var Atraccion = require('../models/atracciones');
+var User = require('../models/users');
 
 router.get('/resenia', function(req, res) {
     Resenia.find(function (err, resenias) {
@@ -150,24 +151,31 @@ router.get('/resenia/:id_resenia', function(req, res) {
 
 
 router.post('/resenia', function(req, res) {
-    var resenia = new Resenia({
-        id_usuario: req.body.id_usuario,
-        descripcion: req.body.descripcion,
-        id_ciudad: req.body.id_ciudad,
-        id_atraccion: req.body.id_atraccion,
-        name: req.body.name,
-        id_userSocial: req.body.id_userSocial,
-        provider: req.body.provider,
-        calificacion: req.body.calificacion,
-        idioma: req.body.idioma
-    });
-
-    resenia.save(function(err, resenia) {
-        if (err) {
-            res.status(405).json({"msj": "input invalido"});
-        }
+    User.findById(req.body.id_usuario, function(err, usuario) {
+        if (err) res.status(405).json({"msj": "input invalido"});
+        else if (usuario === null) res.status(404).json({"msj": "usuario no encontrado"});
+        else if (usuario.bloqueado) res.status(401).json({"msj": "usuario bloqueado para escribir resenias"});
         else {
-            res.status(201).json(resenia);
+            var resenia = new Resenia({
+                id_usuario: req.body.id_usuario,
+                descripcion: req.body.descripcion,
+                id_ciudad: req.body.id_ciudad,
+                id_atraccion: req.body.id_atraccion,
+                name: req.body.name,
+                id_userSocial: req.body.id_userSocial,
+                provider: req.body.provider,
+                calificacion: req.body.calificacion,
+                idioma: req.body.idioma
+            });
+
+            resenia.save(function(err, resenia) {
+                if (err) {
+                    res.status(405).json({"msj": "input invalido"});
+                }
+                else {
+                    res.status(201).json(resenia);
+                }
+            });
         }
     });
 });
