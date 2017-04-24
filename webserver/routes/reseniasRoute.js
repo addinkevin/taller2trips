@@ -121,7 +121,7 @@ router.post('/resenia', function(req, res) {
                        nombre_ciudad: nombre_ciudad,
                        id_atraccion: req.body.id_atraccion,
                        nombre_atraccion: nombre_atraccion,
-                       name: req.body.name,
+					   name: req.body.name,
                        id_userSocial: req.body.id_userSocial,
                        provider: req.body.provider,
                        calificacion: req.body.calificacion,
