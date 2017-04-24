@@ -6,37 +6,53 @@
     <ImageView
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:id="@+id/profPic" />
+        android:id="@+id/profPic"
+        android:padding="8dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/df_user"/>
 
     <TextView
         android:id="@+id/userName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/profPic"
-        android:layout_toRightOf="@+id/profPic"
+        android:text="Sebastian Rocha"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="@color/com_facebook_blue"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:layout_marginTop="7dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/textView6"
+        android:layout_alignStart="@+id/textView6" />
 
     <RatingBar
         android:id="@+id/calificacion"
         style="@style/Widget.AppCompat.RatingBar.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
-        android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/userName"
-        android:layout_toRightOf="@+id/userName"
         android:isIndicator="true"
-        android:numStars="5" />
+        android:numStars="5"
+        android:rating="3"
+        android:layout_below="@+id/userName"
+        android:layout_toRightOf="@+id/textView6"
+        android:layout_toEndOf="@+id/textView6" />
 
     <TextView
         android:id="@+id/comment"
+        android:text="lasdk asdkaj a sdaso ialih aohlia il dalihslu ad"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="5dp"
         android:layout_toEndOf="@+id/profPic"
         android:layout_toRightOf="@+id/profPic"
         android:layout_below="@+id/calificacion" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/rating"
+        android:layout_alignBottom="@+id/calificacion"
+        android:layout_alignLeft="@+id/comment"
+        android:layout_alignStart="@+id/comment" />
 
 </RelativeLayout>

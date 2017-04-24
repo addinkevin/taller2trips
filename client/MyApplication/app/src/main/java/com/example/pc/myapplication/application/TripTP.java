@@ -23,6 +23,8 @@ public class TripTP extends Application {
     private boolean login = false;
     private String userID_fromServ = null;
     private boolean hasMultipleAccounts;
+    private String screenName = null;
+    private String nameFB = null;
 
     private static final String TWITTER_KEY = "SImsg2WXUTa6XGUxmr678Jtro ";
     private static final String TWITTER_SECRET = "BSlApiUVD8wOyoBuWzFS8wv31leVCUQ5XlA2Z7sdXY57XkG3wd";
@@ -144,5 +146,21 @@ public class TripTP extends Application {
 
     public void setHasMultipleAccounts(boolean hasMultipleAccounts) {
         this.hasMultipleAccounts = hasMultipleAccounts;
+    }
+
+    public String getScreenName() {
+        return screenName;
+    }
+
+    public void setScreenName(String screenName) {
+        this.screenName = screenName;
+    }
+
+    public String getNameFB() {
+        return nameFB;
+    }
+
+    public void setNameFB(String nameFB) {
+        this.nameFB = nameFB;
     }
 }

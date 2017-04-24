@@ -28,6 +28,7 @@ import com.facebook.internal.CallbackManagerImpl;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
@@ -35,6 +36,7 @@ import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
+import com.twitter.sdk.android.core.models.User;
 import com.twitter.sdk.android.core.services.CollectionService;
 
 import org.json.JSONException;
@@ -44,6 +46,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Map;
+
+import retrofit2.Call;
 
 public class LoginActivity extends AppCompatActivity implements FacebookCallback<LoginResult> {
 
@@ -103,6 +107,7 @@ public class LoginActivity extends AppCompatActivity implements FacebookCallback
             }
 
             findViewById(R.id.tryIt).setVisibility(View.GONE);
+            view.setVisibility(View.VISIBLE);
         }
 
         LocalBroadcastManager.getInstance(this).registerReceiver(onSignLogin,
@@ -128,6 +133,19 @@ public class LoginActivity extends AppCompatActivity implements FacebookCallback
                 e.printStackTrace();
             }
         } else if (twitterSession != null) {
+
+            Call<User> userResult = Twitter.getApiClient(twitterSession).getAccountService()
+                    .verifyCredentials(true, false);
+
+            userResult.enqueue(new Callback<User>() {
+                @Override
+                public void success(Result<User> userResult) {
+                    tripTP.setScreenName(userResult.data.screenName);
+                }
+                @Override
+                public void failure(TwitterException e) {}
+            });
+
             JSONObject body = new JSONObject();
             JSONObject data = new JSONObject();
             try {
@@ -211,5 +229,14 @@ public class LoginActivity extends AppCompatActivity implements FacebookCallback
     @Override
     public void onError(FacebookException error) {
 
+    }
+
+    public void tryIt(View view) {
+        tripTP.setSocialDef("");
+        tripTP.setLogin(false);
+        Intent i = new Intent(this, MainActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        this.startActivity(i);
+        this.finish();
     }
 }

@@ -8,6 +8,7 @@ var reseniaSchema = mongoose.Schema({
     id_atraccion: String,
     id_userSocial: String,
     provider: String,
+	name: String,
     idioma: String,
     calificacion: Number
 });

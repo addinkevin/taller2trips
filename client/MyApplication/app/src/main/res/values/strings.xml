@@ -32,6 +32,7 @@
     <string name="logout">Logout</string>
     <string name="config">Configuration</string>
     <string name="add_social">Add social network</string>
+    <string name="login">Login</string>
     <string name="link_fail">Association fail.</string>
     <string name="link_succes">Association succes.</string>
     <string name="radio">Search radius</string>

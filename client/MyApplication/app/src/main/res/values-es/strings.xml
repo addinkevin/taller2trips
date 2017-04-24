@@ -35,6 +35,7 @@
     <string name="noPlano">No hay ningún plano para mostrar.</string>
     <string name="noAudio">No hay ningún audio para escuchar.</string>
     <string name="noVideo">No hay ningún video para ver.</string>
+    <string name="login">Entrar</string>
     <string name="comment">Comentar</string>
     <string name="comment_succes">Reseña realizada con éxito.</string>
     <string name="comment_fail">No se pudo realizar la reseña.</string>

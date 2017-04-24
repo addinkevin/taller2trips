@@ -26,7 +26,7 @@ router.get('/resenia/paginas', function(req, res) {
 			else {
 				res.status(200).json(resenias);
 			}
-		}).sort({"created_at": 1})
+		}).sort({"_id": -1})
 		.limit(Number(cantidad))
 		.skip(Number(salto));
 	} else {
@@ -49,7 +49,7 @@ router.get('/resenia/buscar/paginas', function(req, res) {
 			else {
 				res.status(200).json(resenias);
 			}
-		}).sort({"created_at": 1})
+		}).sort({"_id": -1})
 		.limit(Number(cantidad))
 		.skip(Number(salto));
 	} else {
@@ -93,6 +93,7 @@ router.post('/resenia', function(req, res) {
         id_ciudad: req.body.id_ciudad,
         id_atraccion: req.body.id_atraccion,
         id_userSocial: req.body.id_userSocial,
+		name: req.body.name,
         provider: req.body.provider,
         calificacion: req.body.calificacion,
         idioma: req.body.idioma
@@ -119,5 +120,18 @@ router.delete('/resenia/:id_resenia', function(req,res) {
         }
     });
 });
+/*
+router.delete('/resenia', function(req,res) {
+	console.log(req);
+    Resenia.remove({}, function (err) {
+        if (err) {
+            res.send(err)
+        }
+        else {
+            res.status(200).json({"msj": "exito"});
+        }
+    });
+});
+*/
 
 module.exports = router;
