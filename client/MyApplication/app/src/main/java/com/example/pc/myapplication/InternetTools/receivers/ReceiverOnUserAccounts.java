@@ -67,6 +67,7 @@ public class ReceiverOnUserAccounts extends BroadcastReceiver {
 
                         TextView nameTxt = (TextView) headerView.findViewById(R.id.nameProf);
                         nameTxt.setText(name);
+                        tripTP.setNameFB(name);
 
                         String url = Consts.SPLEX_URL + Consts.SOCIAL_ACC + "/" + id;
                         Map<String,String> header = Consts.getSplexHeader(tripTP);

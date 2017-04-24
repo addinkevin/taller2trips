@@ -17,6 +17,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity  implements OnMapReadyCallba
     private ReceiverOnUserInfo onUserInfo;
     private ReceiverOnUserImage onUserImage;
     private ReceiverOnUserLogin onUserLogin;
+    private TripTP tripTP;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,13 +99,22 @@ public class MainActivity extends AppCompatActivity  implements OnMapReadyCallba
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        String urlSplex = Consts.SPLEX_URL + Consts.SOCIAL_ACC;
+        tripTP = (TripTP) getApplication();
+        Menu menu = navigationView.getMenu();
+        if (!tripTP.getSocialDef().isEmpty()) {
+            menu.findItem(R.id.login).setVisible(false);
+            String urlSplex = Consts.SPLEX_URL + Consts.SOCIAL_ACC;
 
-        Map<String,String> header = Consts.getSplexHeader(getApplication());
+            Map<String, String> header = Consts.getSplexHeader(getApplication());
 
-        InternetClient client = new InfoClient(getApplicationContext(),
-                Consts.GET_USER_ACCOUNTS, urlSplex, header, Consts.GET, null, true);
-        client.runInBackground();
+            InternetClient client = new InfoClient(getApplicationContext(),
+                    Consts.GET_USER_ACCOUNTS, urlSplex, header, Consts.GET, null, true);
+            client.runInBackground();
+        } else {
+            menu.findItem(R.id.logout).setVisible(false);
+            menu.findItem(R.id.link).setVisible(false);
+
+        }
     }
 
     void locationConfig(){
@@ -157,7 +168,6 @@ public class MainActivity extends AppCompatActivity  implements OnMapReadyCallba
 
         map.setInfoWindowAdapter(new MapInfoWindowAdapter(getLayoutInflater()));
         map.setOnInfoWindowClickListener(this);
-        TripTP tripTP = (TripTP) getApplication();
         String url = tripTP.getUrl() + Consts.ATRACC + Consts.CERCANIA;
         listener = new LocationGPSListener(this,map, url, tripTP.getRadio(), view);
         locationConfig();
@@ -198,6 +208,11 @@ public class MainActivity extends AppCompatActivity  implements OnMapReadyCallba
             loginAct.putExtra(Consts.IS_LINKING, true);
             loginAct.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(loginAct);
+        } else if (id == R.id.login) {
+            Intent loginAct = new Intent(this, LoginActivity.class);
+            loginAct.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(loginAct);
+            this.finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

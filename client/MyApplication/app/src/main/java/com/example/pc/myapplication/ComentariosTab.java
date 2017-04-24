@@ -5,9 +5,12 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -15,7 +18,9 @@ import com.example.pc.myapplication.InternetTools.InfoClient;
 import com.example.pc.myapplication.InternetTools.InternetClient;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnCommentsGet;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnCommentPost;
+import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnProfPic;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnShare;
+import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnUserCommentImage;
 import com.example.pc.myapplication.adapters.CommentListAdapter;
 import com.example.pc.myapplication.application.TripTP;
 import com.example.pc.myapplication.ciudadesTools.Atraccion;
@@ -35,7 +40,11 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.example.pc.myapplication.commonfunctions.Consts.PERMISSION;
 import static com.example.pc.myapplication.commonfunctions.Consts.S_FACEBOOK;
@@ -53,6 +62,9 @@ public class ComentariosTab extends Fragment {
     private Atraccion atraccion;
     private List<Comentario> rowsItems;
     private CommentListAdapter adapter;
+    private AtomicBoolean isDownloagind; // cuando esta descargando comentarios o ya no hay mas comentarios
+    private ReceiverOnProfPic onProf;
+    private ReceiverOnUserCommentImage onProfImage;
 
 
     @Override
@@ -63,24 +75,61 @@ public class ComentariosTab extends Fragment {
 
         rowsItems = new ArrayList<>();
         adapter = new CommentListAdapter(activity, rowsItems);
-        ListView commentsListView = (ListView) fragView.findViewById(R.id.atraccList);
+        final ListView commentsListView = (ListView) fragView.findViewById(R.id.atraccList);
         commentsListView.setAdapter(adapter);
+
+        isDownloagind = new AtomicBoolean(true);
 
         onShare = new ReceiverOnShare(activity);
         onCommentPost = new ReceiverOnCommentPost(activity,commentText, rowsItems, adapter, commentsListView);
-        onCommentGet = new ReceiverOnCommentsGet(activity, rowsItems, adapter, commentsListView);
+        onCommentGet = new ReceiverOnCommentsGet(activity, rowsItems, adapter, commentsListView, isDownloagind);
+        onProf = new ReceiverOnProfPic(activity);
+        onProfImage = new ReceiverOnUserCommentImage(activity, commentsListView, rowsItems, adapter);
 
         tripTP = (TripTP)activity.getApplication();
 
-        String id_atr = activity.getIntent().getStringExtra(Consts._ID);
+        commentsListView.setOnScrollListener(new AbsListView.OnScrollListener() {
 
-        String urlServ = tripTP.getUrl() + Consts.RESENIA + Consts.BUSCAR + "?" + Consts.ID_ATR + "=" + id_atr;
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
 
-        InternetClient client = new InfoClient(activity.getApplicationContext(),
-                Consts.GET_COMMENT, urlServ, null, Consts.GET, null, true);
-        client.runInBackground();
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (firstVisibleItem == 0) {
+                    view.getFirstVisiblePosition();
+                    // check if we reached the top or bottom of the list
+                    View v = commentsListView.getChildAt(0);
+                    int offset = (v == null) ? 0 : v.getTop();
+                    if (view.getFirstVisiblePosition() == 0 && offset == 0 && isDownloagind.compareAndSet(false, true)) {
+                        downloadComments(String.valueOf(rowsItems.size()));
+                        return;
+                    }
+                }
+            }
+        });
+
+        View commentLN = fragView.findViewById(R.id.commentLN);
+        if(!tripTP.isLogin() || tripTP.getSocialDef().isEmpty()) {
+            commentLN.setVisibility(View.GONE);
+        }
+
+        downloadComments("0");
 
         return fragView;
+    }
+
+    public void downloadComments(String salto) {
+
+        String id_atr = activity.getIntent().getStringExtra(Consts._ID);
+
+        String urlServ = tripTP.getUrl() + Consts.RESENIA + Consts.BUSCAR + Consts.PAGINADO + "?" + Consts.ID_ATR + "=" + id_atr;
+
+        Map<String,String> headers = Consts.getHeaderPaginado(salto);
+
+        InternetClient client = new InfoClient(activity.getApplicationContext(),
+                Consts.GET_COMMENT, urlServ, headers, Consts.GET, null, true);
+        client.runInBackground();
     }
 
     public void makeComment() {
@@ -129,12 +178,16 @@ public class ComentariosTab extends Fragment {
     }
 
     public void onStart() {
+        LocalBroadcastManager.getInstance(activity.getApplicationContext()).registerReceiver(onCommentGet,
+                new IntentFilter(Consts.GET_COMMENT));
         LocalBroadcastManager.getInstance(activity.getApplicationContext()).registerReceiver(onShare,
                 new IntentFilter(Consts.POST_SHARE));
         LocalBroadcastManager.getInstance(activity.getApplicationContext()).registerReceiver(onCommentPost,
                 new IntentFilter(Consts.POST_COMMENT));
-        LocalBroadcastManager.getInstance(activity.getApplicationContext()).registerReceiver(onCommentGet,
-                new IntentFilter(Consts.GET_COMMENT));
+        LocalBroadcastManager.getInstance(activity.getApplicationContext()).registerReceiver(onProf,
+                new IntentFilter(Consts.GET_PROF));
+        LocalBroadcastManager.getInstance(activity.getApplicationContext()).registerReceiver(onProfImage,
+                new IntentFilter(Consts.GET_USER_IMG_PROF));
         super.onStart();
     }
 
@@ -142,6 +195,8 @@ public class ComentariosTab extends Fragment {
         LocalBroadcastManager.getInstance(activity.getApplicationContext()).unregisterReceiver(onShare);
         LocalBroadcastManager.getInstance(activity.getApplicationContext()).unregisterReceiver(onCommentPost);
         LocalBroadcastManager.getInstance(activity.getApplicationContext()).unregisterReceiver(onCommentGet);
+        LocalBroadcastManager.getInstance(activity.getApplicationContext()).unregisterReceiver(onProf);
+        LocalBroadcastManager.getInstance(activity.getApplicationContext()).unregisterReceiver(onProfImage);
 
         super.onStop();
     }

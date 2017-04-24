@@ -52,41 +52,70 @@ public class CommentListAdapter extends BaseAdapter {
     }
 
     private class ViewHolder {
-        ImageView profilePic;
-        TextView userName;
-        TextView comment;
-        RatingBar calificacion;
+        ImageView profilePic = null;
+        TextView userName = null;
+        TextView comment = null;
+        RatingBar calificacion = null;
+        boolean finish = false;
+        int position;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View view, ViewGroup parent) {
 
         ViewHolder holder;
 
         LayoutInflater mInflater = (LayoutInflater) context
                 .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-        if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.review_item, null);
-            holder = new ViewHolder();
-
-            holder.userName = (TextView) convertView.findViewById(R.id.userName);
-            holder.profilePic = (ImageView) convertView.findViewById(R.id.profPic);
-            holder.comment = (TextView) convertView.findViewById(R.id.comment);
-            holder.calificacion = (RatingBar) convertView.findViewById(R.id.calificacion);
-
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
 
         Comentario rowPos = rowItems.get(position);
+
+        if ( view == null || (view.getTag() != null &&
+                ( !((ViewHolder) view.getTag()).finish || ((ViewHolder) view.getTag()).position != position))) {
+
+
+            if (view == null) {
+                view = mInflater.inflate(R.layout.review_item, null);
+            }
+
+            if (view.getTag() != null) {
+                holder = (ViewHolder) view.getTag();
+            } else {
+                holder = new ViewHolder();
+            }
+            if (holder.userName == null)
+                holder.userName = (TextView) view.findViewById(R.id.userName);
+            if (holder.profilePic == null)
+                holder.profilePic = (ImageView) view.findViewById(R.id.profPic);
+            if (holder.comment == null)
+                holder.comment = (TextView) view.findViewById(R.id.comment);
+            if (holder.calificacion == null)
+                holder.calificacion = (RatingBar) view.findViewById(R.id.calificacion);
+
+            if (rowPos.profPic != null) {
+                holder.finish = true;
+            }
+            holder.profilePic.setImageBitmap(rowPos.profPic);
+            holder.userName.setText(rowPos.userName);
+            holder.userName.setTextColor(context.getResources().getColor(R.color.com_facebook_blue));
+            holder.comment.setText(rowPos.comment);
+            holder.comment.setTextColor(Color.BLACK);
+            holder.calificacion.setRating(rowPos.calificacion);
+            holder.position = position;
+
+            view.setTag(holder);
+        } else {
+            holder = (ViewHolder) view.getTag();
+        }
+
         holder.profilePic.setImageBitmap(rowPos.profPic);
         holder.userName.setText(rowPos.userName);
         holder.userName.setTextColor(context.getResources().getColor(R.color.com_facebook_blue));
         holder.comment.setText(rowPos.comment);
         holder.comment.setTextColor(Color.BLACK);
         holder.calificacion.setRating(rowPos.calificacion);
+        holder.position = position;
 
-        return convertView;
+        return view;
     }
 }

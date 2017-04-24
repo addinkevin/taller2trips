@@ -32,7 +32,7 @@ public abstract class InternetClient {
     private String requestMethod;
     private Map<String, String> headers; //headers de la consulta HTTP
     private boolean expectResponse;
-    private int responseCode;
+    protected int responseCode;
 
     public static final String CONNECTION = "Connection";
 
@@ -82,12 +82,12 @@ public abstract class InternetClient {
 
             Intent activityMsg = new Intent(toCall);
 
-            if ( responseCode < 300 && responseCode >= 200 ) {
+            if ( (responseCode < 300 && responseCode >= 200) || responseCode == 302 ) {
                 if (expectResponse) {
                     readMedia(activityMsg);
                 }
                 activityMsg.putExtra(Consts.SUCESS, true);
-            }else {
+            } else {
                 activityMsg.putExtra(Consts.SUCESS, false);
             }
             LocalBroadcastManager.getInstance(context).sendBroadcast(activityMsg);
