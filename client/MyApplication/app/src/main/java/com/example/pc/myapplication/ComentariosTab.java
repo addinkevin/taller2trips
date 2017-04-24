@@ -134,7 +134,7 @@ public class ComentariosTab extends Fragment {
 
     public void makeComment() {
         final String comment = commentText.getText().toString();
-        if (!comment.isEmpty() && atraccion != null) {
+        if (!comment.isEmpty() && atraccion != null && !tripTP.isBanned()) {
             if (tripTP.getSocialDef().equals(S_FACEBOOK)) {
                 new GraphRequest(AccessToken.getCurrentAccessToken(),
                         "/" + tripTP.getUserID_fromSocial() + "/permissions",
@@ -172,9 +172,12 @@ public class ComentariosTab extends Fragment {
             } else if (tripTP.getSocialDef().equals(S_TWITTER)) {
                 ShareDialog.show(getActivity(), comment, atraccion._id, atraccion.idCiudad);
             }
+        } else if(tripTP.isBanned()) {
+            AlertDialog.show(activity, R.string.banned);
         } else {
             AlertDialog.show(activity, R.string.make_review);
         }
+
     }
 
     public void onStart() {

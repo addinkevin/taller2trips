@@ -47,25 +47,22 @@ public class Atraccion {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+        try {
+            JSONObject descrip = jsonO.getJSONObject(Consts.DESCRIPCION);
+            if (idioma != null) {
+                if (descrip.has(idioma)) {
+                    descripcion = descrip.getString(idioma);
 
-        JSONArray descrip = jsonO.getJSONArray(Consts.DESCRIPCION);
-        if (idioma != null) {
-            int i = 0;
-            boolean found = false;
-           while(i < descrip.length() && !found) {
-               if (descrip.getJSONObject(i).has(idioma)) {
-                   descripcion = descrip.getJSONObject(i).getString(idioma);
-                   found = true;
-               }
-               i++;
-           }
-
-           getDefIdioma(descrip);
-        } else {
-            getDefIdioma(descrip);
-        }
-
-        if (descripcion == null) {
+                } else if (descrip.has(Consts.DEF_IDIOMA)) {
+                    descripcion = descrip.getString(Consts.DEF_IDIOMA);
+                } else {
+                    descripcion = "";
+                }
+            } else {
+                descripcion = "";
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
             descripcion = "";
         }
 
@@ -86,17 +83,5 @@ public class Atraccion {
 
         latitud = (float) jsonO.getDouble(Consts.LATITUD);
         longitud = (float) jsonO.getDouble(Consts.LONGITUD);
-    }
-
-    private void getDefIdioma(JSONArray descrip) throws JSONException {
-        int i = 0;
-        boolean found = false;
-        while(i < descrip.length() && !found) {
-            if (descrip.getJSONObject(i).has(Consts.DEF_IDIOMA)) {
-                descripcion = descrip.getJSONObject(i).getString(Consts.DEF_IDIOMA);
-                found = true;
-            }
-            i++;
-        }
     }
 }

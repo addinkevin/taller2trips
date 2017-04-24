@@ -154,7 +154,7 @@ public class ShareDialog {
             Map<String,String> header = Consts.getHeaderJSON();
 
             InternetClient client = new InfoClient(act.getApplicationContext(),
-                    Consts.POST_COMMENT, urlServ, header, Consts.POST, reqServ.toString(), true);
+                    Consts.POST_COMMENT, urlServ, header, Consts.POST, reqServ.toString(), true, Consts.BLOQ_USER);
             client.runInBackground();
 
         } catch (JSONException | UnsupportedEncodingException e) {

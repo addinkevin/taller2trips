@@ -38,24 +38,22 @@ public class Ciudad implements Parcelable {
             e.printStackTrace();
         }
 
-        JSONArray descrip = ciudad.getJSONArray(Consts.DESCRIPCION);
-        if (idioma != null) {
-            int i = 0;
-            boolean found = false;
-            while(i < descrip.length() && !found) {
-                if (descrip.getJSONObject(i).has(idioma)) {
-                    descripcion = descrip.getJSONObject(i).getString(idioma);
-                    found = true;
+        try {
+            JSONObject descrip = ciudad.getJSONObject(Consts.DESCRIPCION);
+            if (idioma != null) {
+                if (descrip.has(idioma)) {
+                    descripcion = descrip.getString(idioma);
+
+                } else if (descrip.has(Consts.DEF_IDIOMA)) {
+                    descripcion = descrip.getString(Consts.DEF_IDIOMA);
+                } else {
+                    descripcion = "";
                 }
-                i++;
+            } else {
+                descripcion = "";
             }
-
-            getDefIdioma(descrip);
-        } else {
-            getDefIdioma(descrip);
-        }
-
-        if (descripcion == null) {
+        } catch (JSONException e) {
+            e.printStackTrace();
             descripcion = "";
         }
 
