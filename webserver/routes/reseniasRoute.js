@@ -92,22 +92,9 @@ router.get('/resenia/:id_resenia', function(req, res) {
 
 
 router.post('/resenia', function(req, res) {
-<<<<<<< HEAD
-    var resenia = new Resenia({
-        id_usuario: req.body.id_usuario,
-        descripcion: req.body.descripcion,
-        id_ciudad: req.body.id_ciudad,
-        id_atraccion: req.body.id_atraccion,
-        id_userSocial: req.body.id_userSocial,
-		name: req.body.name,
-        provider: req.body.provider,
-        calificacion: req.body.calificacion,
-        idioma: req.body.idioma
-    });
-=======
+
     var nombre_ciudad = "";
     var nombre_atraccion = "";
->>>>>>> refs/remotes/origin/develop
 
     Ciudad.findById(req.body.id_ciudad, function(err, ciudad) {
        if (err) {
@@ -134,6 +121,7 @@ router.post('/resenia', function(req, res) {
                        nombre_ciudad: nombre_ciudad,
                        id_atraccion: req.body.id_atraccion,
                        nombre_atraccion: nombre_atraccion,
+					   name: req.body.name,
                        id_userSocial: req.body.id_userSocial,
                        provider: req.body.provider,
                        calificacion: req.body.calificacion,
