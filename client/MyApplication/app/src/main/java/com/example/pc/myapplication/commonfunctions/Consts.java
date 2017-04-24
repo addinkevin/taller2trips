@@ -176,6 +176,7 @@ public class Consts {
 
     public static final int CANT_STARS = 5;
     public static final int DEF_RADIO = 25;
+    public static final String DEF_IDIOMA = "en";
 
     public static Map<String, String> getSplexHeader(Application secret) {
        return getSplexHeader(secret, false);
