@@ -11,6 +11,17 @@ public class Consts {
 
     public static final String EXT = ".mp4";
 
+    public static final String URL_FACEBOOK = "http://graph.facebook.com/v2.9/";
+    public static final String PICTURE = "/picture";
+    public static final String TYPE = "type";
+    public static final String WIDTH = "width";
+    public static final String HEIGHT = "height";
+    public static final String URL_TWITTER = "https://twitter.com/";
+    public static final String PROFILE_IMAGE = "/profile_image";
+    public static final String ORIGINAL = "original";
+    public static final String SIZE = "size";
+
+
     //splex parameters
     public static final String SPLEX_URL = "https://api.splex.rocks";
     public static final String SIGNUP = "/signup";
@@ -46,7 +57,6 @@ public class Consts {
     public static final String S_FACEBOOK = "FACEBOOK";
     public static final String S_TWITTER = "TWITTER";
 
-
     //Facebook permissions
     public static final String PUBLISH = "publish_actions";
     public static final String GRANTED = "granted";
@@ -54,8 +64,6 @@ public class Consts {
     //Facebook json keys
     public static final String PERMISSION = "permission";
     public static final String STATUS = "status";
-
-
 
     //Request methods
     public static final String GET = "GET";
@@ -65,8 +73,11 @@ public class Consts {
     // Internet Client keys
     public static final String JSON_OUT = "JSON";
     public static final String IMG_OUT = "IMG";
+    public static final String URL_OUT = "URL";
     public static final String FILE_OUT = "FILE";
     public static final String IMG_ID = "IDIMG";
+    public static final String URL_ID = "URL_ID";
+    public static final String URL_PACK = "URL_PACK";
     public static final String IMG_H = "IMGH";
     public static final String IMG_W = "IMGW";
     public static final String SUCESS = "SUCESS";
@@ -75,7 +86,9 @@ public class Consts {
     //posicion imagenes de perfil de usuario
     public static final int PROF_IMG = 1;
     public static final int BANNER_IMG = 2;
-
+    public static final String CANTIDAD = "6";
+    public static final String S_CANTIDAD = "cantidad";
+    public static final String S_SALTO = "salto";
 
     //Receiver tags
     public static final String GET_CITY_NAME = "NAMECITY";
@@ -98,6 +111,10 @@ public class Consts {
     public static final String POST_COMMENT = "COMM";
     public static final String POST_SIGNIN = "SIGNIN";
     public static final String GET_COMMENT = "GETCOMM";
+    public static final String GET_PROF = "PROFPIC";
+    public static final String GET_USER_IMG_PROF = "USERIMGPROF";// una sola imagen, la primera
+
+
 
     //path
     public static final String CIUDAD = "/ciudad";
@@ -110,6 +127,7 @@ public class Consts {
     public static final String RESENIA = "/resenia";
     public static final String BUSCAR = "/buscar";
     public static final String SIGNIN = "/signin";
+    public static final String PAGINADO = "/paginas";
 
     //Json Keys
     public static final String NOMBRE = "nombre";
@@ -140,6 +158,8 @@ public class Consts {
     public static final String CALIFICACION = "calificacion";
     public static final String BLOQUEADO = "bloqueado";
     public static final String IS_LINKING = "isLinking";
+    public static final String ID_USER_SOCIAL = "id_userSocial";
+
 
 
     //querry param
@@ -175,6 +195,13 @@ public class Consts {
         Map<String,String> header = new HashMap<>();
         header.put("Content-Type","application/json; charset=utf-8");
         return header;
+    }
+
+    public static Map<String,String> getHeaderPaginado (String salto) {
+        Map<String,String> headers = new HashMap<>();
+        headers.put(Consts.S_CANTIDAD,CANTIDAD);
+        headers.put(Consts.S_SALTO,salto);
+        return headers;
     }
 
 }

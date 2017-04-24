@@ -28,7 +28,7 @@ router.get('/resenia/paginas', function(req, res) {
 			else {
 				res.status(200).json(resenias);
 			}
-		}).sort({"created_at": 1})
+		}).sort({"_id": -1})
 		.limit(Number(cantidad))
 		.skip(Number(salto));
 	} else {
@@ -41,7 +41,7 @@ router.get('/resenia/buscar/paginas', function(req, res) {
 	var cantidad = req.headers["cantidad"];
 	var salto = req.headers["salto"];
 	
-	if(cantidad && salto && !isNaN(cantidad) && !isNaN(salto)) { 
+	if(cantidad && salto && !isNaN(cantidad) && !isNaN(salto)) {
 		if (req.query.descripcion !== undefined) query.descripcion = new RegExp(req.query.descripcion, 'i');
         var matchNombreCiudad, matchNombreAtraccion;
         if (query.nombre_ciudad !== undefined) {
@@ -70,7 +70,7 @@ router.get('/resenia/buscar/paginas', function(req, res) {
                 select: 'nombre',
                 match: { 'nombre': matchNombreCiudad }
             })
-            .sort({"created_at": 1})
+            .sort({"_id": -1})
             .limit(Number(cantidad))
             .skip(Number(salto))
             .exec(function(err, resenias) {
@@ -84,7 +84,6 @@ router.get('/resenia/buscar/paginas', function(req, res) {
                     res.status(200).json(resenias);
                 }
             })
-
 
 	} else {
 	res.status(400).json({"msj": "param err"});
@@ -156,6 +155,7 @@ router.post('/resenia', function(req, res) {
         descripcion: req.body.descripcion,
         id_ciudad: req.body.id_ciudad,
         id_atraccion: req.body.id_atraccion,
+        name: req.body.name,
         id_userSocial: req.body.id_userSocial,
         provider: req.body.provider,
         calificacion: req.body.calificacion,
@@ -182,5 +182,18 @@ router.delete('/resenia/:id_resenia', function(req,res) {
         }
     });
 });
+/*
+router.delete('/resenia', function(req,res) {
+	console.log(req);
+    Resenia.remove({}, function (err) {
+        if (err) {
+            res.send(err)
+        }
+        else {
+            res.status(200).json({"msj": "exito"});
+        }
+    });
+});
+*/
 
 module.exports = router;

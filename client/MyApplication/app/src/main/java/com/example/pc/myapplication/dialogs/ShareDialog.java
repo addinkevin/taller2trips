@@ -12,6 +12,12 @@ import com.example.pc.myapplication.InternetTools.InternetClient;
 import com.example.pc.myapplication.R;
 import com.example.pc.myapplication.application.TripTP;
 import com.example.pc.myapplication.commonfunctions.Consts;
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.models.User;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,6 +27,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Locale;
 import java.util.Map;
+
+import retrofit2.Call;
 
 public class ShareDialog {
 
@@ -38,22 +46,25 @@ public class ShareDialog {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss();
                     }
+
                 }).setNeutralButton(R.string.comment, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                sendToServer(atraccion,comment,ciudad,(int)ratingBar.getRating(),tripTP,act);
-                dialog.dismiss();
-            }
-        }).setPositiveButton(R.string.share_button, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                if (!tripTP.hasMultipleAccounts()) {
-                    shareSplex(comment,tripTP,act,atraccion,ciudad,(int)ratingBar.getRating(),true);
-                } else {
-                    showSelectAccount(act,comment,atraccion,ciudad, (int)ratingBar.getRating());
-                }
-                dialog.dismiss();
-            }
-        });
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        sendToServer(atraccion,comment,ciudad,(int)ratingBar.getRating(),tripTP,act);
+                        dialog.dismiss();
+
+                    }
+
+                }).setPositiveButton(R.string.share_button, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        if (!tripTP.hasMultipleAccounts()) {
+                            shareSplex(comment,tripTP,act,atraccion,ciudad,(int)ratingBar.getRating(),true);
+                        } else {
+                            showSelectAccount(act,comment,atraccion,ciudad, (int)ratingBar.getRating());
+                        }
+                        dialog.dismiss();
+                    }
+                });
 
         builder.create().show();
     }
@@ -123,6 +134,20 @@ public class ShareDialog {
             reqServ.put(Consts.ID_ATR, atraccion);
             reqServ.put(Consts.CALIFICACION, ratingBar);
             reqServ.put(Consts.IDIOMA, idioma);
+
+            if (tripTP.getSocialDef().equals(Consts.S_TWITTER)) {
+                reqServ.put(Consts.ID_USER_SOCIAL, tripTP.getScreenName());
+                reqServ.put(Consts.NAME, tripTP.getScreenName());
+                reqServ.put(Consts.PROVIDER, tripTP.getSocialDef());
+            } else if (tripTP.getSocialDef().equals(Consts.S_FACEBOOK)){
+                reqServ.put(Consts.ID_USER_SOCIAL, tripTP.getUserID_fromSocial());
+                reqServ.put(Consts.NAME, tripTP.getNameFB());
+                reqServ.put(Consts.PROVIDER, tripTP.getSocialDef());
+            } else {
+                reqServ.put(Consts.ID_USER_SOCIAL, "");
+                reqServ.put(Consts.NAME, "");
+                reqServ.put(Consts.PROVIDER, "");
+            }
 
             String urlServ = tripTP.getUrl() + Consts.RESENIA;
 
