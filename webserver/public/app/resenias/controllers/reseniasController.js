@@ -39,10 +39,6 @@ resenias.controller('reseniasController', [ '$scope', 'HelperResenias', function
             'descripcion': 'Calificación (1 - 5)'
         },
         {
-            'filtroName': 'descripcion',
-            'descripcion': 'Descripción'
-        },
-        {
             'filtroName': 'id_usuario',
             'descripcion': 'ID Usuario'
         },
