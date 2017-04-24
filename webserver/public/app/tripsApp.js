@@ -1,4 +1,4 @@
-var tripsApp = angular.module('tripsApp', ["ngRoute", 'tripsApp.ciudades', 'tripsApp.atracciones']);
+var tripsApp = angular.module('tripsApp', ["ngRoute", 'tripsApp.ciudades', 'tripsApp.atracciones', 'tripsApp.resenias']);
 
 tripsApp.config(function config($routeProvider, $locationProvider) {
     $routeProvider.when('/home', {
@@ -122,7 +122,11 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
             .then(function success(res) {
                 callback(null, null);
             }, function error(res) {
-                callback(null, {msg:"No se pudo hacer el update de la ciudad:"+ciudadObject._id});
+                if (res.status == 405) {
+                    callback(null, { msg: "No puedes repetir el par (ciudad, pais) debido a que ya existe. " });
+                } else {
+                    callback(null, {msg:"No se pudo hacer el update de la ciudad:"+ciudadObject._id});
+                }
             });
     };
 
@@ -141,7 +145,11 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
                 ciudadObject._id = res.data._id;
                 callback(ciudadObject, null);
             }, function error(res) {
-                callback(ciudadObject, {msg:"No se pudo agregar la ciudad"});
+                if (res.status == 405) {
+                    callback(null, { msg: "No puedes agregar la ciudad de dicho país debido a que ya fue agregada." });
+                } else {
+                    callback(ciudadObject, {msg: "No se pudo agregar la ciudad"});
+                }
             });
     };
 

@@ -1,0 +1,95 @@
+<div>
+    <div class='page-header'>
+        <h1>Reseñas</h1>
+    </div>
+
+    <div id="infoContainer">
+    </div>
+    <div id="errorContainer">
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">Filtros</div>
+        <div class="panel-body">
+            <form class="buscadorResenias">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-btn search-panel">
+                            <select class="form-control" style="width:160px;"
+                                    ng-model="filtroSelected"
+                                    ng-options="filtro as (filtro.descripcion) for filtro in opcionesDeFiltro">
+                            </select>
+                        </div>
+
+                        <input type="text" class="form-control" ng-model="contenidoFiltro">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" ng-click="agregarFiltro()">Agregar filtro</button>
+                        </span>
+                    </div>
+                </div>
+
+                <div id="filtros" class="form-group">
+                    <div class="row">
+                        <div class="col-sm-3" ng-repeat="(id,filtro) in filtros">
+                            <div class="panel panel-default box-filtro">
+                                <div class="panel-body">
+                                    <div class="text-center">
+                                        <input type="button" style="float:right;"
+                                               class="link" ng-click="deleteFiltro(id)" value="&times;">
+
+                                        <p><strong>{{filtro.filtro.descripcion}}</strong></p>
+                                        <p>{{filtro.contenido}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button class="btn btn-primary" type="button" ng-click="buscarResenias()">Buscar reseñas<span class="glyphicon glyphicon-search" style="margin-left:5%;"></span></button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+    <div ng-show="showTable">
+        <h2>Resultados</h2>
+
+        <div ng-show="resultados.length == 0"><p>No hay resultados para mostrar.</p></div>
+
+        <div ng-show="resultados.length > 0 ">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th class="col-md-1">Ciudad</th>
+                    <th class="col-md-1">Atraccion</th>
+                    <th class="col-md-2">Nombre de usuario</th>
+                    <th class="col-md-1">Calificación</th>
+                    <th class="col-md-1">Idioma</th>
+                    <th class="col-md-6">Descripción</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="(id,resultado) in resultados">
+                    <td>{{getCiudad(id,resultado)}}</td>
+                    <td>{{getAtraccion(id,resultado)}}</td>
+                    <td>{{getNombreDeUsuario(id,resultado)}}</td>
+                    <td>{{getCalificacion(id,resultado)}}</td>
+                    <td>{{getIdioma(id,resultado)}}</td>
+                    <td>{{getDescripcion(id,resultado)}}</td>
+                    <td>
+                        <div class="btn-group" role="group" aria-label="edit-remove">
+                            <button type="button" class="btn btn-default btn-block" ng-click="bloquearUsuario(id, resultado)">Bloquear usuario</button>
+                            <button type="button" class="btn btn-default btn-block" ng-click="borrarResenia(id,resultado)">Borrar reseña</button>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
