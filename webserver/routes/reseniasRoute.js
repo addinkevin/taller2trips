@@ -60,7 +60,7 @@ router.get('/resenia/buscar/paginas', function(req, res) {
 });
 
 router.get('/resenia/buscar', function(req, res) {
-    var query = req.query
+    var query = req.query;
     if (req.query.descripcion !== undefined) query.descripcion = new RegExp(req.query.descripcion);
     if (req.query.nombre_ciudad !== undefined) query.nombre_ciudad = new RegExp(req.query.nombre_ciudad);
     if (req.query.descripcion !== undefined) query.nombre_atraccion = new RegExp(req.query.nombre_atraccion);
