@@ -3,7 +3,8 @@ angular.module('tripsApp').controller('tripsAppController', [ '$scope','$http', 
         $scope.menuItems = [
             { url: '#/home', description: 'Inicio', path:'/home' },
             { url: '#/ciudades', description: 'Ciudades' , path:'/ciudades'},
-            { url: '#/atracciones', description: 'Atracciones', path:'/atracciones' }
+            { url: '#/atracciones', description: 'Atracciones', path:'/atracciones' },
+            { url: '#/resenias', description: 'Reseñas', path:'/resenias' }
         ];
 
         $scope.activeMenu = $scope.menuItems[0];

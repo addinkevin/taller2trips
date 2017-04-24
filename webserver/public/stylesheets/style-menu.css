@@ -177,3 +177,15 @@ code {
 .idiomaNoRellenado {
     background-color: #E60000;
 }
+
+.reseniaRow {
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.box-filtro {
+    height: 100px;
+    overflow:auto;
+}
+
+.link { background:none;border:none; }

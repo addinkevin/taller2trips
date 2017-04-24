@@ -58,7 +58,7 @@ router.get('/resenia/buscar/paginas', function(req, res) {
 });
 
 router.get('/resenia/buscar', function(req, res) {
-    var query = req.query
+    var query = req.query;
     if (req.query.descripcion !== undefined) query.descripcion = new RegExp(req.query.descripcion);
     console.log(query);
     Resenia.find(query, function(err, resenias) {
