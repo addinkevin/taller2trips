@@ -111,7 +111,7 @@ resenias.controller('reseniasController', [ '$scope', 'HelperResenias', function
     };
 
     $scope.bloquearUsuario = function(id, resultado) {
-        HelperResenias.bloquearUsuarios(resultado.usuario).then(function success(res) {
+        HelperResenias.bloquearUsuario(resultado.usuario).then(function success(res) {
             $scope.setInfoMsg("Usuario bloqueado.");
         }, function error(res) {
             $scope.setErrorMsg("No pudo bloquearse el usuario. Intentelo en otro momento.");
