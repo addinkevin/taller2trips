@@ -87,7 +87,7 @@ resenias.controller('reseniasController', [ '$scope', 'HelperResenias', function
 
     $scope.getNombreDeUsuario = function(id, resultado) {
         var result = "";
-        if (result.usuario) {
+        if (resultado.usuario) {
             result = (resultado.usuario.nombre || "") + " " + (resultado.usuario.apellido || "");
         }
         result = result + " (" + resultado.id_usuario + ")";
