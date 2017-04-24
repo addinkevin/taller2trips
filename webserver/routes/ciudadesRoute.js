@@ -19,7 +19,7 @@ router.get('/ciudad', function(req, res) {
 router.get('/ciudad/:id_ciudad', function(req, res) {
     Ciudad.findById(req.params.id_ciudad, function(err, ciudad) {
         if (err) {
-            res.send(err);
+            res.status(405).json({"msj": "input invalido"});
         }
         else if (ciudad === null) {
             res.status(404).json({"msj": "ciudad no encontrada"});
@@ -41,7 +41,6 @@ router.post('/ciudad', function(req, res) {
 
     ciudad.save(function(err, ciudad) {
         if (err) {
-            console.log(err);
             res.status(405).json({"msj": "input invalido"});
         }
         else {
@@ -58,11 +57,13 @@ router.put('/ciudad', function(req, res) {
         descripcion: req.body.descripcion,
         pais: req.body.pais,
         foto: req.body.foto
-    }
+    };
 
     Ciudad.update({_id: req.body._id}, ciudad, function (err) {
         if (err) {
-            res.send(err);
+            console.log(err);
+            res.status(405).json({"msj": "input invalido"});
+            //res.send(err);
         }
         else {
             res.status(200).json({"msj": "exito"})
