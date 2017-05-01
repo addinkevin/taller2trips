@@ -1,0 +1,88 @@
+<div class='page-header'>
+    <div class="row row-eq-height">
+        <div class="col-sm-8">
+            <h1>Agregar push</h1>
+        </div>
+        <div class="col-sm-4">
+            <div class='btn-toolbar pull-right button-wrapper'>
+                <div class='btn-group'>
+                    <a href="#/ciudades" class="btn btn-primary" role="button">Volver al listado de pushes</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Error header -->
+<div id="errorContainer">
+
+</div>
+<div id="infoContainer">
+
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <form ng-submit="submitPush()">
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Identificador del push</label>
+                <div class="col-sm-10">
+                    <input type="text" ng-model="push.identificador" class="form-control" placeholder="Identificador del push">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Link</label>
+                <div class="col-sm-10">
+                    <input type="text" ng-model="push.link" class="form-control" placeholder="Link del push">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-sm-2">
+                    <label class="col-form-label">Descripción</label>
+                    <select class="form-control">
+                        <option>Español</option>
+                        <option>Ingles</option>
+                        <option>Portugues</option>
+                    </select>
+                </div>
+
+                <div class="col-sm-10">
+                    <textarea class="form-control"  rows="5" style="resize: none;" placeholder="Descripción del push"></textarea>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Fecha de publicación</label>
+                <div class="col-sm-10">
+                    <input type="datetime-local">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Imagen</label>
+                <div class="col-sm-10">
+                    <h4>Información</h4>
+                    <p>El formato de la imagen debe ser png.</p>
+                    <p>El tamaño de la imagen debería ser 1920x1080 para una mejor visualización en la aplicación móvil.</p>
+                    <label class="btn btn-primary" for="imagenCiudadInput">
+                        <input type="file" id="imagenCiudadInput" accept="image/png"
+                               style="display:none;" custom-on-change="updateImageClick">
+                        Subir imagen
+                        <span class='label label-info' id="upload-file-info"></span>
+                    </label>
+                    <div class="previewDeImagenes">
+                        <div class="imagenPreview">
+                            <img src="https://media-cdn.tripadvisor.com/media/photo-s/01/c0/be/f3/pizzeria-guerrin.jpg" class="img-responsive"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <button type="submit" class="btn btn-primary center-block">Agregar push</button>
+            </div>
+        </form>
+    </div>
+</div>
