@@ -54,14 +54,30 @@ resenias.service('HelperResenias', [ '$http', '$q', function($http, $q) {
         });
     };
 
-    this.bloquearUsuario = function(usuario) {
-        console.log(usuario);
-        usuario.bloqueado = true;
+    this.setEstadoBloquearUsuario = function(usuario, newStatus) {
+        usuario.bloqueado = newStatus;
         return $http({
             method: 'PUT',
             url : '/api/usuario/',
             data: usuario
         });
+    };
+
+    this.actualizarElEstadoDeBloqueoRestoDeResenias = function(resultados, usuario) {
+        for (var i = 0; i < resultados.length; i++) {
+            var usuarioResenia = resultados.usuario;
+            if (usuarioResenia && usuarioResenia.id_usuario == usuario.id_usuario) {
+                usuarioResenia.bloqueado = usuario.bloqueado;
+            }
+        }
+    };
+
+    this.desbloquearUsuario = function(usuario) {
+        return this.setEstadoBloquearUsuario(usuario, false);
+    };
+
+    this.bloquearUsuario = function(usuario) {
+        return this.setEstadoBloquearUsuario(usuario, true);
     };
 
     this.borrarResenia = function(resenia) {
@@ -73,4 +89,6 @@ resenias.service('HelperResenias', [ '$http', '$q', function($http, $q) {
             }
         });
     };
+
+
 }]);

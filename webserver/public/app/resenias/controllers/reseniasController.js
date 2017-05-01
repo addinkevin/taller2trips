@@ -106,12 +106,38 @@ resenias.controller('reseniasController', [ '$scope', 'HelperResenias', function
         return resultado.descripcion;
     };
 
-    $scope.bloquearUsuario = function(id, resultado) {
+    $scope.getMensajeBotonBloqueo = function(id, resultado) {
+        if (resultado.usuario && resultado.usuario.bloqueado) {
+            return "Bloquear usuario";
+        } else {
+            return "Desbloquear usuario";
+        }
+    };
+
+    $scope.bloquearUsuario = function(id, resultado)  {
         HelperResenias.bloquearUsuario(resultado.usuario).then(function success(res) {
             $scope.setInfoMsg("Usuario bloqueado.");
+            HelperResenias.actualizarElEstadoDeBloqueoRestoDeResenias($scope.resultados, resultado);
         }, function error(res) {
             $scope.setErrorMsg("No pudo bloquearse el usuario. Intentelo en otro momento.");
         });
+    };
+
+    $scope.desbloquearUsuario = function(id, resultado)  {
+        HelperResenias.desbloquearUsuario(resultado.usuario).then(function success(res) {
+            $scope.setInfoMsg("Usuario desbloqueado.");
+            HelperResenias.actualizarElEstadoDeBloqueoRestoDeResenias($scope.resultados, resultado);
+        }, function error(res) {
+            $scope.setErrorMsg("No pudo desbloquearse el usuario. Intentelo en otro momento.");
+        });
+    };
+
+    $scope.bloquearDesbloquearUsuario = function(id, resultado) {
+        if (resultado.usuario) {
+            $scope.bloquearUsuario(id, resultado);
+        } else {
+            $scope.desbloquearUsuario(id, resultado);
+        }
     };
 
     $scope.borrarResenia = function(id, resultado) {
