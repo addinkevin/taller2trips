@@ -63,7 +63,7 @@ public class Atraccion {
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            descripcion = "";
+             descripcion = "";
         }
 
         this.moneda = jsonO.getString(Consts.MONEDA);

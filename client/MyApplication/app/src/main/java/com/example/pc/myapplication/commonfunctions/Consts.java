@@ -74,6 +74,7 @@ public class Consts {
     public static final String JSON_OUT = "JSON";
     public static final String IMG_OUT = "IMG";
     public static final String URL_OUT = "URL";
+    public static final String RESPONSE = "RES";
     public static final String FILE_OUT = "FILE";
     public static final String IMG_ID = "IDIMG";
     public static final String URL_ID = "URL_ID";

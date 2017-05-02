@@ -56,8 +56,9 @@
     <string name="banned">You are banned.</string>
     <string name="banned_alert">You are banned, cannot make reviews.</string>
     <string name="login_alert">You are not logged, cannot make reviews.</string>
-
-
+    <string name="no_comment_alert">Be the first to review.</string>
+    <string name="add_favorite">Add to favorites.</string>
+    <string name="rem_favorite">Remove from favorites.</string>
 
 
 </resources>

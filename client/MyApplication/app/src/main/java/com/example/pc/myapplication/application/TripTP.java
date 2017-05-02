@@ -3,6 +3,7 @@ package com.example.pc.myapplication.application;
 
 import android.app.Application;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.preference.PreferenceManager;
 
 import com.example.pc.myapplication.commonfunctions.Consts;
@@ -19,7 +20,6 @@ public class TripTP extends Application {
     private String socialDef = null;
     private int socialDefID;
     private String userID_fromSocial = null;
-    private boolean banned = false;
     private boolean login = false;
     private String userID_fromServ = null;
     private boolean hasMultipleAccounts;
@@ -28,6 +28,8 @@ public class TripTP extends Application {
 
     private static final String TWITTER_KEY = "SImsg2WXUTa6XGUxmr678Jtro ";
     private static final String TWITTER_SECRET = "BSlApiUVD8wOyoBuWzFS8wv31leVCUQ5XlA2Z7sdXY57XkG3wd";
+    private Bitmap imgBanner = null;
+    private Bitmap imageUser = null;
 
     public void onCreate() {
         TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
@@ -132,14 +134,6 @@ public class TripTP extends Application {
         this.login = login;
     }
 
-    public boolean isBanned() {
-        return banned;
-    }
-
-    public void setBanned(boolean banned) {
-        this.banned = banned;
-    }
-
     public boolean hasMultipleAccounts() {
         return hasMultipleAccounts;
     }
@@ -162,5 +156,21 @@ public class TripTP extends Application {
 
     public void setNameFB(String nameFB) {
         this.nameFB = nameFB;
+    }
+
+    public void setImgBanner(Bitmap imgBanner) {
+        this.imgBanner = imgBanner;
+    }
+
+    public Bitmap getImgBanner() {
+        return imgBanner;
+    }
+
+    public void setImgProf(Bitmap imageUser) {
+        this.imageUser = imageUser;
+    }
+
+    public Bitmap getImageUser() {
+        return imageUser;
     }
 }

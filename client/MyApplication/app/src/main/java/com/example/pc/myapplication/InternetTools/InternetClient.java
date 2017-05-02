@@ -33,6 +33,7 @@ public abstract class InternetClient {
     private Map<String, String> headers; //headers de la consulta HTTP
     private boolean expectResponse;
     protected int responseCode;
+    protected Integer identifier = null;
 
     public static final String CONNECTION = "Connection";
 
@@ -81,8 +82,17 @@ public abstract class InternetClient {
             Log.i(CONNECTION, "code: " + responseCode);
 
             Intent activityMsg = new Intent(toCall);
+            activityMsg.putExtra(Consts.RESPONSE, responseCode);
 
-            if ( (responseCode < 300 && responseCode >= 200) || responseCode == 302 ) {
+            if (connection.getHeaderFields().containsKey("Location")) {
+                String urlRedirect = connection.getHeaderField("Location");
+                activityMsg.putExtra(Consts.URL_OUT, urlRedirect);
+                if (identifier != null) {
+                    activityMsg.putExtra(Consts.URL_ID, identifier);
+                }
+            }
+
+            if ( responseCode < 300 && responseCode >= 200 ) {
                 if (expectResponse) {
                     readMedia(activityMsg);
                 }
