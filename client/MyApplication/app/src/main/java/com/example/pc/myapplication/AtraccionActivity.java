@@ -17,12 +17,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 
+import com.example.pc.myapplication.InternetTools.InfoClient;
+import com.example.pc.myapplication.InternetTools.InternetClient;
 import com.example.pc.myapplication.adapters.AtraccionTabAdapter;
 import com.example.pc.myapplication.application.TripTP;
+import com.example.pc.myapplication.ciudadesTools.Atraccion;
 import com.example.pc.myapplication.commonfunctions.Consts;
 import com.example.pc.myapplication.dialogs.AlertDialog;
 import com.facebook.login.LoginManager;
 import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.services.CollectionService;
+
+import org.json.JSONObject;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -41,33 +47,35 @@ public class AtraccionActivity extends AppCompatActivity implements NavigationVi
         Toolbar toolbar = (Toolbar) findViewById(R.id.include);
         toolbar.setTitle((R.string.atraccion));
         setSupportActionBar(toolbar);
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle( this, drawer, toolbar,
-                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
         tripTP = (TripTP) getApplication();
 
-        View header = navigationView.getHeaderView(0);
+        if (tripTP.isLogin()) {
 
-        if (tripTP.getImageUser() != null) {
-            CircleImageView img = (CircleImageView) header.findViewById(R.id.profile_image);
-            img.setImageBitmap(tripTP.getImageUser());
-        }
+            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+            navigationView.setNavigationItemSelectedListener(this);
 
-        if (tripTP.getImgBanner() != null) {
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
+                    R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawer.setDrawerListener(toggle);
+            toggle.syncState();
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                BitmapDrawable ob = new BitmapDrawable(getResources(), tripTP.getImgBanner());
-                header.setBackground(ob);
-            } else {
-                BitmapDrawable ob = new BitmapDrawable(tripTP.getImgBanner());
-                header.setBackgroundDrawable(ob);
+            View header = navigationView.getHeaderView(0);
+
+            if (tripTP.getImageUser() != null) {
+                CircleImageView img = (CircleImageView) header.findViewById(R.id.profile_image);
+                img.setImageBitmap(tripTP.getImageUser());
+            }
+
+            if (tripTP.getImgBanner() != null) {
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    BitmapDrawable ob = new BitmapDrawable(getResources(), tripTP.getImgBanner());
+                    header.setBackground(ob);
+                } else {
+                    BitmapDrawable ob = new BitmapDrawable(tripTP.getImgBanner());
+                    header.setBackgroundDrawable(ob);
+                }
             }
         }
 
@@ -117,5 +125,7 @@ public class AtraccionActivity extends AppCompatActivity implements NavigationVi
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 
 }

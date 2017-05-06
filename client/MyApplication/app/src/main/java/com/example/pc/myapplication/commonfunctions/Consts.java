@@ -13,7 +13,6 @@ public class Consts {
 
     public static final String URL_FACEBOOK = "http://graph.facebook.com/v2.9/";
     public static final String PICTURE = "/picture";
-    public static final String TYPE = "type";
     public static final String WIDTH = "width";
     public static final String HEIGHT = "height";
     public static final String URL_TWITTER = "https://twitter.com/";
@@ -35,6 +34,9 @@ public class Consts {
 
     //splex headers
     public static final String AUTHORIZATION = "Authorization";
+
+    //response server
+    public static final String EXITO = "exito";
 
     //splex json
     public static final String DATA = "data";
@@ -69,16 +71,15 @@ public class Consts {
     public static final String GET = "GET";
     public static final String POST = "POST";
     public static final String PUT = "PUT";
+    public static final String DELETE = "DELETE";
 
     // Internet Client keys
     public static final String JSON_OUT = "JSON";
     public static final String IMG_OUT = "IMG";
     public static final String URL_OUT = "URL";
     public static final String RESPONSE = "RES";
-    public static final String FILE_OUT = "FILE";
     public static final String IMG_ID = "IDIMG";
     public static final String URL_ID = "URL_ID";
-    public static final String URL_PACK = "URL_PACK";
     public static final String IMG_H = "IMGH";
     public static final String IMG_W = "IMGW";
     public static final String SUCESS = "SUCESS";
@@ -114,7 +115,9 @@ public class Consts {
     public static final String GET_COMMENT = "GETCOMM";
     public static final String GET_PROF = "PROFPIC";
     public static final String GET_USER_IMG_PROF = "USERIMGPROF";// una sola imagen, la primera
-
+    public static final String GET_FAV_ATR = "FAVATR";
+    public static final String GEToPOST_ATR_FAV = "ATRFAV";
+    public static final String DELETE_ATR_FAV = "DELATRFAV";
 
 
     //path
@@ -129,6 +132,7 @@ public class Consts {
     public static final String BUSCAR = "/buscar";
     public static final String SIGNIN = "/signin";
     public static final String PAGINADO = "/paginas";
+    public static final String FAVS = "/favorito";
 
     //Json Keys
     public static final String NOMBRE = "nombre";
@@ -150,18 +154,13 @@ public class Consts {
     public static final String CLASIFICACION = "clasificacion";
     public static final String ID_CIUDAD = "id_ciudad";
     public static final String FOTOS = "imagenes";
-    public static final String VIDEO_K = "video";
-    public static final String AUDIOS = "audios";
     public static final String AUDIO_K = "AUDIO_K";
     public static final String IDIOMA = "idioma"; //tmb se usa como querry
     public static final String LATITUD = "latitud"; //tmb se usa como querry
     public static final String LONGITUD = "longitud";//tmb se usa como querry
     public static final String CALIFICACION = "calificacion";
-    public static final String BLOQUEADO = "bloqueado";
     public static final String IS_LINKING = "isLinking";
     public static final String ID_USER_SOCIAL = "id_userSocial";
-
-
 
     //querry param
     public static final String FILENAME = "filename";
@@ -178,8 +177,6 @@ public class Consts {
     public static final int CANT_STARS = 5;
     public static final int DEF_RADIO = 25;
     public static final String DEF_IDIOMA = "en";
-    public static final String BLOQ_USER = "USUARIO_BLOQ";
-    public static final String ERR = "ERR";
 
     public static Map<String, String> getSplexHeader(Application secret) {
        return getSplexHeader(secret, false);

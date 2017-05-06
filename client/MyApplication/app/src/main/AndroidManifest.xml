@@ -79,7 +79,9 @@
         <activity android:name=".BuscaAtrCercaActivity" />
         <activity android:name=".AtraccionesActivity" />
         <activity android:name=".FullImageMapActivity" />
-        <activity android:name=".RecorridoActivity"></activity>
+        <activity android:name=".RecorridoActivity" />
+        <activity android:name=".FavoritosRecorridosActivity" />
+        <activity android:name=".FavoritosAtraccionesActivity"></activity>
     </application>
 
 </manifest>

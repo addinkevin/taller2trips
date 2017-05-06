@@ -5,7 +5,6 @@ import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -16,17 +15,15 @@ import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAtraccImg;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnCiudadAtracc;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnCiudadAtraccFav;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnCiudadAtraccFavDelete;
-import com.example.pc.myapplication.application.TripTP;
 import com.example.pc.myapplication.adapters.AtraccionesListAdp;
+import com.example.pc.myapplication.application.TripTP;
 import com.example.pc.myapplication.ciudadesTools.Atraccion;
 import com.example.pc.myapplication.commonfunctions.Consts;
-import com.example.pc.myapplication.singletons.GpsSingleton;
-import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BuscaAtrCercaActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class FavoritosAtraccionesActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     private List<Atraccion> atraccionItems;
     private AtraccionesListAdp atraccionesAdp;
@@ -38,37 +35,49 @@ public class BuscaAtrCercaActivity extends AppCompatActivity implements AdapterV
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_busca_atr_cerca);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.include);
-        toolbar.setTitle(R.string.cercanoTitle);
-        setSupportActionBar(toolbar);
-
-        View view = findViewById(R.id.buscaAtr);
-
-        LatLng pos = GpsSingleton.getInstance().getPos();
-        TripTP tripTP = (TripTP) getApplication();
+        setContentView(R.layout.activity_favaoritos_atracciones);
 
         atraccionItems = new ArrayList<>();
         atraccionesAdp = new AtraccionesListAdp(this, atraccionItems);
+
         onCiudadAtracc = new ReceiverOnCiudadAtracc(this, atraccionesAdp);
         onAtraccImg = new ReceiverOnAtraccImg(atraccionesAdp);
         onCiudadAtraccFav = new ReceiverOnCiudadAtraccFav(atraccionesAdp);
         onCiudadAtraccFavDelete = new ReceiverOnCiudadAtraccFavDelete(atraccionesAdp);
 
-
-        ListView atraccList = (ListView) findViewById(R.id.atraccList);
+        ListView atraccList = (ListView) findViewById(R.id.favAtr);
         atraccList.setAdapter(atraccionesAdp);
         atraccList.setOnItemClickListener(this);
 
-        String url = tripTP.getUrl() + Consts.ATRACC + Consts.CERCANIA +
-                "?" + Consts.LATITUD + "=" + pos.latitude +
-                "&" + Consts.LONGITUD + "=" + pos.longitude +
-                "&" + Consts.RADIO + "=" + tripTP.getRadio();
+        TripTP tripTP = (TripTP)getApplication();
+
+        String url = tripTP.getUrl() + Consts.FAVS + Consts.BUSCAR
+                + "?" + Consts.ID_USER + "=" + tripTP.getUserID_fromServ();
+
         InternetClient client = new InfoClient(getApplicationContext(),
-                Consts.GET_ATR_CERC, url, null, Consts.GET, null, true);
+                Consts.GET_FAV_ATR, url, null, Consts.GET, null, true);
         client.runInBackground();
 
+    }
+
+    public void onStart() {
+        super.onStart();
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(onCiudadAtracc,
+                new IntentFilter(Consts.GET_FAV_ATR));
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(onAtraccImg,
+                new IntentFilter(Consts.GET_ATR_IMG));
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(onCiudadAtraccFav,
+                new IntentFilter(Consts.GEToPOST_ATR_FAV));
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(onCiudadAtraccFavDelete,
+                new IntentFilter(Consts.DELETE_ATR_FAV));
+    }
+
+    public void onStop() {
+        super.onStop();
+        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(onCiudadAtracc);
+        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(onAtraccImg);
+        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(onCiudadAtraccFav);
+        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(onCiudadAtraccFavDelete);
     }
 
     @Override
@@ -79,24 +88,6 @@ public class BuscaAtrCercaActivity extends AppCompatActivity implements AdapterV
         this.startActivity(atraccion);
     }
 
-    public void onStart() {
-        LocalBroadcastManager.getInstance(this).registerReceiver(onCiudadAtracc,
-                new IntentFilter(Consts.GET_ATR_CERC));
-        LocalBroadcastManager.getInstance(this).registerReceiver(onAtraccImg,
-                new IntentFilter(Consts.GET_ATR_IMG));
-        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(onCiudadAtraccFav,
-                new IntentFilter(Consts.GEToPOST_ATR_FAV));
-        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(onCiudadAtraccFavDelete,
-                new IntentFilter(Consts.DELETE_ATR_FAV));
-        super.onStart();
-    }
 
-    public void onStop() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(onCiudadAtracc);
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(onAtraccImg);
-        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(onCiudadAtraccFav);
-        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(onCiudadAtraccFavDelete);
-        super.onStop();
-    }
 
 }

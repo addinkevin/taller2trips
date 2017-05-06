@@ -87,9 +87,10 @@ public abstract class InternetClient {
             if (connection.getHeaderFields().containsKey("Location")) {
                 String urlRedirect = connection.getHeaderField("Location");
                 activityMsg.putExtra(Consts.URL_OUT, urlRedirect);
-                if (identifier != null) {
-                    activityMsg.putExtra(Consts.URL_ID, identifier);
-                }
+            }
+
+            if (identifier != null) {
+                activityMsg.putExtra(Consts.URL_ID, identifier);
             }
 
             if ( responseCode < 300 && responseCode >= 200 ) {

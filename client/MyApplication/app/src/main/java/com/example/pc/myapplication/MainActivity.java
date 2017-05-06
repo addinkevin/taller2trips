@@ -213,6 +213,14 @@ public class MainActivity extends AppCompatActivity  implements OnMapReadyCallba
             loginAct.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(loginAct);
             this.finish();
+        } else if (id == R.id.favAtracciones) {
+            Intent favAtrAct = new Intent(this, FavoritosAtraccionesActivity.class);
+            favAtrAct.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(favAtrAct);
+        } else if (id == R.id.favRecorridos){
+            Intent favRecAct = new Intent(this, FavoritosRecorridosActivity.class);
+            favRecAct.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(favRecAct);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
