@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 var Favorito = require('../models/favoritos');
 var User = require('../models/users');
-//TODO: Agregar recorrido cuando esten
 
 router.get('/favorito/buscar', function(req, res) {
     var query = req.query;
@@ -24,18 +23,13 @@ router.get('/favorito/buscar', function(req, res) {
         if (tipo_busqueda === "atracciones" || tipo_busqueda === "todos") busqueda.populate('id_atraccion');
         if (tipo_busqueda === "usuarios" || tipo_busqueda === "todos") busqueda.populate('id_usuario');
         if (tipo_busqueda === "ciudades" || tipo_busqueda === "todos") busqueda.populate('id_ciudad');
-        //if (tipo_busqueda === "recorridos" || tipo_busqueda === "todos") busqueda.populate('id_recorrido');
+        if (tipo_busqueda === "recorridos" || tipo_busqueda === "todos") busqueda.populate('id_recorrido');
             
         busqueda.exec(function(err, favoritos) {
                 if (err) {
                     res.send(err);
                 }
                 else {
-                    /*
-                    resenias = resenias.filter(function(resenia) {
-                        return resenia.id_atraccion && resenia.id_ciudad;
-                    });
-                   */
                     res.status(200).json(favoritos);
                 }
             })
