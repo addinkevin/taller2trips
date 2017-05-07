@@ -192,18 +192,5 @@ router.delete('/resenia/:id_resenia', function(req,res) {
         }
     });
 });
-/*
-router.delete('/resenia', function(req,res) {
-	console.log(req);
-    Resenia.remove({}, function (err) {
-        if (err) {
-            res.send(err)
-        }
-        else {
-            res.status(200).json({"msj": "exito"});
-        }
-    });
-});
-*/
 
 module.exports = router;
