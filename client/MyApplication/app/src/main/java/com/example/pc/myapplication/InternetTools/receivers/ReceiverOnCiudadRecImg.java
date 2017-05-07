@@ -6,17 +6,15 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.widget.Toast;
 
-import com.example.pc.myapplication.adapters.AtraccionesListAdp;
-import com.example.pc.myapplication.ciudadesTools.Atraccion;
+import com.example.pc.myapplication.adapters.RecorridosListAdp;
 import com.example.pc.myapplication.commonfunctions.Consts;
 
-import java.util.List;
+public class ReceiverOnCiudadRecImg extends BroadcastReceiver {
 
-public class ReceiverOnAtraccImg extends BroadcastReceiver{
-    private AtraccionesListAdp atraccionesAdp;
+    private RecorridosListAdp recorridosAdp;
 
-    public ReceiverOnAtraccImg(AtraccionesListAdp atraccionesAdp) {
-        this.atraccionesAdp = atraccionesAdp;
+    public ReceiverOnCiudadRecImg(RecorridosListAdp recorridosAdp) {
+        this.recorridosAdp = recorridosAdp;
     }
 
     @Override
@@ -26,7 +24,7 @@ public class ReceiverOnAtraccImg extends BroadcastReceiver{
             Bitmap imageAtracc = intent.getParcelableExtra(Consts.IMG_OUT);
             int imgID = intent.getIntExtra(Consts.IMG_ID, -1);
             if (imageAtracc != null && imgID >= 0) {
-                atraccionesAdp.addImgToPos(imageAtracc, imgID);
+                recorridosAdp.addImgToPos(imageAtracc, imgID);
             } else {
                 Toast.makeText(context,"Error Bitmap", Toast.LENGTH_LONG).show();
             }

@@ -50,4 +50,8 @@ public class RecorridoTabAdapter extends FragmentPagerAdapter {
         return tabTitles[position];
     }
 
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        ((RecorridoTab)pagesLayout[0]).onRestoreInstanceState(savedInstanceState);
+    }
+
 }

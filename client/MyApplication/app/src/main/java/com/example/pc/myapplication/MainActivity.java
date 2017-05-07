@@ -111,6 +111,7 @@ public class MainActivity extends AppCompatActivity  implements OnMapReadyCallba
                     Consts.GET_USER_ACCOUNTS, urlSplex, header, Consts.GET, null, true);
             client.runInBackground();
         } else {
+            menu.findItem(R.id.favoritos).setVisible(false);
             menu.findItem(R.id.logout).setVisible(false);
             menu.findItem(R.id.link).setVisible(false);
 

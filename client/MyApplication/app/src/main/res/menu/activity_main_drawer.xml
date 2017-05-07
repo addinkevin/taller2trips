@@ -2,54 +2,63 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="none">
         <item
-            android:id="@+id/buscar_cercanos"
-            android:icon="@drawable/ic_search_black_24dp"
-            android:title="@string/buscar_cercanos" />
-        <item
-            android:id="@+id/ciudades"
-            android:icon="@drawable/ic_location_city_black_24dp"
-            android:title="@string/ciudades" />
-        <item
-            android:id="@+id/atracciones"
-            android:icon="@drawable/museum"
-            android:title="@string/atracciones" />
-        <item
-            android:id="@+id/ubicarme"
-            android:icon="@drawable/ic_place_black_24dp"
-            android:title="@string/ubicarme" />
+            android:id="@+id/accion"
+            android:title="@string/acciones" >
+            <menu>
+                <item
+                    android:id="@+id/buscar_cercanos"
+                    android:icon="@drawable/ic_search_black_24dp"
+                    android:title="@string/buscar_cercanos" />
+                <item
+                    android:id="@+id/ciudades"
+                    android:icon="@drawable/ic_location_city_black_24dp"
+                    android:title="@string/ciudades" />
+                <item
+                    android:id="@+id/atracciones"
+                    android:icon="@drawable/museum"
+                    android:title="@string/atracciones" />
+                <item
+                    android:id="@+id/ubicarme"
+                    android:icon="@drawable/ic_place_black_24dp"
+                    android:title="@string/ubicarme" />
+                <item
+                    android:id="@+id/config"
+                    android:icon="@drawable/ic_build_black_24dp"
+                    android:title="@string/config" />
+                <item
+                    android:id="@+id/link"
+                    android:icon="@drawable/link"
+                    android:title="@string/add_social" />
+                <item
+                    android:id="@+id/login"
+                    android:icon="@drawable/login"
+                    android:title="@string/login" />
+                <item
+                    android:id="@+id/logout"
+                    android:icon="@drawable/logout"
+                    android:title="@string/logout" />
+            </menu>
+        </item>
+
         <item
             android:id="@+id/favoritos"
             android:icon="@drawable/ic_favorite_black_24dp"
             android:title="@string/favoritos">
-            <menu>
-                <item
-                    android:id="@+id/favAtracciones"
-                    android:icon="@drawable/museum"
-                    android:title="@string/atracciones" />
-                <item
-                    android:id="@+id/favRecorridos"
-                    android:icon="@drawable/ic_place_black_24dp"
-                    android:title="@string/recorridos" />
+            <menu >
+                <group android:checkableBehavior="none">
+                    <item
+                        android:id="@+id/favAtracciones"
+                        android:icon="@drawable/museum"
+                        android:title="@string/atracciones" />
+                    <item
+                        android:id="@+id/favRecorridos"
+                        android:icon="@drawable/ic_place_black_24dp"
+                        android:title="@string/recorridos" />
+                </group>
             </menu>
         </item>
-        <item
-            android:id="@+id/config"
-            android:icon="@drawable/ic_build_black_24dp"
-            android:title="@string/config" />
-        <item
-            android:id="@+id/link"
-            android:icon="@drawable/link"
-            android:title="@string/add_social" />
-        <item
-            android:id="@+id/login"
-            android:icon="@drawable/login"
-            android:title="@string/login" />
-        <item
-            android:id="@+id/logout"
-            android:icon="@drawable/logout"
-            android:title="@string/logout" />
     </group>
 
 </menu>

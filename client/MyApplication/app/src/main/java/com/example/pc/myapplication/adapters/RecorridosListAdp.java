@@ -13,7 +13,7 @@ import com.example.pc.myapplication.InternetTools.InfoClient;
 import com.example.pc.myapplication.InternetTools.InternetClient;
 import com.example.pc.myapplication.R;
 import com.example.pc.myapplication.application.TripTP;
-import com.example.pc.myapplication.ciudadesTools.Atraccion;
+import com.example.pc.myapplication.ciudadesTools.Recorrido;
 import com.example.pc.myapplication.commonfunctions.Consts;
 
 import org.json.JSONException;
@@ -22,14 +22,14 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AtraccionesListAdp extends BaseAdapter {
+public class RecorridosListAdp extends BaseAdapter {
 
     private final Activity activity;
     private final TripTP tripTP;
-    List<Atraccion> atraccionItems; /**< Lista de todos los items de List*/
+    List<Recorrido> atraccionItems; /**< Lista de todos los items de List*/
     ArrayList<Boolean> needUpdate;
 
-    public AtraccionesListAdp(Activity activity, List<Atraccion> atraccionItems) {
+    public RecorridosListAdp(Activity activity, List<Recorrido> atraccionItems) {
         this.activity = activity;
         this.atraccionItems = atraccionItems;
         tripTP = (TripTP) activity.getApplication();
@@ -37,7 +37,7 @@ public class AtraccionesListAdp extends BaseAdapter {
 
     }
 
-    public void add(Atraccion atraccion) {
+    public void add(Recorrido atraccion) {
         atraccionItems.add(atraccion);
         needUpdate.add(false);
     }
@@ -55,15 +55,15 @@ public class AtraccionesListAdp extends BaseAdapter {
     }
 
     public void addImgToPos(Bitmap img, int imgID) {
-        atraccionItems.get(imgID).fotosBitmap.add(img);
+        atraccionItems.get(imgID).setFotoRecorrido(img);
         notifyDataSetChanged();
     }
 
     private class ViewHolder {
         int position = -1;
-        ImageView atraccionPic;
+        ImageView recorridoPic;
         ImageView favPic;
-        TextView atraccionName;
+        TextView recorridoName;
         boolean setted = false;
     }
 
@@ -91,11 +91,11 @@ public class AtraccionesListAdp extends BaseAdapter {
             LayoutInflater inflater = activity.getLayoutInflater();
             view = inflater.inflate(R.layout.tarjeta_item, null, true);
             holder = new ViewHolder();
-            holder.atraccionName = (TextView) view.findViewById(R.id.textView2);
-            holder.atraccionPic = (ImageView) view.findViewById(R.id.imageView);
+            holder.recorridoName = (TextView) view.findViewById(R.id.textView2);
+            holder.recorridoPic = (ImageView) view.findViewById(R.id.imageView);
             holder.favPic = (ImageView) view.findViewById(R.id.starFav);
 
-            final Atraccion rowPos = atraccionItems.get(position);
+            final Recorrido rowPos = atraccionItems.get(position);
 
             needUpdate.set(position, false);
 
@@ -109,15 +109,15 @@ public class AtraccionesListAdp extends BaseAdapter {
                             rowPos.setIsFav(null); //block button
                             JSONObject body = new JSONObject();
                             try {
-                                body.put(Consts.ID_ATR, rowPos._id);
-                                body.put(Consts.ID_CIUDAD, rowPos.idCiudad);
+                                body.put(Consts.ID_RECORRIDO, rowPos.get_id());
+                                body.put(Consts.ID_CIUDAD, rowPos.getId_ciudad());
                                 body.put(Consts.ID_USER, tripTP.getUserID_fromServ());
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
 
                             InternetClient client = new InfoClient(activity.getApplicationContext(),
-                                    Consts.GEToPOST_ATR_FAV, url, null, Consts.POST, body.toString(), true, position);
+                                    Consts.GEToPOST_REC_FAV, url, null, Consts.POST, body.toString(), true, position);
                             client.runInBackground();
 
                         } else {
@@ -125,7 +125,7 @@ public class AtraccionesListAdp extends BaseAdapter {
                                 rowPos.setIsFav(null); //block button
                                 String urlDelete = url + "/" + rowPos.getId_fav();
                                 InternetClient client = new InfoClient(activity.getApplicationContext(),
-                                        Consts.DELETE_ATR_FAV, urlDelete, null, Consts.DELETE, null, true, position);
+                                        Consts.DELETE_REC_FAV, urlDelete, null, Consts.DELETE, null, true, position);
                                 client.runInBackground();
 
                             }
@@ -135,15 +135,15 @@ public class AtraccionesListAdp extends BaseAdapter {
                 }
             });
 
-            if (!rowPos.fotosBitmap.isEmpty()) {
-                holder.atraccionPic.setImageBitmap(rowPos.fotosBitmap.get(0));
+            if (rowPos.hasPhoto()) {
+                holder.recorridoPic.setImageBitmap(rowPos.getFotoRecorrido());
                 if (!tripTP.isLogin()) {
                     holder.setted =true;
                     holder.favPic.setVisibility(View.GONE);
                 }
             }
 
-            if (tripTP.isLogin() && !rowPos.fotosBitmap.isEmpty() && rowPos.isFavSetted()) {
+            if (tripTP.isLogin() && rowPos.hasPhoto() && rowPos.isFavSetted()) {
                 holder.setted =true;
             }
 
@@ -156,7 +156,7 @@ public class AtraccionesListAdp extends BaseAdapter {
             }
 
             holder.position = position;
-            holder.atraccionName.setText(rowPos.nombre);
+            holder.recorridoName.setText(rowPos.getNombre());
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
@@ -165,3 +165,4 @@ public class AtraccionesListAdp extends BaseAdapter {
         return view;
     }
 }
+
