@@ -1,8 +1,6 @@
 var express = require('express');
 var router = express.Router();
 var Favorito = require('../models/favoritos');
-var Ciudad = require('../models/ciudades');
-var Atraccion = require('../models/atracciones');
 var User = require('../models/users');
 //TODO: Agregar recorrido cuando esten
 
@@ -13,6 +11,10 @@ router.get('/favorito/buscar', function(req, res) {
     var tipo_busqueda = req.headers["tipo_busqueda"];
 	
 	if(cantidad && salto && !isNaN(cantidad) && !isNaN(salto)) {
+        if (tipo_busqueda === "atracciones") query.id_atraccion = {$ne: null};
+        if (tipo_busqueda === "recorridos") query.id_recorrido = {$ne: null};
+
+
         busqueda = Favorito.
             find(query).
             sort({"_id": -1}).
