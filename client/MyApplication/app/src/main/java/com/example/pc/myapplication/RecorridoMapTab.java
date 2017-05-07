@@ -6,10 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * Created by PC on 01/05/2017.
- */
-
 public class RecorridoMapTab extends Fragment {
 
     private View fragView;

@@ -116,8 +116,13 @@ public class Consts {
     public static final String GET_PROF = "PROFPIC";
     public static final String GET_USER_IMG_PROF = "USERIMGPROF";// una sola imagen, la primera
     public static final String GET_FAV_ATR = "FAVATR";
+    public static final String GET_FAV_REC = "FAVREC";
     public static final String GEToPOST_ATR_FAV = "ATRFAV";
+    public static final String GEToPOST_REC_FAV = "RECFAV";
     public static final String DELETE_ATR_FAV = "DELATRFAV";
+    public static final String DELETE_REC_FAV = "DELRECFAV";
+    public static final String GET_CITY_REC = "RECCITY";
+    public static final String GET_REC_FIRST_ATR_IMG = "FIRTATRREC";
 
 
     //path
@@ -133,6 +138,8 @@ public class Consts {
     public static final String SIGNIN = "/signin";
     public static final String PAGINADO = "/paginas";
     public static final String FAVS = "/favorito";
+    public static final String RECORRIDO = "/recorrido";
+    public static final String FAV_IN = "/favIN";
 
     //Json Keys
     public static final String NOMBRE = "nombre";
@@ -140,9 +147,10 @@ public class Consts {
     public static final String EMAIL = "email";
     public static final String DESCRIPCION = "descripcion";
     public static final String _ID = "_id";
-    public static final String ID_USER = "id_usuario";
+    public static final String ID_USER = "id_usuario";//tmb se usa como querry
     public static final String ID_SOCIAL = "id_social";
-    public static final String ID_ATR = "id_atraccion";
+    public static final String ID_ATR = "id_atraccion";//tmb se usa como querry
+    public static final String ID_RECORRIDO = "id_recorrido";//tmb se usa como querry
     public static final String PAIS = "pais";
     public static final String COSTO = "costo_monto";
     public static final String MONEDA = "costo_moneda";
@@ -154,13 +162,13 @@ public class Consts {
     public static final String CLASIFICACION = "clasificacion";
     public static final String ID_CIUDAD = "id_ciudad";
     public static final String FOTOS = "imagenes";
-    public static final String AUDIO_K = "AUDIO_K";
     public static final String IDIOMA = "idioma"; //tmb se usa como querry
     public static final String LATITUD = "latitud"; //tmb se usa como querry
     public static final String LONGITUD = "longitud";//tmb se usa como querry
     public static final String CALIFICACION = "calificacion";
     public static final String IS_LINKING = "isLinking";
     public static final String ID_USER_SOCIAL = "id_userSocial";
+    public static final String RECORRIDO_ATR = "atracciones";
 
     //querry param
     public static final String FILENAME = "filename";
