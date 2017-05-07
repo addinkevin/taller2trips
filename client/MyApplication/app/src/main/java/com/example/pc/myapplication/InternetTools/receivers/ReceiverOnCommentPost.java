@@ -5,8 +5,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.pc.myapplication.InternetTools.ImageClient;
 import com.example.pc.myapplication.InternetTools.InfoClient;
@@ -30,21 +32,24 @@ public class ReceiverOnCommentPost extends BroadcastReceiver{
     private final List<Comentario> rowsItems;
     private final CommentListAdapter adapter;
     private ListView commentsListView;
+    private TextView noCommentMssg;
 
-    public ReceiverOnCommentPost(Activity comentariosTab, EditText commentText, List<Comentario> rowsItems, CommentListAdapter adapter, ListView commentsListView) {
+    public ReceiverOnCommentPost(Activity comentariosTab, EditText commentText, List<Comentario> rowsItems, CommentListAdapter adapter, ListView commentsListView, TextView noCommentMssg) {
         this.act = comentariosTab;
         this.commentEditText = commentText;
         this.rowsItems = rowsItems;
         this.adapter = adapter;
         this.commentsListView = commentsListView;
+        this.noCommentMssg = noCommentMssg;
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
         boolean succes = intent.getBooleanExtra(Consts.SUCESS, false);
-        if (succes) {
+        int response = intent.getIntExtra(Consts.RESPONSE, -1);
+        if (succes && response != -1 && response != 401) {
             String jsonOut = intent.getStringExtra(Consts.JSON_OUT);
-            if (jsonOut != null && !jsonOut.equals(Consts.ERR)) {
+            if ( jsonOut != null ) {
                 try {
                     JSONObject res = new JSONObject(jsonOut);
                     Comentario comentario = new Comentario(res);
@@ -71,16 +76,17 @@ public class ReceiverOnCommentPost extends BroadcastReceiver{
 
                     commentEditText.setText("");
                     adapter.addRowItem(rowsItems);
+                    noCommentMssg.setVisibility(View.GONE);
                     scrollMyListViewToBottom();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-            } else if (jsonOut != null && jsonOut.equals(Consts.ERR)){
-                AlertDialog.show(act, R.string.banned);
             } else {
                 AlertDialog.show(act, R.string.comment_fail);
             }
-        } else {
+        } else if (response == 401){
+            AlertDialog.show(act, R.string.banned);
+        } else{
             AlertDialog.show(act, R.string.comment_fail);
         }
 

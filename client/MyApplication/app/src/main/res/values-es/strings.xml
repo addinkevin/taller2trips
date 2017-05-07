@@ -53,6 +53,12 @@
     <string name="ok">OK</string>
     <string name="share_button">Compatir</string>
     <string name="cancel_button">Cancelar</string>
+    <string name="no_comment_alert">Se el primero en hacer una reseña.</string>
+    <string name="add_favorite">Agregar a favaritos.</string>
+    <string name="rem_favorite">Eliminar de favoritos.</string>
+    <string name="fav_post_err">No se pudo guardar el Favorito, intenta mas tarde.</string>
+    <string name="fav_post_succ">Guardado en favoritos.</string>
+
 
 
 

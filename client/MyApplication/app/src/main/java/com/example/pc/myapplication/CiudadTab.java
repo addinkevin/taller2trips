@@ -1,4 +1,4 @@
-package com.example.pc.myapplication.ciudadTools;
+package com.example.pc.myapplication;
 
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -13,19 +13,18 @@ import android.widget.TextView;
 import com.example.pc.myapplication.InternetTools.ImageClient;
 import com.example.pc.myapplication.InternetTools.InternetClient;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnCiudadImage;
-import com.example.pc.myapplication.R;
 import com.example.pc.myapplication.application.TripTP;
 import com.example.pc.myapplication.ciudadesTools.Ciudad;
 import com.example.pc.myapplication.commonfunctions.Consts;
 
-public class MainFragment extends Fragment {
+public class CiudadTab extends Fragment {
 
     private Ciudad ciudad;
     private ReceiverOnCiudadImage onCiudadImage;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View myFragmentView = inflater.inflate(R.layout.fragment_ciudad, container, false);
+        View myFragmentView = inflater.inflate(R.layout.ciudad_tab, container, false);
 
         if (savedInstanceState != null && savedInstanceState.containsKey(Consts.CITY)) {
             ciudad = savedInstanceState.getParcelable(Consts.CITY);

@@ -36,11 +36,14 @@ public class Atraccion {
     public float latitud;
     public float longitud;
     public String moneda;
+    private Boolean fav;
+    private String id_fav;
 
     public Atraccion(JSONObject jsonO) throws JSONException {
         this._id = jsonO.getString(Consts._ID);
         this.nombre = jsonO.getString(Consts.NOMBRE);
-
+        fav = null;
+        id_fav = null;
         String idioma = null;
         try {
             idioma = URLEncoder.encode(Locale.getDefault().getLanguage().toLowerCase(), "utf-8");
@@ -63,7 +66,7 @@ public class Atraccion {
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            descripcion = "";
+             descripcion = "";
         }
 
         this.moneda = jsonO.getString(Consts.MONEDA);
@@ -83,5 +86,28 @@ public class Atraccion {
 
         latitud = (float) jsonO.getDouble(Consts.LATITUD);
         longitud = (float) jsonO.getDouble(Consts.LONGITUD);
+    }
+
+    public void setIsFav(Boolean fav) {
+        this.fav = fav;
+    }
+
+    public boolean isFav() {
+        if (fav == null) {
+            return false;
+        }
+        return fav;
+    }
+
+    public boolean isFavSetted() {
+        return fav != null;
+    }
+
+    public String getId_fav() {
+        return id_fav;
+    }
+
+    public void setId_fav(String id_fav) {
+        this.id_fav = id_fav;
     }
 }

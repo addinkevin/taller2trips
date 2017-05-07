@@ -13,6 +13,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.pc.myapplication.InternetTools.InfoClient;
 import com.example.pc.myapplication.InternetTools.InternetClient;
@@ -77,12 +78,13 @@ public class ComentariosTab extends Fragment {
         adapter = new CommentListAdapter(activity, rowsItems);
         final ListView commentsListView = (ListView) fragView.findViewById(R.id.atraccList);
         commentsListView.setAdapter(adapter);
+        TextView noCommentMssg = (TextView) fragView.findViewById(R.id.textView);
 
         isDownloagind = new AtomicBoolean(true);
 
         onShare = new ReceiverOnShare(activity);
-        onCommentPost = new ReceiverOnCommentPost(activity,commentText, rowsItems, adapter, commentsListView);
-        onCommentGet = new ReceiverOnCommentsGet(activity, rowsItems, adapter, commentsListView, isDownloagind);
+        onCommentPost = new ReceiverOnCommentPost(activity,commentText, rowsItems, adapter, commentsListView, noCommentMssg);
+        onCommentGet = new ReceiverOnCommentsGet(activity, rowsItems, adapter, commentsListView, isDownloagind, noCommentMssg);
         onProf = new ReceiverOnProfPic(activity);
         onProfImage = new ReceiverOnUserCommentImage(activity, commentsListView, rowsItems, adapter);
 
@@ -134,7 +136,7 @@ public class ComentariosTab extends Fragment {
 
     public void makeComment() {
         final String comment = commentText.getText().toString();
-        if (!comment.isEmpty() && atraccion != null && !tripTP.isBanned()) {
+        if (!comment.isEmpty() && atraccion != null) {
             if (tripTP.getSocialDef().equals(S_FACEBOOK)) {
                 new GraphRequest(AccessToken.getCurrentAccessToken(),
                         "/" + tripTP.getUserID_fromSocial() + "/permissions",
@@ -172,8 +174,6 @@ public class ComentariosTab extends Fragment {
             } else if (tripTP.getSocialDef().equals(S_TWITTER)) {
                 ShareDialog.show(getActivity(), comment, atraccion._id, atraccion.idCiudad);
             }
-        } else if(tripTP.isBanned()) {
-            AlertDialog.show(activity, R.string.banned);
         } else {
             AlertDialog.show(activity, R.string.make_review);
         }

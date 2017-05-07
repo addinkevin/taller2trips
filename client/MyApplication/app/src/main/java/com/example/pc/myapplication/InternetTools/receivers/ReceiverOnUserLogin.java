@@ -35,23 +35,19 @@ public class ReceiverOnUserLogin extends BroadcastReceiver {
                 try {
                     JSONObject res = new JSONObject(jsonOut);
                     tripTP.setUserID_fromServ(res.getString(Consts._ID));
-                    tripTP.setBanned(res.getBoolean(Consts.BLOQUEADO));
                     tripTP.setLogin(true);
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Toast.makeText(activity,"Json err", Toast.LENGTH_LONG).show();
-                    tripTP.setBanned(false);
                     tripTP.setLogin(false);
                 }
             } else {
                 Toast.makeText(activity,"No se pudo conectar sign servidor", Toast.LENGTH_LONG).show();
                 tripTP.setLogin(false);
-                tripTP.setBanned(false);
             }
         } else {
             Toast.makeText(activity,"No se pudo conectar con el servidor", Toast.LENGTH_LONG).show();
             tripTP.setLogin(false);
-            tripTP.setBanned(false);
         }
     }
 }

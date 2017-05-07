@@ -4,14 +4,17 @@ import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Toast;
 
 import com.example.pc.myapplication.MainActivity;
 import com.example.pc.myapplication.R;
+import com.example.pc.myapplication.application.TripTP;
 import com.example.pc.myapplication.commonfunctions.Consts;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -21,10 +24,13 @@ public class ReceiverOnUserImage extends BroadcastReceiver {
 
     private final Activity activity;
     private final View headerView;
+    private final TripTP tripTP;
 
     public ReceiverOnUserImage(Activity activity, View headerView) {
         this.activity = activity;
         this.headerView = headerView;
+        tripTP = (TripTP) activity.getApplication();
+
     }
 
     @Override
@@ -37,6 +43,7 @@ public class ReceiverOnUserImage extends BroadcastReceiver {
                 if (imgID == Consts.PROF_IMG) {
                     CircleImageView img = (CircleImageView) headerView.findViewById(R.id.profile_image);
                     img.setImageBitmap(imageUser);
+                    tripTP.setImgProf(imageUser);
                 } else {
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -47,7 +54,10 @@ public class ReceiverOnUserImage extends BroadcastReceiver {
                         headerView.setBackgroundDrawable(ob);
                     }
 
+                    tripTP.setImgBanner(imageUser);
+
                 }
+
 
             } else {
                 Toast.makeText(activity,"No imagen", Toast.LENGTH_LONG).show();
