@@ -16,11 +16,12 @@ recorridos.service('RecorridosService', ['$http', 'IdiomaService', function ($ht
     };
 
     this.getAtracciones = function(ciudad) {
+        console.log(ciudad);
         return $http({
             method: 'GET',
             url : '/api/atraccion',
             params: {
-                id_ciudad: ciudad.id_ciudad
+                id_ciudad: ciudad._id
             }
         });
     };
@@ -34,17 +35,6 @@ recorridos.service('RecorridosService', ['$http', 'IdiomaService', function ($ht
         return { es: "", en:"", pt: ""};
     };
 
-    this.getCodeIdioma = function(idioma) {
-        // TODO HACERLO BIENNNNNNN
-        if (idioma == "Español") {
-            return 'es';
-        } else if (idioma == "Ingles") {
-            return 'en';
-        } else {
-            return 'pt';
-        }
-    };
-
     this.getListadoDeAtracciones = function(recorrido) {
         var listado = [];
         for (var i = 0; i < recorrido.ids_atracciones.length; i++) {
@@ -52,5 +42,54 @@ recorridos.service('RecorridosService', ['$http', 'IdiomaService', function ($ht
             listado.push(atraccionRecorrido.nombre);
         }
         return listado.join(' , ');
+    };
+
+
+    this.obtenerIdsAtraccciones = function(atracciones) {
+        var ids = [];
+        for (var i = 0; i < atracciones.length; i++) {
+            ids.push(atracciones[i]._id);
+        }
+        return ids;
+    };
+
+    this.agregarRecorrido = function(recorrido) {
+        var data = {
+            "nombre": recorrido.nombre,
+            "descripcion": JSON.stringify(recorrido.descripcion),
+            "id_ciudad": recorrido.ciudad._id,
+            "ids_atracciones": this.obtenerIdsAtraccciones(recorrido.listadoAtracciones).join()
+        };
+
+        return $http({
+            method: 'POST',
+            url : '/api/recorrido',
+            data: data
+        });
+    };
+
+    this.editarRecorrido = function(recorrido) {
+        var data = {
+            "_id": recorrido._id,
+            "nombre": recorrido.nombre,
+            "descripcion": JSON.stringify(recorrido.descripcion),
+            "id_ciudad": recorrido.ciudad._id,
+            "ids_atracciones": this.obtenerIdsAtraccciones(recorrido.listadoAtracciones).join()
+        };
+
+        return $http({
+            method: 'PUT',
+            url : '/api/recorrido',
+            data: data
+        });
+    };
+
+
+    this.getRecorrido = function(IdRecorrido) {
+        return $http({
+            method: 'GET',
+            url : '/api/recorrido/'+IdRecorrido
+        });
     }
+
 }]);

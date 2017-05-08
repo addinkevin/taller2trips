@@ -1,12 +1,12 @@
 var recorridos = angular.module('tripsApp.recorridos');
 
-recorridos.controller('recorridoListadoController', [ '$scope', '$http', 'RecorridosService',
-    function($scope, $http, RecorridosService) {
+recorridos.controller('recorridoListadoController', [ '$scope', '$http', '$location', 'RecorridosService',
+    function($scope, $http, $location, RecorridosService) {
         $scope.recorridos = [];
 
         $scope.deleteRecorrido = function (recorrido) {
             RecorridosService.deleteRecorrido(recorrido).then(function success(res) {
-
+                $location.url('/recorridos');
             }, function error(res) {
 
             });

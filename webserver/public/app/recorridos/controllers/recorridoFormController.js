@@ -1,7 +1,7 @@
 var recorridos = angular.module('tripsApp.recorridos');
 
-recorridos.controller('recorridoFormController', [ '$scope', '$http', '$routeParams', 'RecorridosService', 'IdiomaService',
-    function($scope, $http, $routeParams, RecorridosService, IdiomaService) {
+recorridos.controller('recorridoFormController', [ '$scope', '$http', '$routeParams', '$location', 'RecorridosService', 'IdiomaService',
+    function($scope, $http, $routeParams, $location, RecorridosService, IdiomaService) {
         $scope.editForm = $routeParams.id;
         $scope.recorrido = {};
         $scope.recorrido.nombre = "";
@@ -13,27 +13,69 @@ recorridos.controller('recorridoFormController', [ '$scope', '$http', '$routePar
         $scope.recorrido.listadoAtracciones = [];
 
 
-        $scope.submitRecorrido = function() {
+        $scope.submitAddRecorrido = function () {
+            RecorridosService.agregarRecorrido($scope.recorrido).then(function success() {
+                $location.url('/recorridos/');
+            }, function error() {
+                $location.url('/recorridos/');
+            });
+        };
 
+        $scope.submitEditRecorrido = function() {
+            RecorridosService.editarRecorrido($scope.recorrido).then(function success() {
+                $location.url('/recorridos/');
+            }, function error() {
+                $location.url('/recorridos/');
+            });
+        };
+
+        $scope.submitRecorrido = function() {
+            if ($scope.editForm) {
+                $scope.submitEditRecorrido();
+            } else {
+                $scope.submitAddRecorrido();
+            }
+        };
+
+        var move = function (origin, destination) {
+            var temp = $scope.recorrido.listadoAtracciones[destination];
+            $scope.recorrido.listadoAtracciones[destination] = $scope.recorrido.listadoAtracciones[origin];
+            $scope.recorrido.listadoAtracciones[origin] = temp;
+        };
+
+        $scope.listadoMoveUp = function(id, atraccion) {
+            if (id == 0) return;
+            move(id, id-1);
+        };
+
+        $scope.listadoMoveDown = function(id, atraccion) {
+            if (id == $scope.recorrido.listadoAtracciones.length - 1) return;
+            move(id, id+1);
+        };
+
+        $scope.listadoRemove = function(id, atraccion) {
+            $scope.recorrido.listadoAtracciones.splice(id,1);
         };
 
         $scope.agregarAtraccion = function() {
+            if (!$scope.atraccionSelected) return;
+            var index = $scope.recorrido.listadoAtracciones.indexOf($scope.atraccionSelected);
+            if (index >= 0) return;
             $scope.recorrido.listadoAtracciones.push($scope.atraccionSelected);
         };
 
         var getCiudades = function() {
-            RecorridosService.getCiudades().then(function success(res) {
+            return RecorridosService.getCiudades().then(function success(res) {
                 $scope.ciudades = res.data;
                 if ($scope.ciudades.length > 0) {
                     $scope.recorrido.ciudad = $scope.ciudades[0];
-                    getAtracciones();
                 }
             }, function error(res) {
             });
         };
 
         var getAtracciones = function() {
-            RecorridosService.getAtracciones($scope.recorrido.ciudad).then(function success(res) {
+            return RecorridosService.getAtracciones($scope.recorrido.ciudad).then(function success(res) {
                 $scope.atracciones = res.data;
                 console.log(res.data);
             }, function error(res) {
@@ -43,19 +85,40 @@ recorridos.controller('recorridoFormController', [ '$scope', '$http', '$routePar
 
         $scope.initAdd = function() {
             $scope.title = "Agregar recorrido";
+            $scope.submit = "Agregar recorrido";
             $scope.disabled = false;
-            getCiudades();
+            getCiudades().then(function() {
+                getAtracciones();
+            });
+        };
+
+        var getRecorrido = function() {
+            return RecorridosService.getRecorrido($scope.editForm).then(function success(res) {
+                $scope.recorrido = res.data[0];
+            }, function error(res) {
+
+            });
         };
 
         $scope.initEdit = function() {
             $scope.title = "Editar recorrido";
+            $scope.submit = "Guardar edición de recorrido";
             $scope.disabled = true;
+            getRecorrido().then(function() {
+                console.log($scope.recorrido);
+                $scope.ciudades = [$scope.recorrido.id_ciudad];
+                $scope.recorrido.ciudad = $scope.ciudades[0];
+                getAtracciones();
+                $scope.recorrido.listadoAtracciones = $scope.recorrido.ids_atracciones;
+            });
         };
 
 
         $scope.cambioDeCiudad = function() {
             console.log("Cambio de ciudad", $scope.recorrido.ciudad);
-            getAtracciones();
+            getAtracciones().then(function() {
+                $scope.recorrido.listadoAtracciones = [];
+            });
         };
 
         $scope.init = function() {

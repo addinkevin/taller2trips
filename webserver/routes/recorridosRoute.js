@@ -31,7 +31,8 @@ router.get('/recorrido', function(req, res) {
 router.get('/recorrido/:id_recorrido', function(req, res) {
     busqueda = Recorrido.
         find({_id: req.params.id_recorrido}).
-        populate('ids_atracciones');
+        populate('ids_atracciones')
+        .populate('id_ciudad');
     busqueda.exec(function(err, recorrido) {
         if (err) {
             res.status(405).json({"msj": "input invalido"});
