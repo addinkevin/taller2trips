@@ -5,6 +5,7 @@ var atraccionesRoute = require('./atraccionesRoute');
 var reseniasRoute = require('./reseniasRoute');
 var usuariosRoute = require('./usuariosRoute');
 var favoritosRoute = require('./favoritosRoute');
+var recorridosRoute = require('./recorridosRoute');
 
 module.exports = function(app, passport) {
     var router = express.Router();
@@ -42,4 +43,5 @@ module.exports = function(app, passport) {
     app.use('/api', reseniasRoute);
     app.use('/api', usuariosRoute);
     app.use('/api', favoritosRoute);
+    app.use('/api', recorridosRoute);
 };
