@@ -1,0 +1,77 @@
+<div class='page-header'>
+    <div class="row row-eq-height">
+        <div class="col-sm-8">
+            <h1>{{title}}</h1>
+        </div>
+        <div class="col-sm-4">
+            <div class='btn-toolbar pull-right button-wrapper'>
+                <div class='btn-group'>
+                    <a href="#/recorridos" class="btn btn-primary" role="button">Volver al listado de recorridos</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Error header -->
+<div id="errorContainer">
+
+</div>
+<div id="infoContainer">
+
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <form ng-submit="submitRecorrido()">
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Nombre del recorrido</label>
+                <div class="col-sm-10">
+                    <input type="text" ng-model="recorrido.nombre" class="form-control" placeholder="Nombre del recorrido">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-sm-2">
+                    <label class="col-form-label">Descripción</label>
+                    <select class="form-control"
+                            ng-model="idiomaSelected"
+                            ng-options="idioma.nombre for idioma in idiomas"></select>
+                </div>
+
+                <div class="col-sm-10">
+                    <textarea class="form-control"  rows="5" style="resize: none;" placeholder="Descripción del push"
+                              ng-model="recorrido.descripcion[idiomaSelected.code]"
+                    ></textarea>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Ciudad</label>
+                <div class="col-sm-10">
+                    <select class="form-control" ng-disabled="disabled" custom-on-change="cambioDeCiudad" ng-model="recorrido.ciudad" ng-options="ciudad.nombre for ciudad in ciudades">
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Atracciones</label>
+                <div class="col-sm-10">
+                    <div class="input-group">
+                        <select class="form-control" ng-model="atraccionSelected" ng-options="atraccion.nombre for atraccion in atracciones">
+                        </select>
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" ng-click="agregarAtraccion()">Agregar</button>
+                        </span>
+                    </div>
+
+
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <button type="submit" class="btn btn-primary center-block">Agregar push</button>
+            </div>
+        </form>
+    </div>
+</div>
