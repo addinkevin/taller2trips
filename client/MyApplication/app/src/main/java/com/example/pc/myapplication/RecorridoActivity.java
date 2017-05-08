@@ -5,12 +5,11 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.example.pc.myapplication.adapters.AtraccionTabAdapter;
 import com.example.pc.myapplication.adapters.RecorridoTabAdapter;
 
 public class RecorridoActivity extends AppCompatActivity {
 
-    private RecorridoTabAdapter atraccionTabAdp;
+    private RecorridoTabAdapter recorridoTabAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,10 +17,15 @@ public class RecorridoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_recorrido);
 
         ViewPager mViewPager = (ViewPager) findViewById(R.id.pager);
-        atraccionTabAdp = new RecorridoTabAdapter(getSupportFragmentManager(),this);
-        mViewPager.setAdapter(atraccionTabAdp);
+        recorridoTabAdapter = new RecorridoTabAdapter(getSupportFragmentManager(),this);
+        mViewPager.setAdapter(recorridoTabAdapter);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
+    }
+
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        recorridoTabAdapter.onRestoreInstanceState(savedInstanceState);
     }
 }

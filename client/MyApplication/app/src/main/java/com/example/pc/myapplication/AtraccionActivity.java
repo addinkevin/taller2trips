@@ -32,7 +32,7 @@ import org.json.JSONObject;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class AtraccionActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class AtraccionActivity extends AppCompatActivity{
 
     private AtraccionTabAdapter atraccionTabAdp;
     private TripTP tripTP;
@@ -41,43 +41,10 @@ public class AtraccionActivity extends AppCompatActivity implements NavigationVi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
-        setContentView(R.layout.drawer_atracciones);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.include);
         toolbar.setTitle((R.string.atraccion));
         setSupportActionBar(toolbar);
         tripTP = (TripTP) getApplication();
-
-        if (tripTP.isLogin()) {
-
-            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-            navigationView.setNavigationItemSelectedListener(this);
-
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
-                    R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-            drawer.setDrawerListener(toggle);
-            toggle.syncState();
-
-            View header = navigationView.getHeaderView(0);
-
-            if (tripTP.getImageUser() != null) {
-                CircleImageView img = (CircleImageView) header.findViewById(R.id.profile_image);
-                img.setImageBitmap(tripTP.getImageUser());
-            }
-
-            if (tripTP.getImgBanner() != null) {
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    BitmapDrawable ob = new BitmapDrawable(getResources(), tripTP.getImgBanner());
-                    header.setBackground(ob);
-                } else {
-                    BitmapDrawable ob = new BitmapDrawable(tripTP.getImgBanner());
-                    header.setBackgroundDrawable(ob);
-                }
-            }
-        }
 
         ViewPager mViewPager = (ViewPager) findViewById(R.id.pager);
         atraccionTabAdp = new AtraccionTabAdapter(getSupportFragmentManager(),this);
@@ -114,18 +81,5 @@ public class AtraccionActivity extends AppCompatActivity implements NavigationVi
             AlertDialog.show(this,R.string.login_alert);
         }
     }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-
 
 }
