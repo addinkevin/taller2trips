@@ -29,7 +29,6 @@ router.get('/usuario/:id_usuario', function(req, res) {
 });
 
 router.post('/signin', function(req, res) {
-    //var auth_token =
     var auth_token = req.get('Authorization').split(" ")[1];
     login.procesarLogin(auth_token, req, res);
 });

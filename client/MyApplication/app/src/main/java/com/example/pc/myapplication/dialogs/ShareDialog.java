@@ -137,7 +137,7 @@ public class ShareDialog {
 
             if (tripTP.getSocialDef().equals(Consts.S_TWITTER)) {
                 reqServ.put(Consts.ID_USER_SOCIAL, tripTP.getScreenName());
-                reqServ.put(Consts.NAME, tripTP.getScreenName());
+                reqServ.put(Consts.NAME, tripTP.getNameFB());
                 reqServ.put(Consts.PROVIDER, tripTP.getSocialDef());
             } else if (tripTP.getSocialDef().equals(Consts.S_FACEBOOK)){
                 reqServ.put(Consts.ID_USER_SOCIAL, tripTP.getUserID_fromSocial());
@@ -154,7 +154,7 @@ public class ShareDialog {
             Map<String,String> header = Consts.getHeaderJSON();
 
             InternetClient client = new InfoClient(act.getApplicationContext(),
-                    Consts.POST_COMMENT, urlServ, header, Consts.POST, reqServ.toString(), true, Consts.BLOQ_USER);
+                    Consts.POST_COMMENT, urlServ, header, Consts.POST, reqServ.toString(), true);
             client.runInBackground();
 
         } catch (JSONException | UnsupportedEncodingException e) {

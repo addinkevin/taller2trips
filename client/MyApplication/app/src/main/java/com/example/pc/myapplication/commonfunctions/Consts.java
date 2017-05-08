@@ -13,7 +13,6 @@ public class Consts {
 
     public static final String URL_FACEBOOK = "http://graph.facebook.com/v2.9/";
     public static final String PICTURE = "/picture";
-    public static final String TYPE = "type";
     public static final String WIDTH = "width";
     public static final String HEIGHT = "height";
     public static final String URL_TWITTER = "https://twitter.com/";
@@ -35,6 +34,9 @@ public class Consts {
 
     //splex headers
     public static final String AUTHORIZATION = "Authorization";
+
+    //response server
+    public static final String EXITO = "exito";
 
     //splex json
     public static final String DATA = "data";
@@ -69,15 +71,15 @@ public class Consts {
     public static final String GET = "GET";
     public static final String POST = "POST";
     public static final String PUT = "PUT";
+    public static final String DELETE = "DELETE";
 
     // Internet Client keys
     public static final String JSON_OUT = "JSON";
     public static final String IMG_OUT = "IMG";
     public static final String URL_OUT = "URL";
-    public static final String FILE_OUT = "FILE";
+    public static final String RESPONSE = "RES";
     public static final String IMG_ID = "IDIMG";
     public static final String URL_ID = "URL_ID";
-    public static final String URL_PACK = "URL_PACK";
     public static final String IMG_H = "IMGH";
     public static final String IMG_W = "IMGW";
     public static final String SUCESS = "SUCESS";
@@ -113,7 +115,14 @@ public class Consts {
     public static final String GET_COMMENT = "GETCOMM";
     public static final String GET_PROF = "PROFPIC";
     public static final String GET_USER_IMG_PROF = "USERIMGPROF";// una sola imagen, la primera
-
+    public static final String GET_FAV_ATR = "FAVATR";
+    public static final String GET_FAV_REC = "FAVREC";
+    public static final String GEToPOST_ATR_FAV = "ATRFAV";
+    public static final String GEToPOST_REC_FAV = "RECFAV";
+    public static final String DELETE_ATR_FAV = "DELATRFAV";
+    public static final String DELETE_REC_FAV = "DELRECFAV";
+    public static final String GET_CITY_REC = "RECCITY";
+    public static final String GET_REC_FIRST_ATR_IMG = "FIRTATRREC";
 
 
     //path
@@ -128,6 +137,9 @@ public class Consts {
     public static final String BUSCAR = "/buscar";
     public static final String SIGNIN = "/signin";
     public static final String PAGINADO = "/paginas";
+    public static final String FAVS = "/favorito";
+    public static final String RECORRIDO = "/recorrido";
+    public static final String FAV_IN = "/favIN";
 
     //Json Keys
     public static final String NOMBRE = "nombre";
@@ -135,9 +147,10 @@ public class Consts {
     public static final String EMAIL = "email";
     public static final String DESCRIPCION = "descripcion";
     public static final String _ID = "_id";
-    public static final String ID_USER = "id_usuario";
+    public static final String ID_USER = "id_usuario";//tmb se usa como querry
     public static final String ID_SOCIAL = "id_social";
-    public static final String ID_ATR = "id_atraccion";
+    public static final String ID_ATR = "id_atraccion";//tmb se usa como querry
+    public static final String ID_RECORRIDO = "id_recorrido";//tmb se usa como querry
     public static final String PAIS = "pais";
     public static final String COSTO = "costo_monto";
     public static final String MONEDA = "costo_moneda";
@@ -149,18 +162,13 @@ public class Consts {
     public static final String CLASIFICACION = "clasificacion";
     public static final String ID_CIUDAD = "id_ciudad";
     public static final String FOTOS = "imagenes";
-    public static final String VIDEO_K = "video";
-    public static final String AUDIOS = "audios";
-    public static final String AUDIO_K = "AUDIO_K";
     public static final String IDIOMA = "idioma"; //tmb se usa como querry
     public static final String LATITUD = "latitud"; //tmb se usa como querry
     public static final String LONGITUD = "longitud";//tmb se usa como querry
     public static final String CALIFICACION = "calificacion";
-    public static final String BLOQUEADO = "bloqueado";
     public static final String IS_LINKING = "isLinking";
     public static final String ID_USER_SOCIAL = "id_userSocial";
-
-
+    public static final String RECORRIDO_ATR = "atracciones";
 
     //querry param
     public static final String FILENAME = "filename";
@@ -177,8 +185,6 @@ public class Consts {
     public static final int CANT_STARS = 5;
     public static final int DEF_RADIO = 25;
     public static final String DEF_IDIOMA = "en";
-    public static final String BLOQ_USER = "USUARIO_BLOQ";
-    public static final String ERR = "ERR";
 
     public static Map<String, String> getSplexHeader(Application secret) {
        return getSplexHeader(secret, false);

@@ -4,7 +4,8 @@ angular.module('tripsApp').controller('tripsAppController', [ '$scope','$http', 
             { url: '#/home', description: 'Inicio', path:'/home' },
             { url: '#/ciudades', description: 'Ciudades' , path:'/ciudades'},
             { url: '#/atracciones', description: 'Atracciones', path:'/atracciones' },
-            { url: '#/resenias', description: 'Reseñas', path:'/resenias' }
+            { url: '#/resenias', description: 'Reseñas', path:'/resenias' },
+            { url: '#/recorridos', description: 'Recorridos', path:'/recorridos' }
         ];
 
         $scope.activeMenu = $scope.menuItems[0];

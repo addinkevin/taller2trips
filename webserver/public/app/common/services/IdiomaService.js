@@ -19,4 +19,5 @@ tripsApp.service('IdiomaService', ['$http', function ($http) {
             }
         ];
     };
+
 }]);
