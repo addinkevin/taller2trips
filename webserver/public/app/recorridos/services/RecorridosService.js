@@ -27,7 +27,10 @@ recorridos.service('RecorridosService', ['$http', 'IdiomaService', function ($ht
     };
 
     this.deleteRecorrido = function(recorrido) {
-
+        return $http({
+            method: 'DELETE',
+            url : '/api/recorrido/'+recorrido._id,
+        });
     };
 
     this.getDescriptionObject = function() {
