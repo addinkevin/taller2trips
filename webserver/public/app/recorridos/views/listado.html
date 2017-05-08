@@ -25,7 +25,14 @@
         <div class="panel-body">
             <div class="row">
                 <div class="col-xs-6 col-md-3">
-                    <img ng-src="{{getSomeImage(recorrido)}}" class="img-responsive"/>
+                    <div uib-carousel active="active" interval="myInterval" no-wrap="noWrapSlides">
+                        <div uib-slide ng-repeat="slide in recorrido.slides track by slide.id" index="slide.id">
+                            <img ng-src="{{slide.src}}" style="margin:auto;" class="img-responsive">
+                            <div class="carousel-caption">
+                                <p>{{slide.caption}}</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-xs-6 col-md-9">
                     <h3>{{recorrido.nombre}}</h3>
