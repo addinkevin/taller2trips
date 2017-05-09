@@ -28,6 +28,13 @@ recorridos.controller('recorridoFormController', [ '$scope', '$http', '$routePar
             $("#errorContainer").html(msg);
         }
 
+        function setInfoMsg(msgInfo) {
+            var msg = "<div class='alert alert-info alert-fixed text-center'>" +
+                msgError +
+                "</div>";
+            $("#infoContainer").html(msg);
+        }
+
         function checkNombre() {
             if ($scope.recorrido.nombre.length == 0) {
                 setFormularioErrorMsg("Debe ingresar un nombre para el recorrido");
@@ -70,16 +77,16 @@ recorridos.controller('recorridoFormController', [ '$scope', '$http', '$routePar
             RecorridosService.agregarRecorrido($scope.recorrido).then(function success() {
                 $location.url('/recorridos/');
             }, function error() {
-                $location.url('/recorridos/');
+                setErrorMsg("Error inesperado al agregar el recorrido.");
             });
         };
 
         $scope.submitEditRecorrido = function() {
             if (!estaFormularioOk()) return;
-            RecorridosService.editarRecorrido($scope.recorrido).then(function success() {
+            RecorridosService.editarRecorrido($scope.recorrido).then(function success(res) {
                 $location.url('/recorridos/');
-            }, function error() {
-                $location.url('/recorridos/');
+            }, function error(res) {
+                setErrorMsg("Error inesperado al guardar el recorrido.");
             });
         };
 
@@ -132,6 +139,7 @@ recorridos.controller('recorridoFormController', [ '$scope', '$http', '$routePar
                     $scope.recorrido.ciudad = $scope.ciudades[0];
                 }
             }, function error(res) {
+                setErrorMsg("Error inesperado al cargar el listado de ciudades.");
             });
         };
 
@@ -140,7 +148,7 @@ recorridos.controller('recorridoFormController', [ '$scope', '$http', '$routePar
                 $scope.atracciones = res.data;
                 console.log(res.data);
             }, function error(res) {
-
+                setErrorMsg("Error inesperado al cargar las atracciones disponibles.");
             });
         };
 
@@ -157,7 +165,7 @@ recorridos.controller('recorridoFormController', [ '$scope', '$http', '$routePar
             return RecorridosService.getRecorrido($scope.editForm).then(function success(res) {
                 $scope.recorrido = res.data[0];
             }, function error(res) {
-
+                setErrorMsg("Error inesperado al cargar el recorrido para su edición.");
             });
         };
 
