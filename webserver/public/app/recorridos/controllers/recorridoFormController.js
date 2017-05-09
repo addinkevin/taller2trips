@@ -12,8 +12,61 @@ recorridos.controller('recorridoFormController', [ '$scope', '$http', '$routePar
         $scope.atracciones = [];
         $scope.recorrido.listadoAtracciones = [];
 
+        function setFormularioErrorMsg(msgError) {
+            var msg = "<div class='alert alert-danger text-center'>" +
+                "<button type='button' class='close' data-dismiss='alert'>&times;</button>" +
+                msgError +
+                "</div>";
+            $("#error-en-formulario").html(msg);
+        }
+
+        function setErrorMsg(msgError) {
+            var msg = "<div class='alert alert-danger alert-fixed text-center'>" +
+                "<button type='button' class='close' data-dismiss='alert'>&times;</button>" +
+                msgError +
+                "</div>";
+            $("#errorContainer").html(msg);
+        }
+
+        function checkNombre() {
+            if ($scope.recorrido.nombre.length == 0) {
+                setFormularioErrorMsg("Debe ingresar un nombre para el recorrido");
+                return false;
+            }
+            return true;
+        }
+
+        function checkDescripcion() {
+            var alMenosUnIdioma = false;
+            for (var i = 0; i < $scope.idiomas.length; i++) {
+                var idioma = $scope.idiomas[i];
+                if ($scope.recorrido.descripcion[idioma.code] != "") {
+                    alMenosUnIdioma = true;
+                    break;
+                }
+            }
+
+            if (!alMenosUnIdioma) {
+                setFormularioErrorMsg("Debe ingresar la descripción del recorrido en al menos un idioma");
+            }
+
+            return alMenosUnIdioma;
+        }
+
+        function checkListado() {
+            if ($scope.recorrido.listadoAtracciones.length == 0){
+                setFormularioErrorMsg("Debe ingresar al menos una atracción para el recorrido.");
+                return false;
+            }
+            return true;
+        }
+
+        function estaFormularioOk() {
+            return  !(!checkNombre() || !checkDescripcion() || !checkListado());
+        }
 
         $scope.submitAddRecorrido = function () {
+            if (!estaFormularioOk()) return;
             RecorridosService.agregarRecorrido($scope.recorrido).then(function success() {
                 $location.url('/recorridos/');
             }, function error() {
@@ -22,6 +75,7 @@ recorridos.controller('recorridoFormController', [ '$scope', '$http', '$routePar
         };
 
         $scope.submitEditRecorrido = function() {
+            if (!estaFormularioOk()) return;
             RecorridosService.editarRecorrido($scope.recorrido).then(function success() {
                 $location.url('/recorridos/');
             }, function error() {
