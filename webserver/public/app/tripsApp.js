@@ -1,5 +1,5 @@
 var tripsApp = angular.module('tripsApp', [
-    "ngRoute", 'tripsApp.ciudades', 'tripsApp.atracciones', 'tripsApp.resenias',
+    "ngRoute", 'ui.bootstrap', 'tripsApp.ciudades', 'tripsApp.atracciones', 'tripsApp.resenias',
     'tripsApp.recorridos', 'tripsApp.push'
 ]);
 

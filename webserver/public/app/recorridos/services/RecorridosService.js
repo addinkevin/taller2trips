@@ -16,7 +16,6 @@ recorridos.service('RecorridosService', ['$http', 'IdiomaService', function ($ht
     };
 
     this.getAtracciones = function(ciudad) {
-        console.log(ciudad);
         return $http({
             method: 'GET',
             url : '/api/atraccion',
