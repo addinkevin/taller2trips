@@ -1,7 +1,7 @@
 var recorridos = angular.module('tripsApp.recorridos');
 
-recorridos.controller('recorridoListadoController', [ '$scope', '$http', '$location', 'RecorridosService',
-    function($scope, $http, $location, RecorridosService) {
+recorridos.controller('recorridoListadoController', [ '$scope', '$http', '$location', 'IdiomaService', 'RecorridosService',
+    function($scope, $http, $location, IdiomaService, RecorridosService) {
         $scope.recorridos = [];
         $scope.myInterval = 0;
         $scope.noWrapSlides = false;
@@ -52,10 +52,34 @@ recorridos.controller('recorridoListadoController', [ '$scope', '$http', '$locat
             RecorridosService.getRecorridos().then(function success(res) {
                 $scope.recorridos = res.data;
                 makeSlides();
+                makeIdiomas();
             }, function error(res) {
 
             });
         };
+
+        function makeIdiomas() {
+            for (var i = 0; i < $scope.recorridos.length; i++) {
+                var recorrido = $scope.recorridos[i];
+                agregarListadoDeIdiomas(recorrido);
+            }
+        }
+
+        function agregarListadoDeIdiomas(recorrido) {
+            recorrido.idiomasCargados = [];
+            recorrido.idiomasNoCargados = [];
+
+            var idiomas = IdiomaService.getIdiomas();
+
+            for (var i = 0; i < idiomas.length; i++) {
+                var idioma = idiomas[i];
+                if (recorrido.descripcion[idioma.code] != "") {
+                    recorrido.idiomasCargados.push(idioma);
+                } else {
+                    recorrido.idiomasNoCargados.push(idioma);
+                }
+            }
+        }
 
         $scope.init = function() {
             loadRecorridos();
