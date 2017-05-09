@@ -140,6 +140,7 @@ recorridos.controller('recorridoFormController', [ '$scope', '$http', '$routePar
                 }
             }, function error(res) {
                 setErrorMsg("Error inesperado al cargar el listado de ciudades.");
+                throw Error("No se pudo cargar el listado de ciudades");
             });
         };
 
@@ -149,6 +150,7 @@ recorridos.controller('recorridoFormController', [ '$scope', '$http', '$routePar
                 console.log(res.data);
             }, function error(res) {
                 setErrorMsg("Error inesperado al cargar las atracciones disponibles.");
+                throw Error("No se pudo cargar el listado de atracciones");
             });
         };
 
@@ -156,9 +158,10 @@ recorridos.controller('recorridoFormController', [ '$scope', '$http', '$routePar
             $scope.title = "Agregar recorrido";
             $scope.submit = "Agregar recorrido";
             $scope.disabled = false;
+
             getCiudades().then(function() {
                 getAtracciones();
-            });
+            }, function() {});
         };
 
         var getRecorrido = function() {
@@ -166,6 +169,7 @@ recorridos.controller('recorridoFormController', [ '$scope', '$http', '$routePar
                 $scope.recorrido = res.data[0];
             }, function error(res) {
                 setErrorMsg("Error inesperado al cargar el recorrido para su edición.");
+                throw Error("No se pudo cargar el recorrido");
             });
         };
 
@@ -186,6 +190,8 @@ recorridos.controller('recorridoFormController', [ '$scope', '$http', '$routePar
         $scope.cambioDeCiudad = function() {
             console.log("Cambio de ciudad", $scope.recorrido.ciudad);
             getAtracciones().then(function() {
+                $scope.recorrido.listadoAtracciones = [];
+            }, function() {
                 $scope.recorrido.listadoAtracciones = [];
             });
         };
