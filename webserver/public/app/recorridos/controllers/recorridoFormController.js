@@ -57,10 +57,17 @@ recorridos.controller('recorridoFormController', [ '$scope', '$http', '$routePar
             $scope.recorrido.listadoAtracciones.splice(id,1);
         };
 
+        function estaAtracccionRepetidaEnListado(atraccion) {
+            var result = $scope.recorrido.listadoAtracciones.find(function(element) {
+                return element._id === atraccion._id;
+            });
+
+            return result;
+        }
+
         $scope.agregarAtraccion = function() {
             if (!$scope.atraccionSelected) return;
-            var index = $scope.recorrido.listadoAtracciones.indexOf($scope.atraccionSelected);
-            if (index >= 0) return;
+            if (estaAtracccionRepetidaEnListado($scope.atraccionSelected)) return;
             $scope.recorrido.listadoAtracciones.push($scope.atraccionSelected);
         };
 
