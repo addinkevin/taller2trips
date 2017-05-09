@@ -7,6 +7,48 @@ recorridos.controller('recorridoListadoController', [ '$scope', '$http', '$locat
         $scope.noWrapSlides = false;
         $scope.active = 0;
 
+        $scope.opcionesDeFiltro = [
+            {
+                'filtroName': 'nombre_recorrido',
+                'descripcion': 'Nombre del recorrido'
+            },
+            {
+                'filtroName': 'nombre_ciudad',
+                'descripcion': 'Ciudad'
+            }
+        ];
+
+        $scope.filtroSelected = $scope.opcionesDeFiltro[0];
+        $scope.filtros = [];
+        $scope.contenidoFiltro = "";
+
+        $scope.agregarFiltro = function() {
+            if ($scope.contenidoFiltro == "") {
+                return;
+            }
+            var element = $scope.filtros.find(function(element) {
+                return element.filtro == $scope.filtroSelected;
+            });
+            if (element) {
+                element.contenido = $scope.contenidoFiltro;
+            } else {
+                $scope.filtros.push( {
+                    filtro: $scope.filtroSelected,
+                    contenido: $scope.contenidoFiltro
+                });
+            }
+            $scope.contenidoFiltro = "";
+        };
+
+        $scope.deleteFiltro = function(id) {
+            $scope.filtros.splice(id,1);
+        };
+
+        $scope.buscarRecorridos = function() {
+            console.log("Buscando recorridos...");
+            // TODO
+        };
+
         $scope.deleteRecorrido = function (recorrido) {
             RecorridosService.deleteRecorrido(recorrido).then(function success(res) {
                 $location.url('/recorridos');
