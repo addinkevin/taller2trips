@@ -6,6 +6,12 @@ push.controller('pushFormController',
 
         var editForm = $routeParams.id;
         $scope.push = {};
+        $scope.push.nombre = "";
+        $scope.push.link = "";
+        $scope.push.descripcion = PushService.getDescriptionObject();
+        $scope.idiomas = IdiomaService.getIdiomas();
+        $scope.idiomaSelected = $scope.idiomas[0];
+        $scope.ciudades = [];
 
         function setFormularioErrorMsg(msgError) {
             var msg = "<div class='alert alert-danger text-center'>" +
@@ -30,12 +36,83 @@ push.controller('pushFormController',
             $("#infoContainer").html(msg);
         }
 
-        function submitAddPush() {
+        function checkNombre() {
+            if ($scope.push.nombre.length == 0) {
+                setFormularioErrorMsg("Debe ingresar un nombre para la notificación push");
+                return false;
+            }
+            return true;
+        }
 
+        function checkLink() {
+            if ($scope.push.link.length == 0) {
+                setFormularioErrorMsg("Debe ingresar un link para la notificación push");
+                return false;
+            }
+            return true;
+        }
+
+        function checkDescripcion() {
+            var alMenosUnIdioma = false;
+            for (var i = 0; i < $scope.idiomas.length; i++) {
+                var idioma = $scope.idiomas[i];
+                if ($scope.push.descripcion[idioma.code] != "") {
+                    alMenosUnIdioma = true;
+                    break;
+                }
+            }
+
+            if (!alMenosUnIdioma) {
+                setFormularioErrorMsg("Debe ingresar la descripción del recorrido en al menos un idioma");
+            }
+
+            return alMenosUnIdioma;
+        }
+
+        function checkImagen() {
+            if (!$scope.push.imagen) {
+                setFormularioErrorMsg("Debe subir una imagen para la notificación push.");
+                return false;
+            }
+
+            return true;
+        }
+
+        function checkFecha() {
+            if (!$scope.push.fecha) {
+                setFormularioErrorMsg("Debe especificar una fecha para la publicación de la notificación push");
+                return false;
+            }
+
+            if ($scope.push.fecha < new Date()) {
+                setFormularioErrorMsg("Debe especificar una fecha posterior al dia de hoy");
+                return false;
+            }
+
+            return true;
+        }
+
+
+        function estaFormularioOk() {
+            return  !(!checkNombre() || !checkLink() || !checkDescripcion() || !checkFecha() || !checkImagen());
+        }
+
+        function submitAddPush() {
+            if (!estaFormularioOk()) return;
+            PushService.addPush($scope.push).then(function success() {
+                $location.url('/push/');
+            }, function error() {
+                setErrorMsg("No se pudo agregar el push");
+            });
         }
 
         function submitEditPush() {
-
+            if (!estaFormularioOk()) return;
+            PushService.editPush($scope.push).then(function success() {
+                $location.url('/push/');
+            }, function error() {
+                setErrorMsg("No se pudo guardar la edición del push.");
+            });
         }
 
         $scope.submitPush = function() {
@@ -46,13 +123,43 @@ push.controller('pushFormController',
             }
         };
 
+        var getCiudades = function() {
+            return PushService.getCiudades().then(function success(res) {
+                $scope.ciudades = res.data;
+            }, function error(res) {
+                setErrorMsg("Error inesperado al cargar el listado de ciudades.");
+                throw Error("No se pudo cargar el listado de ciudades");
+            });
+        };
+
 
         function initAdd() {
+            $scope.title = "Agregar push";
+            $scope.submit = "Agregar push";
 
+            getCiudades().then(function (){
+                if ($scope.ciudades.length > 0) {
+                    $scope.push.ciudad = $scope.ciudades[0];
+                }
+            });
+        }
+
+        function getPush() {
+            return PushService.getPush($scope.editForm).then(function success() {
+                $scope.push = res.data;
+            }, function error() {
+                setErrorMsg("Error inesperado al cargar el push para su edición.");
+                throw Error("No se pudo cargar el push");
+            });
         }
 
         function initEdit() {
+            $scope.title = "Editar push";
+            $scope.submit = "Guardar push";
 
+            getPush().then(function() {
+                return getCiudades();
+            });
         }
 
         function init() {
@@ -64,6 +171,16 @@ push.controller('pushFormController',
         }
 
         init();
+
+        $scope.uploadImageClick = function(event) {
+            if (!event.target.files[0]) return;
+            $scope.push.imagen = {
+                imgSrc: window.URL.createObjectURL(event.target.files[0]),
+                imgFile: event.target.files[0]
+            };
+
+            $scope.$digest();
+        };
 
     }
 ]);

@@ -2,9 +2,9 @@ var push = angular.module('tripsApp.push', ['ngRoute']);
 
 push.config(['$routeProvider', function config($routeProvider) {
     $routeProvider
-        .when('/push', {
+        .when('/push/', {
             templateUrl: 'app/push/views/form.html',
-            controller: 'pushListadoController'
+            controller: 'pushFormController'
         })
         .when('/push/listado', {
             templateUrl: 'app/push/views/listado.html',

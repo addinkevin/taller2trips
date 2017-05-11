@@ -1,7 +1,7 @@
 <div class='page-header'>
     <div class="row row-eq-height">
         <div class="col-sm-8">
-            <h1>Agregar push</h1>
+            <h1>{{title}}</h1>
         </div>
         <div class="col-sm-4">
             <div class='btn-toolbar pull-right button-wrapper'>
@@ -41,25 +41,22 @@
             <div class="form-group row">
                 <div class="col-sm-2">
                     <label class="col-form-label">Descripción</label>
-                    <select class="form-control">
-                        <option>Español</option>
-                        <option>Ingles</option>
-                        <option>Portugues</option>
-                    </select>
+                    <select class="form-control"
+                            ng-model="idiomaSelected"
+                            ng-options="idioma.nombre for idioma in idiomas"></select>
                 </div>
 
                 <div class="col-sm-10">
-                    <textarea class="form-control"  rows="5" style="resize: none;" placeholder="Descripción del push"></textarea>
+                    <textarea class="form-control"  rows="5" style="resize: none;" placeholder="Descripción del push"
+                              ng-model="push.descripcion[idiomaSelected.code]"
+                    ></textarea>
                 </div>
             </div>
 
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Ciudad asociada</label>
                 <div class="col-sm-10">
-                    <select class="form-control">
-                        <option>Bariloche</option>
-                        <option>CABA</option>
-                        <option>Portugues</option>
+                    <select class="form-control" ng-model="push.ciudad" ng-options="ciudad.nombre for ciudad in ciudades">
                     </select>
                 </div>
             </div>
@@ -67,7 +64,7 @@
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Fecha de publicación</label>
                 <div class="col-sm-10">
-                    <input type="datetime-local">
+                    <input type="datetime-local" ng-model="push.fecha">
                 </div>
             </div>
 
@@ -79,20 +76,25 @@
                     <p>El tamaño de la imagen debería ser 1920x1080 para una mejor visualización en la aplicación móvil.</p>
                     <label class="btn btn-primary" for="imagenCiudadInput">
                         <input type="file" id="imagenCiudadInput" accept="image/png"
-                               style="display:none;" custom-on-change="updateImageClick">
+                               style="display:none;" custom-on-change="uploadImageClick">
                         Subir imagen
                         <span class='label label-info' id="upload-file-info"></span>
                     </label>
-                    <div class="previewDeImagenes">
+                    <div class="previewDeImagenes" ng-show="push.imagen">
                         <div class="imagenPreview">
-                            <img src="https://media-cdn.tripadvisor.com/media/photo-s/01/c0/be/f3/pizzeria-guerrin.jpg" class="img-responsive"/>
+                            <img ng-src="{{push.imagen.imgSrc}}" class="img-responsive"/>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!-- Error header -->
+            <div id="error-en-formulario">
+            </div>
+
+
             <div class="form-group row">
-                <button type="submit" class="btn btn-primary center-block">Agregar push</button>
+                <button type="submit" class="btn btn-primary center-block">{{submit}}</button>
             </div>
         </form>
     </div>
