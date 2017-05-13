@@ -147,6 +147,8 @@ public class Consts {
     public static final String EMAIL = "email";
     public static final String DESCRIPCION = "descripcion";
     public static final String _ID = "_id";
+    public static final String _ID_NEXT = "_id_next";
+    public static final String _ID_PREV = "_id_prev";
     public static final String ID_USER = "id_usuario";//tmb se usa como querry
     public static final String ID_SOCIAL = "id_social";
     public static final String ID_ATR = "id_atraccion";//tmb se usa como querry
