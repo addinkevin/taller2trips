@@ -52,12 +52,24 @@ resenias.controller('reseniasController', [ '$scope', 'HelperResenias', function
     $scope.contenidoFiltro = "";
     $scope.filtros = [];
     $scope.resultados = [];
+    $scope.filtrosDic = {};
 
     $scope.agregarFiltro = function() {
-        $scope.filtros.push( {
-            filtro: $scope.filtroSelected,
-            contenido: $scope.contenidoFiltro
+        if ($scope.contenidoFiltro == "") {
+            return;
+        }
+        var element = $scope.filtros.find(function(element) {
+            return element.filtro == $scope.filtroSelected;
         });
+        if (element) {
+            element.contenido = $scope.contenidoFiltro;
+        } else {
+            $scope.filtros.push( {
+                filtro: $scope.filtroSelected,
+                contenido: $scope.contenidoFiltro
+            });
+        }
+        $scope.contenidoFiltro = "";
     };
 
     $scope.deleteFiltro = function(id) {
@@ -78,16 +90,16 @@ resenias.controller('reseniasController', [ '$scope', 'HelperResenias', function
     };
 
     $scope.getCiudad = function(id, resultado) {
-        return resultado.nombre_ciudad;
+        return resultado.id_ciudad.nombre;
     };
 
     $scope.getAtraccion = function(id, resultado) {
-        return resultado.nombre_atraccion;
+        return resultado.id_atraccion.nombre;
     };
 
     $scope.getNombreDeUsuario = function(id, resultado) {
         var result = "";
-        if (result.usuario) {
+        if (resultado.usuario) {
             result = (resultado.usuario.nombre || "") + " " + (resultado.usuario.apellido || "");
         }
         result = result + " (" + resultado.id_usuario + ")";
