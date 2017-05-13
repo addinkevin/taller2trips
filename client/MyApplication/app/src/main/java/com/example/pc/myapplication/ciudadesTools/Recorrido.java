@@ -1,6 +1,8 @@
 package com.example.pc.myapplication.ciudadesTools;
 
 import android.graphics.Bitmap;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.example.pc.myapplication.commonfunctions.Consts;
 
@@ -15,9 +17,10 @@ import java.util.List;
  * Created by PC on 07/05/2017.
  */
 
-public class Recorrido {
+public class Recorrido implements Parcelable{
     private String _id;
     private String nombre;
+    private String descripcion;
     private String id_ciudad;
     private Bitmap fotoRecorrido;
     private List<Atraccion> atracciones;
@@ -30,11 +33,11 @@ public class Recorrido {
             _id = jsonRec.getString(Consts._ID);
             nombre = jsonRec.getString(Consts.NOMBRE);
             id_ciudad = jsonRec.getString(Consts.ID_RECORRIDO);
+            descripcion = jsonRec.getString(Consts.DESCRIPCION);
             atracciones = new ArrayList<>();
             fotoRecorrido = null;
 
             JSONArray recAtr = jsonRec.getJSONArray(Consts.RECORRIDO_ATR);
-
 
             for (int i = 0; i < recAtr.length(); i++) {
                 Atraccion atraccion = new Atraccion(recAtr.getJSONObject(i));
@@ -57,6 +60,14 @@ public class Recorrido {
 
     public List<Atraccion> getAtracciones() {
         return atracciones;
+    }
+
+    public Atraccion getAtraccionAt(int index) {
+        return atracciones.get(index);
+    }
+
+    public int getAtraccionSize() {
+        return atracciones.size();
     }
 
     public Atraccion getFirstAtraccion() {
@@ -102,4 +113,56 @@ public class Recorrido {
     public boolean hasPhoto() {
         return fotoRecorrido != null;
     }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    protected Recorrido(Parcel in) {
+
+        String[] data = new String[3];
+
+        in.readStringArray(data);
+        //en orden de write to parcel
+        _id = data[0];
+        nombre = data[1];
+        descripcion = data[2];
+        id_ciudad = data[3];
+        id_fav = data[4];
+        fotoRecorrido = in.readParcelable(Bitmap.class.getClassLoader());
+        in.readTypedList(atracciones, Atraccion.CREATOR);
+    }
+
+    public static final Creator<Recorrido> CREATOR = new Creator<Recorrido>() {
+        @Override
+        public Recorrido createFromParcel(Parcel in) {
+            return new Recorrido(in);
+        }
+
+        @Override
+        public Recorrido[] newArray(int size) {
+            return new Recorrido[size];
+        }
+    };
+
+    public String toString() {
+        return nombre;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeStringArray(new String[] {this._id,
+                this.nombre,
+                this.descripcion,
+                this.id_ciudad,
+                id_fav});
+        dest.writeParcelable(fotoRecorrido, flags);
+        dest.writeTypedList(atracciones);
+    }
+
 }

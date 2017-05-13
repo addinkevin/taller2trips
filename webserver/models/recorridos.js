@@ -9,7 +9,7 @@ var recorridoSchema = mongoose.Schema({
         es: String,
         pt: String
     },
-    id_ciudad: String
+    id_ciudad: {type: Schema.Types.ObjectId, ref: 'Ciudad' }
 });
 
 module.exports = mongoose.model('Recorrido', recorridoSchema);
