@@ -2,6 +2,7 @@
 <LinearLayout xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:id="@+id/masterAtraccion"
     android:weightSum="1"
@@ -379,7 +380,6 @@
                 android:layout_marginTop="8dp"
                 android:text="@string/noPlano"
                 android:visibility="gone"/>
-
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

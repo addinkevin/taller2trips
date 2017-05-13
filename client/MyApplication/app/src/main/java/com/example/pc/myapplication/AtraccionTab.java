@@ -36,6 +36,7 @@ import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAtraccion;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAtraccionImgs;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAtraccionPlano;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAudCheck;
+import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnFavPost;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnVidCheck;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnVidThumbnail;
 import com.example.pc.myapplication.application.TripTP;
@@ -56,6 +57,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -99,6 +103,8 @@ public class AtraccionTab extends Fragment implements View.OnClickListener, Medi
     private long lastPressTime;
     private MapView mMapView;
     private ComentariosTab comentariosTab;
+    private TripTP tripTP;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -124,7 +130,9 @@ public class AtraccionTab extends Fragment implements View.OnClickListener, Medi
         videoThumb = (ImageView) fragView.findViewById(R.id.videoIMG) ;
         pager = (ViewPager) fragView.findViewById(R.id.myviewpager);
 
-        String urlConst = ((TripTP)activity.getApplication()).getUrl() + Consts.ATRACC + "/" + _id;
+        tripTP = (TripTP)activity.getApplication();
+
+        String urlConst = tripTP.getUrl() + Consts.ATRACC + "/" + _id;
 
         onAtraccion = new ReceiverOnAtraccion(this, view);
         onAtraccionImgs = new ReceiverOnAtraccionImgs(view, adapter, pager);
@@ -446,7 +454,7 @@ public class AtraccionTab extends Fragment implements View.OnClickListener, Medi
         videoThumb.setVisibility(View.INVISIBLE);
         videoBtn.setOnClickListener(null);
 
-        String url = ((TripTP)activity.getApplication()).getUrl() + Consts.ATRACC + "/" + _id + Consts.VIDEO;
+        String url = tripTP.getUrl() + Consts.ATRACC + "/" + _id + Consts.VIDEO;
 
         try {
             videoPlayerView.setMediaController(videoController);
@@ -505,7 +513,7 @@ public class AtraccionTab extends Fragment implements View.OnClickListener, Medi
 
             boolean mHasDoubleClicked;
             if (pressTime - lastPressTime <= DOUBLE_PRESS_INTERVAL) {
-                String url = ((TripTP) activity.getApplication()).getUrl() + Consts.ATRACC + "/" + atraccion._id + Consts.VIDEO;
+                String url = tripTP.getUrl() + Consts.ATRACC + "/" + atraccion._id + Consts.VIDEO;
                 Intent videoAct = new Intent(activity, VideoActivity.class);
                 videoAct.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 videoAct.putExtra(Consts.URL, url);
@@ -535,7 +543,7 @@ public class AtraccionTab extends Fragment implements View.OnClickListener, Medi
             try {
                 audioPlayer.reset();
                 String idioma = URLEncoder.encode(Locale.getDefault().getLanguage().toLowerCase(), "utf-8");
-                String url = ((TripTP) activity.getApplication()).getUrl() + Consts.ATRACC + "/" + atraccion._id + Consts.AUDIO + "?" + Consts.IDIOMA + "=" + idioma;
+                String url = tripTP.getUrl() + Consts.ATRACC + "/" + atraccion._id + Consts.AUDIO + "?" + Consts.IDIOMA + "=" + idioma;
                 audioPlayer.setDataSource(url);
                 audioPlayer.prepareAsync();
 

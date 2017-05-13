@@ -1,6 +1,8 @@
 package com.example.pc.myapplication.ciudadesTools;
 
 import android.graphics.Bitmap;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.example.pc.myapplication.commonfunctions.Consts;
 
@@ -18,7 +20,7 @@ import java.util.Locale;
  * Created by PC on 26/03/2017.
  */
 
-public class Atraccion {
+public class Atraccion implements Parcelable{
 
     public String _id;
     public String nombre;
@@ -36,11 +38,14 @@ public class Atraccion {
     public float latitud;
     public float longitud;
     public String moneda;
+    private Boolean fav;
+    private String id_fav;
 
     public Atraccion(JSONObject jsonO) throws JSONException {
         this._id = jsonO.getString(Consts._ID);
         this.nombre = jsonO.getString(Consts.NOMBRE);
-
+        fav = null;
+        id_fav = null;
         String idioma = null;
         try {
             idioma = URLEncoder.encode(Locale.getDefault().getLanguage().toLowerCase(), "utf-8");
@@ -63,7 +68,7 @@ public class Atraccion {
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            descripcion = "";
+             descripcion = "";
         }
 
         this.moneda = jsonO.getString(Consts.MONEDA);
@@ -84,4 +89,84 @@ public class Atraccion {
         latitud = (float) jsonO.getDouble(Consts.LATITUD);
         longitud = (float) jsonO.getDouble(Consts.LONGITUD);
     }
+
+    public void setIsFav(Boolean fav) {
+        this.fav = fav;
+    }
+
+    public boolean isFav() {
+        if (fav == null) {
+            return false;
+        }
+        return fav;
+    }
+
+    public boolean isFavSetted() {
+        return fav != null;
+    }
+
+    public String getId_fav() {
+        return id_fav;
+    }
+
+    public void setId_fav(String id_fav) {
+        this.id_fav = id_fav;
+    }
+
+    protected Atraccion(Parcel in) {
+
+        String[] data = new String[9];
+        float[] position = new float[2];
+
+        in.readStringArray(data);
+        in.readFloatArray(position);
+        //en orden de write to parcel
+        _id =  data[0];
+        nombre =  data[1];
+        descripcion =  data[2];
+        horaApert =  data[3];
+        horaCierre =  data[4];
+        clasificacion =  data[5];
+        idCiudad =  data[6];
+        in.readStringList(fotosPath);
+        moneda =  data[7];
+        id_fav =  data[8];
+        latitud = position[0];
+        longitud = position[1];
+    }
+
+    public static final Creator<Atraccion> CREATOR = new Creator<Atraccion>() {
+        @Override
+        public Atraccion createFromParcel(Parcel in) {
+            return new Atraccion(in);
+        }
+
+        @Override
+        public Atraccion[] newArray(int size) {
+            return new Atraccion[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeStringArray(new String[] {_id,
+                        nombre,
+                        descripcion,
+                        horaApert,
+                        horaCierre,
+                        clasificacion,
+                        idCiudad,
+                        moneda,
+                        id_fav,});
+        dest.writeStringList(fotosPath);
+        dest.writeFloatArray(new float[] {
+                        latitud,
+                        longitud});
+    }
+
 }
