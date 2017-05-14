@@ -128,6 +128,7 @@ public class Consts {
     public static final String DELETE_REC_FAV = "DELRECFAV";
     public static final String GET_CITY_REC = "RECCITY";
     public static final String GET_REC_FIRST_ATR_IMG = "FIRTATRREC";
+    public static final String GET_PUBLI_IMG = "PUBLIGET";
 
 
     //path
@@ -144,6 +145,9 @@ public class Consts {
     public static final String PAGINADO = "/paginas";
     public static final String FAVS = "/favorito";
     public static final String RECORRIDO = "/recorridoPopulate";
+    public static final String TOKEN = "/token";
+    public static final String USUARIO = "/usuario";
+    public static final String PUSH = "/push";
 
     //Json Keys
     public static final String NOMBRE = "nombre";
@@ -151,8 +155,6 @@ public class Consts {
     public static final String EMAIL = "email";
     public static final String DESCRIPCION = "descripcion";
     public static final String _ID = "_id";
-    public static final String _ID_NEXT = "_id_next";
-    public static final String _ID_PREV = "_id_prev";
     public static final String ID_USER = "id_usuario";//tmb se usa como querry
     public static final String ID_SOCIAL = "id_social";
     public static final String ID_ATR = "id_atraccion";//tmb se usa como querry
@@ -175,6 +177,11 @@ public class Consts {
     public static final String IS_LINKING = "isLinking";
     public static final String ID_USER_SOCIAL = "id_userSocial";
     public static final String IDS_ATRACCIONES = "ids_atracciones";
+    public static final String TOKEN_PUSH = "token_push";
+    public static final String LINK = "link";
+    public static final String HAS_PUBLICIDAD = "hasPubli";
+    public static final String PUBLICIDAD = "publicidad";
+
 
     //querry param
     public static final String FILENAME = "filename";
