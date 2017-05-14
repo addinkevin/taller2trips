@@ -2,6 +2,7 @@ var express = require('express');
 var constants = require('../config/constants');
 var router = express.Router();
 var NotificacionPush = require('../models/notificaciones_push');
+var helperPush = require('../utils/helperPush');
 var almacen = require('../utils/helperAlmacenamiento');
 
 router.get('/push', function(req, res) {
@@ -17,10 +18,7 @@ router.get('/push', function(req, res) {
 
 router.get('/push/:id_push', function(req, res) {
     NotificacionPush.findById(req.params.id_push, function(err, push) {
-        if (err) {
-            res.status(405).json({"msj": "input invalido"});
-        }
-        else if (push === null) {
+        if (push === null) {
             res.status(404).json({"msj": "push no encontrada"});
         }
         else {
@@ -29,6 +27,25 @@ router.get('/push/:id_push', function(req, res) {
     });
 });
 
+router.post('/push/:id_push', function(req, res) {
+    NotificacionPush.findById(req.params.id_push, function(err, push) {
+        if (push === null) {
+            res.status(404).json({"msj": "push no encontrada"});
+        }
+        else {
+            helperPush.mandarNotificaciones(push);
+            push.enviada = true;
+            push.save(function(err) {
+                if (err) {
+                    res.send(err);
+                }
+                else {  
+                    res.status(200).json({"msj": "exito"});
+                }
+            });
+        }
+    });
+});
 
 router.post('/push', function(req, res) {
     req.body.descripcion = JSON.parse(req.body.descripcion);

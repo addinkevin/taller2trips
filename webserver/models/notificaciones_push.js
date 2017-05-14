@@ -17,6 +17,10 @@ var notificacionPushSchema = mongoose.Schema({
     hora: {
         type: String,
         default: ""
+    },
+    enviada: {
+        type: Boolean,
+        default: false
     }
 });
 
