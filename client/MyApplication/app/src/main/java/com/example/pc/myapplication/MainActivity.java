@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity  implements OnMapReadyCallba
 
             InternetClient client = new InfoClient(getApplicationContext(),
                     Consts.GET_USER_ACCOUNTS, urlSplex, header, Consts.GET, null, true);
-            client.runInBackground();
+            client.createAndRunInBackground();
         } else {
             menu.findItem(R.id.favoritos).setVisible(false);
             menu.findItem(R.id.logout).setVisible(false);

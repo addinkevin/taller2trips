@@ -62,6 +62,10 @@
     <string name="rem_favorite">Remove from favorites.</string>
     <string name="fav_post_err">Cannot save favorites at the moment, try later.</string>
     <string name="fav_post_succ">Favorite save!.</string>
+    <string name="back">Back</string>
+    <string name="mapa">Map</string>
+    <string name="addToFavs">Added to Favorites.</string>
+
 
 
 </resources>

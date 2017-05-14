@@ -49,7 +49,7 @@ router.get('/recorrido/:id_recorrido', function(req, res) {
 
 router.post('/recorrido', function(req, res) {
     req.body.descripcion = JSON.parse(req.body.descripcion);
-    console.log("LOG", req.body);
+
     atracciones = req.body.ids_atracciones.split(",");
     var recorrido = new Recorrido({
         nombre: req.body.nombre,
@@ -91,7 +91,7 @@ router.put('/recorrido', function(req, res) {
 });
 
 router.delete('/recorrido/:id_recorrido', function(req,res) {
-    // Valido que no tenga atracciones relacionadas
+
     Recorrido.remove({_id: req.params.id_recorrido}, function (err) {
         if (err) {
             res.send(err)

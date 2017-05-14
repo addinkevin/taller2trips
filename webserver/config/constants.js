@@ -6,5 +6,6 @@ module.exports = {
     dirPlanosAtracciones: "./contenido/planosAtracciones/",
     dirVideosAtracciones: "./contenido/videosAtracciones/",
     dirAudiosAtracciones: "./contenido/audiosAtracciones/",
-    dirImagenesAtracciones: "./contenido/imagenesAtracciones/"
+    dirImagenesAtracciones: "./contenido/imagenesAtracciones/",
+    dirImagenesNotificacionesPush: "./contenido/imagenesNotificacionesPush/"
 };

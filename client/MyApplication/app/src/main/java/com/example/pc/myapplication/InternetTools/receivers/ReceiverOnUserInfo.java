@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.view.View;
 import android.widget.Toast;
 
 import com.example.pc.myapplication.InternetTools.ImageClient;
@@ -58,18 +57,18 @@ public class ReceiverOnUserInfo extends BroadcastReceiver {
 
                     InternetClient client = new InfoClient(activity.getApplicationContext(),
                             Consts.POST_SIGNIN, ulrServ, header, Consts.POST, reqServ.toString(), true);
-                    client.runInBackground();
+                    client.createAndRunInBackground();
 
                     String urlProfPic = jsonData.getString(Consts.PROFIMG);
                     InternetClient profPic = new ImageClient(activity.getApplicationContext(),
                             Consts.GET_USER_IMG, urlProfPic, null, Consts.GET, null, true, Consts.PROF_IMG);
-                    profPic.runInBackground();
+                    profPic.createAndRunInBackground();
 
                     if (jsonData.has(Consts.PROFBANN)) {
                         String urlBannerPic = jsonData.getString(Consts.PROFBANN);
                         InternetClient bannerPic = new ImageClient(activity.getApplicationContext(),
                                 Consts.GET_USER_IMG, urlBannerPic, null, Consts.GET, null, true, Consts.BANNER_IMG);
-                        bannerPic.runInBackground();
+                        bannerPic.createAndRunInBackground();
                     }
 
                 } catch (JSONException e) {

@@ -65,7 +65,7 @@ public class LocationGPSListener implements LocationListener {
                     "&" + Consts.RADIO + "=" + radio;
             InternetClient client = new InfoClient(ctx.getApplicationContext(),
                     Consts.GET_ATR_CERC, urlToAtr, null, Consts.GET, null, true);
-            client.runInBackground();
+            client.createAndRunInBackground();
         }
 
     }

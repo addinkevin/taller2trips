@@ -21,6 +21,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class AtraccionesListAdp extends BaseAdapter {
 
@@ -116,9 +117,11 @@ public class AtraccionesListAdp extends BaseAdapter {
                                 e.printStackTrace();
                             }
 
+                            Map<String,String> header = Consts.getHeaderJSON();
+
                             InternetClient client = new InfoClient(activity.getApplicationContext(),
-                                    Consts.GEToPOST_ATR_FAV, url, null, Consts.POST, body.toString(), true, position);
-                            client.runInBackground();
+                                    Consts.GEToPOST_ATR_FAV, url, header, Consts.POST, body.toString(), true, position);
+                            client.createAndRunInBackground();
 
                         } else {
                             if (rowPos.getId_fav() != null) {
@@ -126,7 +129,7 @@ public class AtraccionesListAdp extends BaseAdapter {
                                 String urlDelete = url + "/" + rowPos.getId_fav();
                                 InternetClient client = new InfoClient(activity.getApplicationContext(),
                                         Consts.DELETE_ATR_FAV, urlDelete, null, Consts.DELETE, null, true, position);
-                                client.runInBackground();
+                                client.createAndRunInBackground();
 
                             }
 
