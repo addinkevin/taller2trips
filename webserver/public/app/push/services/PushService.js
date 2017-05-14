@@ -5,9 +5,13 @@ push.service('PushService',  ['$http', 'IdiomaService', '$timeout', function ($h
     this.pushes = [
         {
             _id: 0,
-            nombre: 'Identificador1',
+            nombre: 'Nombre del push',
             link: 'Link1',
-            descripcion: { es: "Descr", en:"", pt: ""}
+            imagen: {imgSrc: '/obelisco.png'},
+            descripcion: { es: "Descr", en:"", pt: ""},
+            id_ciudad: { _id: 'asd', nombre:'Bariloche' },
+            fecha: "03/10/2017",
+            hora: "23:43"
         }
     ];
 
@@ -65,6 +69,21 @@ push.service('PushService',  ['$http', 'IdiomaService', '$timeout', function ($h
             }
 
             resolve(element);
+        });
+    };
+
+    this.deletePush = function(push) {
+
+    };
+
+    this.getPushes = function() {
+        var self = this;
+        return new Promise(function (resolve, reject) {
+            $timeout(function() {
+                resolve({
+                    data: self.pushes
+                });
+            }, 100);
         });
     };
 
