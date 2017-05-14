@@ -12,12 +12,6 @@ import com.example.pc.myapplication.InternetTools.InternetClient;
 import com.example.pc.myapplication.R;
 import com.example.pc.myapplication.application.TripTP;
 import com.example.pc.myapplication.commonfunctions.Consts;
-import com.twitter.sdk.android.Twitter;
-import com.twitter.sdk.android.core.Callback;
-import com.twitter.sdk.android.core.Result;
-import com.twitter.sdk.android.core.TwitterException;
-import com.twitter.sdk.android.core.TwitterSession;
-import com.twitter.sdk.android.core.models.User;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,8 +21,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Locale;
 import java.util.Map;
-
-import retrofit2.Call;
 
 public class ShareDialog {
 
@@ -85,7 +77,7 @@ public class ShareDialog {
 
             InternetClient client = new InfoClient(act.getApplicationContext(),
                     Consts.POST_SHARE, urlSplex, header, Consts.POST, reqSplex.toString(), true);
-            client.runInBackground();
+            client.createAndRunInBackground();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -155,7 +147,7 @@ public class ShareDialog {
 
             InternetClient client = new InfoClient(act.getApplicationContext(),
                     Consts.POST_COMMENT, urlServ, header, Consts.POST, reqServ.toString(), true);
-            client.runInBackground();
+            client.createAndRunInBackground();
 
         } catch (JSONException | UnsupportedEncodingException e) {
             e.printStackTrace();

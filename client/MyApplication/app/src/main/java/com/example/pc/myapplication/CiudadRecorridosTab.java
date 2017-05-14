@@ -57,7 +57,7 @@ public class CiudadRecorridosTab extends Fragment implements AdapterView.OnItemC
 
         InternetClient client = new InfoClient(getActivity().getApplicationContext(),
                 Consts.GET_CITY_REC, url, null, Consts.GET, null, true);
-        client.runInBackground();
+        client.createAndRunInBackground();
 
         ListView atraccList = (ListView) myFragmentView.findViewById(R.id.recList);
         atraccList.setAdapter(recorridosAdp);

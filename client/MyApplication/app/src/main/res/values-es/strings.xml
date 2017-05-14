@@ -12,7 +12,7 @@
     <string name="cercanoTitle">Atracciones cercanas</string>
     <string name="atracciones">Atracciones</string>
     <string name="atraccion">Atracción</string>
-    <string name="recorridos">Mapa</string>
+    <string name="recorridos">Recorridos</string>
     <string name="ciudades">Ciudades</string>
     <string name="ubicarme">Ubicarme</string>
     <string name="favoritos">Favoritos</string>
@@ -60,6 +60,8 @@
     <string name="fav_post_err">No se pudo guardar el Favorito, intenta mas tarde.</string>
     <string name="fav_post_succ">Guardado en favoritos.</string>
     <string name="back">Volver</string>
+    <string name="mapa">Mapa</string>
+    <string name="addToFavs">Agregado a Favoritos.</string>
 
 
 
