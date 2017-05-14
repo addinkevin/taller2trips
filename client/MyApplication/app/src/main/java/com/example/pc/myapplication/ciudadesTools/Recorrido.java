@@ -10,18 +10,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
-/**
- * Created by PC on 07/05/2017.
- */
 
 public class Recorrido implements Parcelable{
     private String _id;
     private String nombre;
     private String descripcion;
-    private String id_ciudad;
+    private Ciudad ciudad;
     private Bitmap fotoRecorrido;
     private List<Atraccion> atracciones;
     private Boolean fav;
@@ -32,12 +32,35 @@ public class Recorrido implements Parcelable{
         try {
             _id = jsonRec.getString(Consts._ID);
             nombre = jsonRec.getString(Consts.NOMBRE);
-            id_ciudad = jsonRec.getString(Consts.ID_RECORRIDO);
-            descripcion = jsonRec.getString(Consts.DESCRIPCION);
+            ciudad = new Ciudad(jsonRec.getJSONObject(Consts.ID_CIUDAD));
+            String idioma = null;
+            try {
+                idioma = URLEncoder.encode(Locale.getDefault().getLanguage().toLowerCase(), "utf-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            try {
+                JSONObject descrip = jsonRec.getJSONObject(Consts.DESCRIPCION);
+                if (idioma != null) {
+                    if (descrip.has(idioma)) {
+                        descripcion = descrip.getString(idioma);
+
+                    } else if (descrip.has(Consts.DEF_IDIOMA)) {
+                        descripcion = descrip.getString(Consts.DEF_IDIOMA);
+                    } else {
+                        descripcion = "";
+                    }
+                } else {
+                    descripcion = "";
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                descripcion = "";
+            }
             atracciones = new ArrayList<>();
             fotoRecorrido = null;
 
-            JSONArray recAtr = jsonRec.getJSONArray(Consts.RECORRIDO_ATR);
+            JSONArray recAtr = jsonRec.getJSONArray(Consts.IDS_ATRACCIONES);
 
             for (int i = 0; i < recAtr.length(); i++) {
                 Atraccion atraccion = new Atraccion(recAtr.getJSONObject(i));
@@ -99,7 +122,7 @@ public class Recorrido implements Parcelable{
 
 
     public String getId_ciudad() {
-        return id_ciudad;
+        return ciudad._id;
     }
 
     public Bitmap getFotoRecorrido() {
@@ -120,16 +143,16 @@ public class Recorrido implements Parcelable{
 
     protected Recorrido(Parcel in) {
 
-        String[] data = new String[3];
+        String[] data = new String[4];
+        atracciones = new ArrayList<>();
 
         in.readStringArray(data);
         //en orden de write to parcel
         _id = data[0];
         nombre = data[1];
         descripcion = data[2];
-        id_ciudad = data[3];
-        id_fav = data[4];
-        fotoRecorrido = in.readParcelable(Bitmap.class.getClassLoader());
+        id_fav = data[3];
+        ciudad = in.readParcelable(Ciudad.class.getClassLoader());
         in.readTypedList(atracciones, Atraccion.CREATOR);
     }
 
@@ -159,9 +182,8 @@ public class Recorrido implements Parcelable{
         dest.writeStringArray(new String[] {this._id,
                 this.nombre,
                 this.descripcion,
-                this.id_ciudad,
                 id_fav});
-        dest.writeParcelable(fotoRecorrido, flags);
+        dest.writeParcelable(ciudad, flags);
         dest.writeTypedList(atracciones);
     }
 

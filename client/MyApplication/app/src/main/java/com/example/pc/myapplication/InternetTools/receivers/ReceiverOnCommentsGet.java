@@ -20,13 +20,13 @@ import com.example.pc.myapplication.adapters.ScrollListMaintainer;
 import com.example.pc.myapplication.ciudadesTools.Comentario;
 import com.example.pc.myapplication.commonfunctions.Consts;
 import com.example.pc.myapplication.dialogs.AlertDialog;
+import com.example.pc.myapplication.singletons.NetClientsSingleton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class ReceiverOnCommentsGet extends BroadcastReceiver{
 
@@ -68,6 +68,7 @@ public class ReceiverOnCommentsGet extends BroadcastReceiver{
 
                             InternetClient client = new InfoClient(activity.getApplicationContext(),
                                     Consts.GET_PROF, urlServ, null, Consts.GET, null, true, rowsItems.size()-1);
+                            NetClientsSingleton.getInstance().add(client.createTask());
                             client.runInBackground();
                         } else if (comentario.provider.equals(Consts.S_TWITTER)){
 
@@ -76,6 +77,7 @@ public class ReceiverOnCommentsGet extends BroadcastReceiver{
 
                             InternetClient client = new ImageClient(activity.getApplicationContext(),
                                     Consts.GET_USER_IMG_PROF, urlServ, null, Consts.GET, null, true, rowsItems.size() -1);
+                            NetClientsSingleton.getInstance().add(client.createTask());
                             client.runInBackground();
                         }
 

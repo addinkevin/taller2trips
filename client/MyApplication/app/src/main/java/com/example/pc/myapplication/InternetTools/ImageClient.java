@@ -49,7 +49,7 @@ public class ImageClient extends InternetClient {
     }
 
     @Override
-    protected void closeConnection()  throws IOException {
+    public void closeConnection()  throws IOException {
         super.closeConnection();
         if (out != null) {
              out.flush();

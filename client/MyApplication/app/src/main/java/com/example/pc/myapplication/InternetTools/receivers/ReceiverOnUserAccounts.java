@@ -74,7 +74,7 @@ public class ReceiverOnUserAccounts extends BroadcastReceiver {
 
                         InternetClient client = new InfoClient(activity.getApplicationContext(),
                                 Consts.GET_USER_INFO, url, header, Consts.GET, null, true);
-                        client.runInBackground();
+                        client.createAndRunInBackground();
                     }
 
                 } catch (JSONException e) {

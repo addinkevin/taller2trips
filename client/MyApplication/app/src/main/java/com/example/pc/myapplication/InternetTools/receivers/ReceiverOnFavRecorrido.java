@@ -16,16 +16,15 @@ import com.example.pc.myapplication.commonfunctions.Consts;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
-import java.util.Map;
-
-public class ReceiverOnCiudadRecorrido extends BroadcastReceiver {
+public class ReceiverOnFavRecorrido extends BroadcastReceiver {
 
     private final TripTP tripTP;
     private RecorridosListAdp recorridoAdp;
     private Activity activity;
 
-    public ReceiverOnCiudadRecorrido(Activity activity, RecorridosListAdp recorridoList) {
+    public ReceiverOnFavRecorrido(Activity activity, RecorridosListAdp recorridoList) {
         this.activity = activity;
         tripTP = (TripTP)activity.getApplication();
         this.recorridoAdp = recorridoList;
@@ -39,31 +38,28 @@ public class ReceiverOnCiudadRecorrido extends BroadcastReceiver {
             if (jsonOut != null) {
                 try {
                     JSONArray rec = new JSONArray(jsonOut);
-
                     String urlConstImg = tripTP.getUrl() + Consts.ATRACC + "/";
-                    String urlConstFav = tripTP.getUrl() + Consts.FAVS + Consts.BUSCAR
-                            + "?" + Consts.ID_USER + "=" + tripTP.getUserID_fromServ()
-                            + "&" + Consts.ID_RECORRIDO + "=" ;
 
                     for (int i = 0; i < rec.length(); i++) {
-                        Recorrido recorrido = new Recorrido(rec.getJSONObject(i));
+                        JSONObject favorito = rec.getJSONObject(i);
+                        Recorrido recorrido = new Recorrido(favorito.getJSONObject(Consts.ID_RECORRIDO));
                         recorridoAdp.add(recorrido);
+
+                        recorridoAdp.setIsFav(i, true);
+                        recorridoAdp.setNeedUpdateToPos(i, true);
+                        recorridoAdp.setId_fav(i, favorito.getString(Consts._ID));
+
                         Atraccion atraccion = recorrido.getFirstAtraccion();
-                        String firstImg = atraccion.fotosPath.get(0); //primer imagen para mostrar
-                        String urlImg = urlConstImg + atraccion._id + Consts.IMAGEN +
-                                "?" + Consts.FILENAME + "=" + firstImg;
+                        if (!atraccion.fotosPath.isEmpty()) {
+                            String firstImg = atraccion.fotosPath.get(0); //primer imagen para mostrar
+                            String urlImg = urlConstImg + atraccion._id + Consts.IMAGEN +
+                                    "?" + Consts.FILENAME + "=" + firstImg;
 
-                        InternetClient client = new ImageClient(activity.getApplicationContext(),
-                                Consts.GET_REC_FIRST_ATR_IMG, urlImg, null, Consts.GET, null, true, i);
-                        client.createAndRunInBackground();
-
-                        if (tripTP.isLogin()) {
-                            String urlAtrFav = urlConstFav + recorrido.get_id();
-                            Map<String,String> headers = Consts.getHeaderPaginadoTipoBusqueda("0",Consts.TIPO_BUSQ_TODOS);
-                            InternetClient clientFav = new InfoClient(activity.getApplicationContext(),
-                                    Consts.GEToPOST_REC_FAV, urlAtrFav, headers, Consts.GET, null, true, i);
-                            clientFav.createAndRunInBackground();
+                            InternetClient client = new ImageClient(activity.getApplicationContext(),
+                                    Consts.GET_REC_FIRST_ATR_IMG, urlImg, null, Consts.GET, null, true, i);
+                            client.createAndRunInBackground();
                         }
+
                     }
 
                 } catch (JSONException e) {
@@ -73,3 +69,4 @@ public class ReceiverOnCiudadRecorrido extends BroadcastReceiver {
         }
     }
 }
+

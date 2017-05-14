@@ -5,6 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.example.pc.myapplication.commonfunctions.Consts;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -163,10 +164,13 @@ public class Atraccion implements Parcelable{
                         idCiudad,
                         moneda,
                         id_fav,});
-        dest.writeStringList(fotosPath);
         dest.writeFloatArray(new float[] {
                         latitud,
                         longitud});
+        dest.writeStringList(fotosPath);
     }
 
+    public LatLng getLatLng() {
+        return new LatLng(latitud, longitud);
+    }
 }

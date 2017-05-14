@@ -7,6 +7,9 @@
     android:orientation="vertical"
     tools:context="com.example.pc.myapplication.FavoritosAtraccionesActivity">
 
+    <include layout="@layout/toolbar"
+        android:id="@+id/include" />
+
     <ListView
         android:id="@+id/favAtr"
         android:layout_width="match_parent"
