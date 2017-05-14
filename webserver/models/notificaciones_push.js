@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 
 var notificacionPushSchema = mongoose.Schema({
     // mongoose automaticamente agrega el campo id que corresponde al _id de mongodb
@@ -8,7 +9,7 @@ var notificacionPushSchema = mongoose.Schema({
         es: String,
         pt: String
     },
-    id_ciudad: String,
+    id_ciudad: {type: Schema.Types.ObjectId, ref: 'Ciudad'},
     link: String,
     fecha: {
         type: String,
