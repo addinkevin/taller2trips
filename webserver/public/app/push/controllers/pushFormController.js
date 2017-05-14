@@ -31,7 +31,7 @@ push.controller('pushFormController',
 
         function setInfoMsg(msgInfo) {
             var msg = "<div class='alert alert-info alert-fixed text-center'>" +
-                msgError +
+                msgInfo +
                 "</div>";
             $("#infoContainer").html(msg);
         }
@@ -118,13 +118,29 @@ push.controller('pushFormController',
         function createFecha() {
             var dia = parseInt($scope.push.fechahora.getDay());
             var mes = parseInt($scope.push.fechahora.getMonth()) + 1;
-            var anio = parseInt($scope.push.fechahora.getYear());
+            var anio = parseInt($scope.push.fechahora.getFullYear());
+
+            if (dia < 10) {
+                dia = '0' + dia;
+            }
+            if (mes < 10) {
+                mes = '0' + mes;
+            }
+
             $scope.push.fecha = dia + "/" + mes + "/" + anio;
         }
 
         function createHora() {
             var hora = parseInt($scope.push.fechahora.getHours());
             var minutos = parseInt($scope.push.fechahora.getMinutes());
+
+            if (hora < 10) {
+                hora = '0' + hora;
+            }
+
+            if (minutos < 10) {
+                minutos = '0' + minutos;
+            }
 
             $scope.push.hora = hora + ":" + minutos;
         }
@@ -175,9 +191,15 @@ push.controller('pushFormController',
         }
 
         function getPush() {
-            return PushService.getPush($scope.editForm).then(function success() {
+            return PushService.getPush(editForm).then(function success(res) {
                 $scope.push = res.data;
                 createFechaHora($scope.push);
+                $scope.push.imagen = { imgSrc: '/api/push/'+ $scope.push._id + '/imagen'};
+                $scope.push.ciudad = $scope.ciudades.find(
+                    function(element) {
+                        return element._id == res.data.id_ciudad._id;
+                    }
+                );
             }, function error() {
                 setErrorMsg("Error inesperado al cargar el push para su edición.");
                 throw Error("No se pudo cargar el push");
@@ -188,8 +210,8 @@ push.controller('pushFormController',
             $scope.title = "Editar push";
             $scope.submit = "Guardar push";
 
-            getPush().then(function() {
-                return getCiudades();
+            getCiudades().then(function() {
+               return getPush();
             });
         }
 

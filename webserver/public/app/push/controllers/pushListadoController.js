@@ -14,7 +14,7 @@ push.controller('pushListadoController',
 
             function setInfoMsg(msgInfo) {
                 var msg = "<div class='alert alert-info alert-fixed text-center'>" +
-                    msgError +
+                    msgInfo +
                     "</div>";
                 $("#infoContainer").html(msg);
             }
@@ -38,7 +38,12 @@ push.controller('pushListadoController',
             };
 
             $scope.enviarPush = function(push) {
-                // TODO
+                PushService.enviarPush(push).then(function success(res) {
+                    push.enviado = true;
+                    setInfoMsg("Notificación push enviada");
+                }, function error() {
+                    setErrorMsg("No pudo enviarse la notificación push");
+                });
             };
 
             $scope.deletePush = function(push) {
@@ -72,10 +77,18 @@ push.controller('pushListadoController',
                 }
             }
 
+            function makeImages() {
+                for (var i = 0; i < $scope.pushes.length; i++) {
+                    var push = $scope.pushes[i];
+                    push.imagen = { imgSrc: '/api/push/'+ push._id + '/imagen'};
+                }
+            }
+
             function loadPushes() {
                 PushService.getPushes().then(function success(res) {
                     $scope.pushes = res.data;
                     makeIdiomas();
+                    makeImages();
                 }, function error(res) {
                     setErrorMsg("No se pudo cargar las pushes. Intentelo nuevamente.");
                 });

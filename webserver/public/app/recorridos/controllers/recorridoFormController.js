@@ -30,7 +30,7 @@ recorridos.controller('recorridoFormController', [ '$scope', '$http', '$routePar
 
         function setInfoMsg(msgInfo) {
             var msg = "<div class='alert alert-info alert-fixed text-center'>" +
-                msgError +
+                msgInfo +
                 "</div>";
             $("#infoContainer").html(msg);
         }

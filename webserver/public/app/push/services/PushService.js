@@ -1,20 +1,6 @@
 var push = angular.module('tripsApp.push');
 
 push.service('PushService',  ['$http', 'IdiomaService', '$timeout', function ($http, IdiomaService, $timeout) {
-    this.id = 1;
-    this.pushes = [
-        {
-            _id: 0,
-            nombre: 'Nombre del push',
-            link: 'Link1',
-            imagen: {imgSrc: '/obelisco.png'},
-            descripcion: { es: "Descr", en:"", pt: ""},
-            id_ciudad: { _id: 'asd', nombre:'Bariloche' },
-            fecha: "03/10/2017",
-            hora: "23:43"
-        }
-    ];
-
     this.getDescriptionObject = function() {
         return { es: "", en:"", pt: ""};
     };
@@ -32,7 +18,7 @@ push.service('PushService',  ['$http', 'IdiomaService', '$timeout', function ($h
                 'Content-Type': undefined
             },
             data: {
-                imagen: push.imagen.imgSrc.imgFile
+                imagen: push.imagen.imgFile
             },
             transformRequest: function (data, headersGetter) {
                 var formData = new FormData();
@@ -70,6 +56,7 @@ push.service('PushService',  ['$http', 'IdiomaService', '$timeout', function ($h
 
     this.editPush = function(push) {
         var data = {
+            "_id": push._id,
             "nombre": push.nombre,
             "descripcion": JSON.stringify(push.descripcion),
             "id_ciudad": push.ciudad._id,
@@ -84,7 +71,6 @@ push.service('PushService',  ['$http', 'IdiomaService', '$timeout', function ($h
             url : '/api/push',
             data: data
         }).then(function success(res) {
-            push._id = res.data._id;
             if (push.imagen && push.imagen.imgFile) {
                 return self._addImagePush(push);
             }
@@ -101,7 +87,7 @@ push.service('PushService',  ['$http', 'IdiomaService', '$timeout', function ($h
     this.deletePush = function(push) {
         return $http({
             method: 'DELETE',
-            url : '/api/push/' + idPush
+            url : '/api/push/' + push._id
         });
     };
 
@@ -111,5 +97,12 @@ push.service('PushService',  ['$http', 'IdiomaService', '$timeout', function ($h
             url : '/api/push/'
         });
     };
+
+    this.enviarPush = function(push) {
+        return $http({
+            method: 'POST',
+            url: '/api/push/' + push._id
+        });
+    }
 
 }]);
