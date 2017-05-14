@@ -1,4 +1,5 @@
 module.exports = {
+    idiomaDefault: "en",
     loginMessageType: 'login-message',
     wrongPassword: 'Contraseña incorrecta.',
     noUserFound: 'No se encuentra el usuario',
