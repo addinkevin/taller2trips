@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.example.pc.myapplication.MainActivity;
 import com.example.pc.myapplication.R;
 import com.example.pc.myapplication.application.TripTP;
+import com.example.pc.myapplication.ciudadesTools.Publicidad;
 import com.example.pc.myapplication.commonfunctions.Consts;
 import com.example.pc.myapplication.dialogs.AlertDialog;
 import com.twitter.sdk.android.core.Callback;
@@ -78,6 +79,12 @@ public class ReceiverOnSingLogin extends BroadcastReceiver {
     private void goHomeActivity() {
         Intent i = new Intent(activity, MainActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        boolean hasPublicidad = activity.getIntent().getBooleanExtra(Consts.HAS_PUBLICIDAD, false);
+        if (hasPublicidad) {
+            Publicidad publi = activity.getIntent().getParcelableExtra(Consts.PUBLICIDAD);
+            i.putExtra(Consts.PUBLICIDAD,publi);
+            i.putExtra(Consts.HAS_PUBLICIDAD, true);
+        }
         activity.startActivity(i);
         activity.finish();
     }
