@@ -77,7 +77,7 @@ public class Ciudad implements Parcelable {
 
     protected Ciudad(Parcel in) {
 
-        String[] data = new String[3];
+        String[] data = new String[4];
 
         in.readStringArray(data);
         //en orden de write to parcel
@@ -85,7 +85,6 @@ public class Ciudad implements Parcelable {
         descripcion = data[2];
         pais = data[3];
         _id = data[0];
-        imagen = in.readParcelable(Bitmap.class.getClassLoader());
     }
 
     public static final Creator<Ciudad> CREATOR = new Creator<Ciudad>() {
@@ -115,6 +114,5 @@ public class Ciudad implements Parcelable {
                 this.nombre,
                 this.descripcion,
                 this.pais});
-        dest.writeParcelable(imagen,flags);
     }
 }

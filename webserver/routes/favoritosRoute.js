@@ -23,7 +23,7 @@ router.get('/favorito/buscar', function(req, res) {
         if (tipo_busqueda === "atracciones" || tipo_busqueda === "todos") busqueda.populate('id_atraccion');
         if (tipo_busqueda === "usuarios" || tipo_busqueda === "todos") busqueda.populate('id_usuario');
         if (tipo_busqueda === "ciudades" || tipo_busqueda === "todos") busqueda.populate('id_ciudad');
-        if (tipo_busqueda === "recorridos" || tipo_busqueda === "todos") busqueda.populate('id_recorrido');
+        if (tipo_busqueda === "recorridos" || tipo_busqueda === "todos") busqueda.populate({ path: 'id_recorrido', populate: {path: 'ids_atracciones id_ciudad'}});
             
         busqueda.exec(function(err, favoritos) {
                 if (err) {

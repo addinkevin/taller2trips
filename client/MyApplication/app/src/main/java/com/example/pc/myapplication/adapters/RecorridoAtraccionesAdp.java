@@ -35,12 +35,12 @@ public class RecorridoAtraccionesAdp extends BaseAdapter {
     public RecorridoAtraccionesAdp(Activity activity, List<Atraccion> atraccionItems) {
         this.activity = activity;
         this.atraccionItems = atraccionItems;
+        needUpdate = new ArrayList<>();
 
         if (!atraccionItems.isEmpty()) {
-            needUpdate = new ArrayList<>(atraccionItems.size());
-            Collections.fill(needUpdate, Boolean.FALSE);
-        } else {
-            needUpdate = new ArrayList<>();//setear cuando se necesite actualizar la view
+            for (int i = 0; i < atraccionItems.size(); i++) {
+                needUpdate.add(false);
+            }
         }
         tripTP = (TripTP) activity.getApplication();
 

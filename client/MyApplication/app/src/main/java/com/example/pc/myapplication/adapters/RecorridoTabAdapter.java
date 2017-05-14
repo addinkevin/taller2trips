@@ -29,8 +29,8 @@ public class RecorridoTabAdapter extends FragmentPagerAdapter {
         pagesLayout[1] = new RecorridoMapTab();
 
         String info = context.getResources().getString(R.string.informacion);
-        String comments = context.getResources().getString(R.string.comments);
-        tabTitles = new String[] { info,comments };
+        String map = context.getResources().getString(R.string.mapa);
+        tabTitles = new String[] { info,map };
 
     }
 

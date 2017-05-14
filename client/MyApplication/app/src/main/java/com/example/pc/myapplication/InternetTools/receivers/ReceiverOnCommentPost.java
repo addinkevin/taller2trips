@@ -18,12 +18,12 @@ import com.example.pc.myapplication.adapters.CommentListAdapter;
 import com.example.pc.myapplication.ciudadesTools.Comentario;
 import com.example.pc.myapplication.commonfunctions.Consts;
 import com.example.pc.myapplication.dialogs.AlertDialog;
+import com.example.pc.myapplication.singletons.NetClientsSingleton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class ReceiverOnCommentPost extends BroadcastReceiver{
 
@@ -61,6 +61,7 @@ public class ReceiverOnCommentPost extends BroadcastReceiver{
 
                         InternetClient client = new InfoClient(act.getApplicationContext(),
                                 Consts.GET_PROF, urlServ, null, Consts.GET, null, true, 0);
+                        NetClientsSingleton.getInstance().add(client.createTask());
                         client.runInBackground();
                     } else if (comentario.provider.equals(Consts.S_TWITTER)){
 
@@ -69,6 +70,7 @@ public class ReceiverOnCommentPost extends BroadcastReceiver{
 
                         InternetClient client = new ImageClient(act.getApplicationContext(),
                                 Consts.GET_USER_IMG_PROF, urlServ, null, Consts.GET, null, true, 0);
+                        NetClientsSingleton.getInstance().add(client.createTask());
                         client.runInBackground();
                     }
 

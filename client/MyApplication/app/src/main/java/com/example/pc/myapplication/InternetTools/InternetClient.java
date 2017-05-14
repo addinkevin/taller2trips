@@ -36,6 +36,7 @@ public abstract class InternetClient {
     protected Integer identifier = null;
 
     public static final String CONNECTION = "Connection";
+    private DownloadInBackground task = null;
 
     public InternetClient(Context context, String toCall, String path, Map<String, String> headerM, String rMethod, String jBody, boolean response) {
         this.context = context;
@@ -109,7 +110,7 @@ public abstract class InternetClient {
 
     protected abstract void readMedia(Intent activityMsg) throws IOException;
 
-    protected void closeConnection() throws IOException {
+    public void closeConnection() throws IOException {
         if (connection != null) {
             connection.disconnect();
         }
@@ -121,14 +122,32 @@ public abstract class InternetClient {
 
     protected abstract String readIt() throws IOException;
 
-    public void runInBackground() {
+    public void createAndRunInBackground() {
+        ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected() && task == null) {
+            task = new DownloadInBackground(this);
+            task.execute();
+        } else {
+            callErrorServer();
+        }
+    }
+
+    public DownloadInBackground createTask() {
         ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-            new DownloadInBackground(this).execute();
+            task = new DownloadInBackground(this);
         } else {
             callErrorServer();
+        }
 
+        return task;
+    }
+
+    public void runInBackground() {
+        if (task != null) {
+            task.execute();
         }
     }
 

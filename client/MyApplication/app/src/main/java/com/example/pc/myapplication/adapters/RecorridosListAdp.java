@@ -21,13 +21,14 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class RecorridosListAdp extends BaseAdapter {
 
     private final Activity activity;
     private final TripTP tripTP;
-    List<Recorrido> atraccionItems; /**< Lista de todos los items de List*/
-    ArrayList<Boolean> needUpdate;
+    private List<Recorrido> atraccionItems; /**< Lista de todos los items de List*/
+    private ArrayList<Boolean> needUpdate;
 
     public RecorridosListAdp(Activity activity, List<Recorrido> atraccionItems) {
         this.activity = activity;
@@ -116,9 +117,11 @@ public class RecorridosListAdp extends BaseAdapter {
                                 e.printStackTrace();
                             }
 
+                            Map<String,String> header = Consts.getHeaderJSON();
+
                             InternetClient client = new InfoClient(activity.getApplicationContext(),
-                                    Consts.GEToPOST_REC_FAV, url, null, Consts.POST, body.toString(), true, position);
-                            client.runInBackground();
+                                    Consts.GEToPOST_REC_FAV, url, header, Consts.POST, body.toString(), true, position);
+                            client.createAndRunInBackground();
 
                         } else {
                             if (rowPos.getId_fav() != null) {
@@ -126,7 +129,7 @@ public class RecorridosListAdp extends BaseAdapter {
                                 String urlDelete = url + "/" + rowPos.getId_fav();
                                 InternetClient client = new InfoClient(activity.getApplicationContext(),
                                         Consts.DELETE_REC_FAV, urlDelete, null, Consts.DELETE, null, true, position);
-                                client.runInBackground();
+                                client.createAndRunInBackground();
 
                             }
 

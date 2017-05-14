@@ -23,9 +23,10 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.MediaController;
+import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,7 +37,6 @@ import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAtraccion;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAtraccionImgs;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAtraccionPlano;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAudCheck;
-import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnFavPost;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnVidCheck;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnVidThumbnail;
 import com.example.pc.myapplication.application.TripTP;
@@ -48,6 +48,7 @@ import com.example.pc.myapplication.mediaPlayers.AudioPlayer;
 import com.example.pc.myapplication.mediaPlayers.PlayPauseListener;
 import com.example.pc.myapplication.mediaPlayers.VideoPlayer;
 import com.example.pc.myapplication.singletons.ImagesSingleton;
+import com.example.pc.myapplication.singletons.NetClientsSingleton;
 import com.example.pc.myapplication.singletons.PosVideoSingleton;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -58,12 +59,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 
@@ -104,7 +104,44 @@ public class AtraccionTab extends Fragment implements View.OnClickListener, Medi
     private MapView mMapView;
     private ComentariosTab comentariosTab;
     private TripTP tripTP;
+    private boolean isRecorrido;
+    private FrameLayout nextAct;
+    private FrameLayout prevAct;
+    private boolean disponible;
+    private boolean floatingVisible;
 
+    public void hideFloating(View view) {
+
+        if (isRecorrido) {
+            if (floatingVisible) {
+                nextAct.setVisibility(View.INVISIBLE);
+                prevAct.setVisibility(View.INVISIBLE);
+            } else {
+                nextAct.setVisibility(View.VISIBLE);
+                prevAct.setVisibility(View.VISIBLE);
+            }
+
+            floatingVisible = !floatingVisible;
+        }
+    }
+
+    private void goToAtraccion(List<Atraccion> atraccions, int pos) {
+        NetClientsSingleton.getInstance().clearConnections();
+        ImagesSingleton.getInstance().clear();
+        PosVideoSingleton.getInstance().clear();
+
+        Intent atrAct = new Intent(activity, AtraccionActivity.class);
+        atrAct.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        atrAct.putExtra(Consts.RECORRIDO, true);
+        atrAct.putExtra(Consts._ID, atraccions.get(pos)._id);
+        atrAct.putExtra(Consts.POS, pos);
+        atrAct.putParcelableArrayListExtra(Consts.ATRACC, (ArrayList<Atraccion>) atraccions);
+        startActivity(atrAct);
+        disponible = true;
+        unregister();
+        comentariosTab.unregister();
+        activity.finish();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -114,11 +151,82 @@ public class AtraccionTab extends Fragment implements View.OnClickListener, Medi
 
         view = fragView.findViewById(R.id.masterAtraccion);
 
+        activity = getActivity();
+
         if ( _id == null || _id.isEmpty()) {
-            _id = getActivity().getIntent().getStringExtra(Consts._ID);
+            _id = activity.getIntent().getStringExtra(Consts._ID);
         }
 
-        activity = getActivity();
+        disponible = true;
+        floatingVisible = true;
+
+        isRecorrido = activity.getIntent().getBooleanExtra(Consts.RECORRIDO, false);
+        nextAct = (FrameLayout) fragView.findViewById(R.id.nextAtr);
+        prevAct = (FrameLayout) fragView.findViewById(R.id.prevAtr);
+
+        fragView.findViewById(R.id.relAct).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideFloating(v);
+            }
+        });
+
+        if (isRecorrido) {
+            Atraccion nextAtr = null;
+            Atraccion prevAtr = null;
+            final int index = activity.getIntent().getIntExtra(Consts.POS, -1);
+            final List<Atraccion> atraccions = activity.getIntent().getParcelableArrayListExtra(Consts.ATRACC);
+
+            if (atraccions.size() > index + 1) {
+                nextAtr = atraccions.get(index + 1);
+            }
+
+            if (index - 1 >= 0) {
+                prevAtr = atraccions.get(index - 1);
+            }
+
+            if (nextAtr != null && index + 1 < atraccions.size()) {
+                TextView nextNameV = (TextView) nextAct.findViewById(R.id.nextAtrName);
+                nextNameV.setText(nextAtr.nombre);
+                nextAct.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (disponible) {
+                            disponible = false;
+                            goToAtraccion(atraccions, index + 1);
+                        }
+                    }
+                });
+            } else {
+                nextAct.setVisibility(View.GONE);
+            }
+
+
+            TextView prevNameV = (TextView) prevAct.findViewById(R.id.prevAtrName);
+            if (prevAtr != null) {
+                prevNameV.setText(prevAtr.nombre);
+            } else {
+                prevNameV.setText(R.string.back);
+            }
+
+            prevAct.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (disponible) {
+                        disponible = false;
+                        if (index - 1 >= 0) {
+                            goToAtraccion(atraccions, index - 1);
+                        } else {
+                            activity.onBackPressed();
+                        }
+                    }
+                }
+            });
+
+        } else {
+            nextAct.setVisibility(View.GONE);
+            prevAct.setVisibility(View.GONE);
+        }
 
         isProgressCanceled = false;
         toFullScreen = false;
@@ -184,11 +292,13 @@ public class AtraccionTab extends Fragment implements View.OnClickListener, Medi
 
         InternetClient client = new InfoClient(activity.getApplicationContext(),
                 Consts.GET_ATR, urlConst, null, Consts.GET, null, true);
+        NetClientsSingleton.getInstance().add(client.createTask());
         client.runInBackground();
 
         String urlVideo = urlConst + Consts.VIDEO;
         InternetClient clientVid = new InfoClient(activity.getApplicationContext(),
                 Consts.GET_CHECK_VID, urlVideo, null, Consts.GET, null, false);
+        NetClientsSingleton.getInstance().add(clientVid.createTask());
         clientVid.runInBackground();
 
         try {
@@ -196,7 +306,9 @@ public class AtraccionTab extends Fragment implements View.OnClickListener, Medi
             String urlAudio = urlConst + Consts.AUDIO + "?" + Consts.IDIOMA + "=" + idioma;
             InternetClient clientAud = new InfoClient(activity.getApplicationContext(),
                     Consts.GET_CHECK_AUD, urlAudio, null, Consts.GET, null, true);
+            NetClientsSingleton.getInstance().add(clientAud.createTask());
             clientAud.runInBackground();
+
         } catch (UnsupportedEncodingException e) {
 
         }
@@ -245,14 +357,18 @@ public class AtraccionTab extends Fragment implements View.OnClickListener, Medi
     }
 
     public void onStop() {
+       unregister();
+        super.onStop();
+
+    }
+
+    public void unregister() {
         LocalBroadcastManager.getInstance(activity.getApplicationContext()).unregisterReceiver(onAtraccion);
         LocalBroadcastManager.getInstance(activity.getApplicationContext()).unregisterReceiver(onVidCheck);
         LocalBroadcastManager.getInstance(activity.getApplicationContext()).unregisterReceiver(onAudCheck);
         LocalBroadcastManager.getInstance(activity.getApplicationContext()).unregisterReceiver(onAtraccionImgs);
         LocalBroadcastManager.getInstance(activity.getApplicationContext()).unregisterReceiver(onAtrVidThumb);
         LocalBroadcastManager.getInstance(activity.getApplicationContext()).unregisterReceiver(onAtrPlano);
-        super.onStop();
-
     }
 
     @Override
@@ -380,36 +496,8 @@ public class AtraccionTab extends Fragment implements View.OnClickListener, Medi
         TextView audioName = (TextView) fragView.findViewById(R.id.audio01);
         audioName.setText(Html.fromHtml( "<a href=>" + atraccion.nombre + " 01" + "</a> "));
 
-        LinearLayout ln = (LinearLayout) fragView.findViewById(R.id.ratingIMG);
-        ImageView stars = (ImageView) ln.findViewById(R.id.star);
-        ViewGroup.LayoutParams params = stars.getLayoutParams();
-        ln.removeViewAt(1); //remuevo primer estrella solo la puse para setear parametros
-
-        int entero = (int) atraccion.rating;
-
-        for (int i = 0; i < entero; i++) {
-            ImageView imgNew = new ImageView(this.getContext());
-            imgNew.setLayoutParams(params);
-            imgNew.setImageResource(R.drawable.star);
-            ln.addView(imgNew,1); //+1 textview
-        }
-
-        int medio = 0;
-
-        if (atraccion.rating - entero != 0 ) {
-            ImageView imgNew = new ImageView(this.getContext());
-            imgNew.setLayoutParams(params);
-            imgNew.setImageResource(R.drawable.star_half);
-            ln.addView(imgNew,entero + 1); //+1 textview
-            medio = 1;
-        }
-        //+1 textview
-        for(int i = entero + medio; i < Consts.CANT_STARS; i++) {
-            ImageView imgNew = new ImageView(this.getContext());
-            imgNew.setLayoutParams(params);
-            imgNew.setImageResource(R.drawable.star_outline);
-            ln.addView(imgNew,entero + medio + 1); //+1 textview
-        }
+        RatingBar stars = (RatingBar) fragView.findViewById(R.id.ratingBar2);
+        stars.setRating(atraccion.rating);
 
         videoBtn.setOnClickListener(this);
 

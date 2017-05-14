@@ -72,14 +72,6 @@ public class RecorridoTab  extends Fragment {
         atrAct.putExtra(Consts._ID, recorrido.getAtraccionAt(index)._id);
         atrAct.putExtra(Consts.POS, index);
         atrAct.putParcelableArrayListExtra(Consts.ATRACC, (ArrayList<Atraccion>) recorrido.getAtracciones());
-        if (recorrido.getAtraccionSize() < index + 1) {
-            atrAct.putExtra(Consts._ID_NEXT, recorrido.getAtraccionAt(index + 1));
-        }
-
-        if (index - 1 >= 0) {
-            atrAct.putExtra(Consts._ID_PREV, recorrido.getAtraccionAt(index - 1));
-        }
-
         startActivity(atrAct);
     }
 
