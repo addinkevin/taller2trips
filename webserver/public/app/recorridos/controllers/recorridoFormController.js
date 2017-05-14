@@ -12,20 +12,81 @@ recorridos.controller('recorridoFormController', [ '$scope', '$http', '$routePar
         $scope.atracciones = [];
         $scope.recorrido.listadoAtracciones = [];
 
+        function setFormularioErrorMsg(msgError) {
+            var msg = "<div class='alert alert-danger text-center'>" +
+                "<button type='button' class='close' data-dismiss='alert'>&times;</button>" +
+                msgError +
+                "</div>";
+            $("#error-en-formulario").html(msg);
+        }
+
+        function setErrorMsg(msgError) {
+            var msg = "<div class='alert alert-danger alert-fixed text-center'>" +
+                "<button type='button' class='close' data-dismiss='alert'>&times;</button>" +
+                msgError +
+                "</div>";
+            $("#errorContainer").html(msg);
+        }
+
+        function setInfoMsg(msgInfo) {
+            var msg = "<div class='alert alert-info alert-fixed text-center'>" +
+                msgError +
+                "</div>";
+            $("#infoContainer").html(msg);
+        }
+
+        function checkNombre() {
+            if ($scope.recorrido.nombre.length == 0) {
+                setFormularioErrorMsg("Debe ingresar un nombre para el recorrido");
+                return false;
+            }
+            return true;
+        }
+
+        function checkDescripcion() {
+            var alMenosUnIdioma = false;
+            for (var i = 0; i < $scope.idiomas.length; i++) {
+                var idioma = $scope.idiomas[i];
+                if ($scope.recorrido.descripcion[idioma.code] != "") {
+                    alMenosUnIdioma = true;
+                    break;
+                }
+            }
+
+            if (!alMenosUnIdioma) {
+                setFormularioErrorMsg("Debe ingresar la descripción del recorrido en al menos un idioma");
+            }
+
+            return alMenosUnIdioma;
+        }
+
+        function checkListado() {
+            if ($scope.recorrido.listadoAtracciones.length == 0){
+                setFormularioErrorMsg("Debe ingresar al menos una atracción para el recorrido.");
+                return false;
+            }
+            return true;
+        }
+
+        function estaFormularioOk() {
+            return  !(!checkNombre() || !checkDescripcion() || !checkListado());
+        }
 
         $scope.submitAddRecorrido = function () {
+            if (!estaFormularioOk()) return;
             RecorridosService.agregarRecorrido($scope.recorrido).then(function success() {
                 $location.url('/recorridos/');
             }, function error() {
-                $location.url('/recorridos/');
+                setErrorMsg("Error inesperado al agregar el recorrido.");
             });
         };
 
         $scope.submitEditRecorrido = function() {
-            RecorridosService.editarRecorrido($scope.recorrido).then(function success() {
+            if (!estaFormularioOk()) return;
+            RecorridosService.editarRecorrido($scope.recorrido).then(function success(res) {
                 $location.url('/recorridos/');
-            }, function error() {
-                $location.url('/recorridos/');
+            }, function error(res) {
+                setErrorMsg("Error inesperado al guardar el recorrido.");
             });
         };
 
@@ -78,6 +139,8 @@ recorridos.controller('recorridoFormController', [ '$scope', '$http', '$routePar
                     $scope.recorrido.ciudad = $scope.ciudades[0];
                 }
             }, function error(res) {
+                setErrorMsg("Error inesperado al cargar el listado de ciudades.");
+                throw Error("No se pudo cargar el listado de ciudades");
             });
         };
 
@@ -86,7 +149,8 @@ recorridos.controller('recorridoFormController', [ '$scope', '$http', '$routePar
                 $scope.atracciones = res.data;
                 console.log(res.data);
             }, function error(res) {
-
+                setErrorMsg("Error inesperado al cargar las atracciones disponibles.");
+                throw Error("No se pudo cargar el listado de atracciones");
             });
         };
 
@@ -94,16 +158,18 @@ recorridos.controller('recorridoFormController', [ '$scope', '$http', '$routePar
             $scope.title = "Agregar recorrido";
             $scope.submit = "Agregar recorrido";
             $scope.disabled = false;
+
             getCiudades().then(function() {
                 getAtracciones();
-            });
+            }, function() {});
         };
 
         var getRecorrido = function() {
             return RecorridosService.getRecorrido($scope.editForm).then(function success(res) {
                 $scope.recorrido = res.data[0];
             }, function error(res) {
-
+                setErrorMsg("Error inesperado al cargar el recorrido para su edición.");
+                throw Error("No se pudo cargar el recorrido");
             });
         };
 
@@ -124,6 +190,8 @@ recorridos.controller('recorridoFormController', [ '$scope', '$http', '$routePar
         $scope.cambioDeCiudad = function() {
             console.log("Cambio de ciudad", $scope.recorrido.ciudad);
             getAtracciones().then(function() {
+                $scope.recorrido.listadoAtracciones = [];
+            }, function() {
                 $scope.recorrido.listadoAtracciones = [];
             });
         };
