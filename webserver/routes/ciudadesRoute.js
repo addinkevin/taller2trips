@@ -4,12 +4,7 @@ var router = express.Router();
 var Ciudad = require('../models/ciudades');
 var Atraccion = require('../models/atracciones');
 var almacen = require('../utils/helperAlmacenamiento');
-
-//TODO: cambiar por helper
-var normalizarNombre = function(str)
-{
-    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-}
+var normalizar = require('../utils/normalizar');
 
 router.get('/ciudad', function(req, res) {
     Ciudad.find(function (err, ciudades) {
@@ -40,8 +35,8 @@ router.get('/ciudad/:id_ciudad', function(req, res) {
 router.post('/ciudad', function(req, res) {
     req.body.descripcion = JSON.parse(req.body.descripcion);
     var ciudad = new Ciudad({
-        nombre: normalizarNombre(req.body.nombre),
-        pais: normalizarNombre(req.body.pais),
+        nombre: normalizar.nombre(req.body.nombre),
+        pais: normalizar.nombre(req.body.pais),
         descripcion: req.body.descripcion
     });
 
@@ -59,8 +54,8 @@ router.post('/ciudad', function(req, res) {
 router.put('/ciudad', function(req, res) {
     req.body.descripcion = JSON.parse(req.body.descripcion);
     var ciudad = {
-        nombre: normalizarNombre(req.body.nombre),
-        descripcion: normalizarNombre(req.body.descripcion),
+        nombre: normalizar.nombre(req.body.nombre),
+        descripcion: normalizar.nombre(req.body.descripcion),
         pais: req.body.pais,
     };
 
