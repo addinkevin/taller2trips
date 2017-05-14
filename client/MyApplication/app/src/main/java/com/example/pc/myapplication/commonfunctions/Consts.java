@@ -89,8 +89,13 @@ public class Consts {
     public static final int PROF_IMG = 1;
     public static final int BANNER_IMG = 2;
     public static final String CANTIDAD = "6";
+    public static final String TIPO_BUSQ_TODOS = "todos";
+    public static final String TIPO_BUSQ_REC = "recorridos";
+    public static final String TIPO_BUSQ_ATR = "atracciones";
+    //headers
     public static final String S_CANTIDAD = "cantidad";
     public static final String S_SALTO = "salto";
+    public static final String TIPO_BUSQUEDA = "tipo_busqueda";
 
     //Receiver tags
     public static final String GET_CITY_NAME = "NAMECITY";
@@ -169,7 +174,7 @@ public class Consts {
     public static final String CALIFICACION = "calificacion";
     public static final String IS_LINKING = "isLinking";
     public static final String ID_USER_SOCIAL = "id_userSocial";
-    public static final String RECORRIDO_ATR = "ids_atracciones";
+    public static final String IDS_ATRACCIONES = "ids_atracciones";
 
     //querry param
     public static final String FILENAME = "filename";
@@ -211,6 +216,12 @@ public class Consts {
         Map<String,String> headers = new HashMap<>();
         headers.put(Consts.S_CANTIDAD,CANTIDAD);
         headers.put(Consts.S_SALTO,salto);
+        return headers;
+    }
+
+    public static Map<String,String> getHeaderPaginadoTipoBusqueda (String salto, String busqueda) {
+        Map<String,String> headers = getHeaderPaginado(salto);
+        headers.put(TIPO_BUSQUEDA, busqueda);
         return headers;
     }
 

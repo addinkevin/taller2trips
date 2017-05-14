@@ -16,15 +16,21 @@ import com.example.pc.myapplication.commonfunctions.Consts;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Map;
 
-public class ReceiverOnCiudadAtracc extends BroadcastReceiver {
+/**
+ * Created by PC on 14/05/2017.
+ */
+
+public class ReceiverOnFavAtraccion extends BroadcastReceiver{
+
     private final Activity act;
     private final TripTP tripTP;
     private AtraccionesListAdp adp;
 
-    public ReceiverOnCiudadAtracc(Activity atraccionesFragment, AtraccionesListAdp adp) {
+    public ReceiverOnFavAtraccion(Activity atraccionesFragment, AtraccionesListAdp adp) {
         this.act = atraccionesFragment;
         this.adp = adp;
         tripTP = (TripTP) act.getApplication();
@@ -39,20 +45,15 @@ public class ReceiverOnCiudadAtracc extends BroadcastReceiver {
                 try {
                     JSONArray jsonA = new JSONArray(jsonOut);
                     String urlConstImg = tripTP.getUrl() + Consts.ATRACC + "/";
-                    String urlConstFav = tripTP.getUrl() + Consts.FAVS + Consts.BUSCAR
-                            + "?" + Consts.ID_USER + "=" + tripTP.getUserID_fromServ()
-                            + "&" + Consts.ID_ATR + "=" ;
+
                     for (int i = 0; i < jsonA.length(); i++) {
-                        Atraccion atraccion = new Atraccion(jsonA.getJSONObject(i));
+                        JSONObject favorito = jsonA.getJSONObject(i);
+                        Atraccion atraccion = new Atraccion(favorito.getJSONObject(Consts.ID_ATR));
                         adp.add(atraccion);
 
-                        if (tripTP.isLogin()) {
-                            String urlAtrFav = urlConstFav + atraccion._id;
-                            Map<String,String> headers = Consts.getHeaderPaginadoTipoBusqueda("0",Consts.TIPO_BUSQ_TODOS);
-                            InternetClient clientFav = new InfoClient(act.getApplicationContext(),
-                                    Consts.GEToPOST_ATR_FAV, urlAtrFav, headers, Consts.GET, null, true, i);
-                            clientFav.createAndRunInBackground();
-                        }
+                        adp.setIsFav(i, true);
+                        adp.setNeedUpdateToPos(i, true);
+                        adp.setId_fav(i, favorito.getString(Consts._ID));
 
                         if (!atraccion.fotosPath.isEmpty()) {
                             String urlImg = urlConstImg + atraccion._id + Consts.IMAGEN + "?" + Consts.FILENAME + "=";

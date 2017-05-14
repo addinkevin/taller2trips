@@ -60,7 +60,7 @@ public class Recorrido implements Parcelable{
             atracciones = new ArrayList<>();
             fotoRecorrido = null;
 
-            JSONArray recAtr = jsonRec.getJSONArray(Consts.RECORRIDO_ATR);
+            JSONArray recAtr = jsonRec.getJSONArray(Consts.IDS_ATRACCIONES);
 
             for (int i = 0; i < recAtr.length(); i++) {
                 Atraccion atraccion = new Atraccion(recAtr.getJSONObject(i));
