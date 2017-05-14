@@ -20,70 +20,95 @@ push.service('PushService',  ['$http', 'IdiomaService', '$timeout', function ($h
     };
 
     this.getCiudades = function() {
-        return new Promise(function (resolve, reject) {
-            $timeout(function() {
-                resolve({
-                    data: [ { nombre: 'Bariloche'}, { nombre: 'Mar del plata'}]
+        return $http.get('/api/ciudad');
+    };
+
+    this._addImagePush = function(push) {
+        var url = '/api/push/' + push._id + '/imagen';
+        return $http({
+            method: 'POST',
+            url: url,
+            headers: {
+                'Content-Type': undefined
+            },
+            data: {
+                imagen: push.imagen.imgSrc.imgFile
+            },
+            transformRequest: function (data, headersGetter) {
+                var formData = new FormData();
+                angular.forEach(data, function (value, key) {
+                    formData.append(key, value);
                 });
-            }, 100);
+
+                return formData;
+            }
         });
     };
 
     this.addPush = function(push) {
+        var data = {
+            "nombre": push.nombre,
+            "descripcion": JSON.stringify(push.descripcion),
+            "id_ciudad": push.ciudad._id,
+            "fecha": push.fecha,
+            "hora": push.hora,
+            "link": push.link
+        };
+
         var self = this;
-        push.id = this.id;
-        this._id = this.id + 1;
-        return new Promise(function (resolve,reject) {
-            $timeout(function() {
-                self.pushes.push(push);
-                resolve();
-            }, 100);
+        return $http({
+            method: 'POST',
+            url : '/api/push',
+            data: data
+        }).then(function success(res) {
+            push._id = res.data._id;
+            if (push.imagen && push.imagen.imgFile) {
+                return self._addImagePush(push);
+            }
         });
     };
 
     this.editPush = function(push) {
-        var element = this.pushes.find(function(element) {
-            return element._id == push._id;
-        });
+        var data = {
+            "nombre": push.nombre,
+            "descripcion": JSON.stringify(push.descripcion),
+            "id_ciudad": push.ciudad._id,
+            "fecha": push.fecha,
+            "hora": push.hora,
+            "link": push.link
+        };
 
         var self = this;
-        return new Promise(function(resolve, reject) {
-            if (!element) {
-                reject();
+        return $http({
+            method: 'PUT',
+            url : '/api/push',
+            data: data
+        }).then(function success(res) {
+            push._id = res.data._id;
+            if (push.imagen && push.imagen.imgFile) {
+                return self._addImagePush(push);
             }
-
-            self.pushes[self.pushes.indexOf(element)] = push;
-            resolve();
         });
     };
 
     this.getPush = function(idPush) {
-        var element = this.pushes.find(function(element) {
-            return element._id == push._id;
-        });
-
-        var self = this;
-        return new Promise(function(resolve, reject) {
-            if (!element) {
-                reject();
-            }
-
-            resolve(element);
+        return $http({
+            method: 'GET',
+            url : '/api/push/' + idPush
         });
     };
 
     this.deletePush = function(push) {
-
+        return $http({
+            method: 'DELETE',
+            url : '/api/push/' + idPush
+        });
     };
 
     this.getPushes = function() {
-        var self = this;
-        return new Promise(function (resolve, reject) {
-            $timeout(function() {
-                resolve({
-                    data: self.pushes
-                });
-            }, 100);
+        return $http({
+            method: 'GET',
+            url : '/api/push/'
         });
     };
 

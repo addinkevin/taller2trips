@@ -115,7 +115,23 @@ push.controller('pushFormController',
             });
         }
 
+        function createFecha() {
+            var dia = parseInt($scope.push.fechahora.getDay());
+            var mes = parseInt($scope.push.fechahora.getMonth()) + 1;
+            var anio = parseInt($scope.push.fechahora.getYear());
+            $scope.push.fecha = dia + "/" + mes + "/" + anio;
+        }
+
+        function createHora() {
+            var hora = parseInt($scope.push.fechahora.getHours());
+            var minutos = parseInt($scope.push.fechahora.getMinutes());
+
+            $scope.push.hora = hora + ":" + minutos;
+        }
+
         $scope.submitPush = function() {
+            createFecha();
+            createHora();
             if (editForm) {
                 submitEditPush();
             } else {
@@ -144,9 +160,24 @@ push.controller('pushFormController',
             });
         }
 
+        function createFechaHora(push) {
+            var fechaSplit = push.fecha.split("/");
+            var horaSplit = push.hora.split(":");
+
+            var year = parseInt(fechaSplit[2]);
+            var month = parseInt(fechaSplit[1]) - 1;
+            var day = parseInt(fechaSplit[0]);
+
+            var hours = parseInt(horaSplit[0]);
+            var minutes = parseInt(horaSplit[1]);
+
+            push.fechahora = new Date(year, month, day, hours, minutes, 0, 0);
+        }
+
         function getPush() {
             return PushService.getPush($scope.editForm).then(function success() {
                 $scope.push = res.data;
+                createFechaHora($scope.push);
             }, function error() {
                 setErrorMsg("Error inesperado al cargar el push para su edición.");
                 throw Error("No se pudo cargar el push");
