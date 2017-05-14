@@ -28,11 +28,37 @@ router.get('/recorrido', function(req, res) {
     })
 });
 
+router.get('/recorrido/buscar', function(req, res) {
+    var query = req.query;
+    var cantidad = req.headers["cantidad"];
+    var salto = req.headers["salto"];
+	if(cantidad && salto && !isNaN(cantidad) && !isNaN(salto)) {
+        Recorrido.
+            find(query).
+            sort({"_id": -1}).
+            limit(Number(cantidad)).
+            skip(Number(salto)).
+            populate('ids_atracciones').
+            populate('id_ciudad').
+            exec(function(err, recorridos) {
+                if (err) {
+                    res.send(err);
+                }
+                else {
+                    res.status(200).json(recorridos);
+                }
+            });
+	} 
+    else {
+	    res.status(405).json({"msj": "input invalido"});
+	}
+});
+
 router.get('/recorrido/:id_recorrido', function(req, res) {
     busqueda = Recorrido.
         find({_id: req.params.id_recorrido}).
-        populate('ids_atracciones')
-        .populate('id_ciudad');
+        populate('ids_atracciones').
+        populate('id_ciudad');
     busqueda.exec(function(err, recorrido) {
         if (err) {
             res.status(405).json({"msj": "input invalido"});
@@ -91,7 +117,6 @@ router.put('/recorrido', function(req, res) {
 });
 
 router.delete('/recorrido/:id_recorrido', function(req,res) {
-
     Recorrido.remove({_id: req.params.id_recorrido}, function (err) {
         if (err) {
             res.send(err)
