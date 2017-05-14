@@ -5,6 +5,7 @@ var Ciudad = require('../models/ciudades');
 var Atraccion = require('../models/atracciones');
 var almacen = require('../utils/helperAlmacenamiento');
 
+//TODO: cambiar por helper
 var normalizarNombre = function(str)
 {
     return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
