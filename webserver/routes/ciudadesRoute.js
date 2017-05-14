@@ -5,6 +5,11 @@ var Ciudad = require('../models/ciudades');
 var Atraccion = require('../models/atracciones');
 var almacen = require('../utils/helperAlmacenamiento');
 
+var normalizarNombre = function(str)
+{
+    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+}
+
 router.get('/ciudad', function(req, res) {
     Ciudad.find(function (err, ciudades) {
         if (err) {
@@ -34,8 +39,8 @@ router.get('/ciudad/:id_ciudad', function(req, res) {
 router.post('/ciudad', function(req, res) {
     req.body.descripcion = JSON.parse(req.body.descripcion);
     var ciudad = new Ciudad({
-        nombre: req.body.nombre,
-        pais: req.body.pais,
+        nombre: normalizarNombre(req.body.nombre),
+        pais: normalizarNombre(req.body.pais),
         descripcion: req.body.descripcion
     });
 
@@ -53,10 +58,9 @@ router.post('/ciudad', function(req, res) {
 router.put('/ciudad', function(req, res) {
     req.body.descripcion = JSON.parse(req.body.descripcion);
     var ciudad = {
-        nombre: req.body.nombre,
-        descripcion: req.body.descripcion,
+        nombre: normalizarNombre(req.body.nombre),
+        descripcion: normalizarNombre(req.body.descripcion),
         pais: req.body.pais,
-        foto: req.body.foto
     };
 
     Ciudad.update({_id: req.body._id}, ciudad, function (err) {

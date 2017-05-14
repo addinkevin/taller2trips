@@ -15,6 +15,10 @@ var userSchema = mongoose.Schema({
     bloqueado: {
         type: Boolean,
         default: false
+    },
+    token_push: {
+        type: String,
+        default: ""
     }
 });
 
