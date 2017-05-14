@@ -38,7 +38,7 @@ public class ReceiverOnAtraccionImgs extends BroadcastReceiver {
                 Toast.makeText(context,"Error Bitmap", Toast.LENGTH_LONG).show();
             }
         } else {
-            Toast.makeText(context,"Error Conexión", Toast.LENGTH_LONG).show();
+            Toast.makeText(context,"Error Conexión 2", Toast.LENGTH_LONG).show();
         }
     }
 }

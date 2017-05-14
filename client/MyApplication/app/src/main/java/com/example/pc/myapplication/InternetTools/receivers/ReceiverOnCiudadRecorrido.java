@@ -17,6 +17,8 @@ import com.example.pc.myapplication.commonfunctions.Consts;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.util.Map;
+
 public class ReceiverOnCiudadRecorrido extends BroadcastReceiver {
 
     private final TripTP tripTP;
@@ -38,7 +40,7 @@ public class ReceiverOnCiudadRecorrido extends BroadcastReceiver {
                 try {
                     JSONArray rec = new JSONArray(jsonOut);
 
-                    String urlConstImg = tripTP.getUrl() + Consts.ATRACC;
+                    String urlConstImg = tripTP.getUrl() + Consts.ATRACC + "/";
                     String urlConstFav = tripTP.getUrl() + Consts.FAVS + Consts.BUSCAR
                             + "?" + Consts.ID_USER + "=" + tripTP.getUserID_fromServ()
                             + "&" + Consts.ID_RECORRIDO + "=" ;
@@ -53,13 +55,14 @@ public class ReceiverOnCiudadRecorrido extends BroadcastReceiver {
 
                         InternetClient client = new ImageClient(activity.getApplicationContext(),
                                 Consts.GET_REC_FIRST_ATR_IMG, urlImg, null, Consts.GET, null, true, i);
-                        client.runInBackground();
+                        client.createAndRunInBackground();
 
                         if (tripTP.isLogin()) {
                             String urlAtrFav = urlConstFav + recorrido.get_id();
+                            Map<String,String> headers = Consts.getHeaderPaginadoTipoBusqueda("0",Consts.TIPO_BUSQ_TODOS);
                             InternetClient clientFav = new InfoClient(activity.getApplicationContext(),
-                                    Consts.GEToPOST_REC_FAV, urlAtrFav, null, Consts.GET, null, true, i);
-                            clientFav.runInBackground();
+                                    Consts.GEToPOST_REC_FAV, urlAtrFav, headers, Consts.GET, null, true, i);
+                            clientFav.createAndRunInBackground();
                         }
                     }
 

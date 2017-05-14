@@ -26,6 +26,10 @@ public class DownloadInBackground extends AsyncTask<String, Void, Integer> {
         return 1;
     }
 
+    public void closeConnection() throws IOException {
+        client.closeConnection();
+    }
+
     @Override
     protected void onPostExecute(Integer result) {
     }

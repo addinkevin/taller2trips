@@ -8,6 +8,7 @@ import com.example.pc.myapplication.adapters.RecorridosListAdp;
 import com.example.pc.myapplication.ciudadesTools.Recorrido;
 import com.example.pc.myapplication.commonfunctions.Consts;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,18 +25,35 @@ public class ReceiverOnCiudadRecFav extends BroadcastReceiver {
         boolean succes = intent.getBooleanExtra(Consts.SUCESS, false);
         String jsonOut = intent.getStringExtra(Consts.JSON_OUT);
         int id = intent.getIntExtra(Consts.URL_ID, -1);
-        recorridosAdp.setIsFav(id, succes && jsonOut != null);
-        recorridosAdp.setNeedUpdateToPos(id, true);
-        if ( ((Recorrido) recorridosAdp.getItem(id)).isFav()) {
+        try {
+            JSONArray atrFav = new JSONArray(jsonOut);
+            if (atrFav.length() > 0) {
+                setIsFavAndIdFav(id,succes && jsonOut != null,atrFav.getJSONObject(0));
+            } else {
+                setIsFav(id,false);
+            }
+        } catch (JSONException e) {
             try {
                 JSONObject atrFav = new JSONObject(jsonOut);
-                recorridosAdp.setId_fav(id, atrFav.getString(Consts._ID));
-
-            } catch (JSONException e) {
-                e.printStackTrace();
+                setIsFavAndIdFav(id,succes && jsonOut != null,atrFav);
+            } catch (JSONException e1) {
+                setIsFav(id,false);
             }
         }
         recorridosAdp.notifyDataSetChanged();
 
+    }
+
+    private void setIsFav(int id, boolean isFav){
+        recorridosAdp.setIsFav(id, isFav);
+        recorridosAdp.setNeedUpdateToPos(id, true);
+    }
+
+    private void setIsFavAndIdFav(int id, boolean isFav, JSONObject fav) throws JSONException {
+        setIsFav(id,isFav);
+        if ( isFav && fav != null) {
+            recorridosAdp.setId_fav(id, fav.getString(Consts._ID));
+            //Toast.makeText(activity, R.string.addToFavs, Toast.LENGTH_SHORT).show();
+        }
     }
 }

@@ -1,6 +1,6 @@
 var tripsApp = angular.module('tripsApp', [
     "ngRoute", 'ui.bootstrap', 'tripsApp.ciudades', 'tripsApp.atracciones', 'tripsApp.resenias',
-    'tripsApp.recorridos'
+    'tripsApp.recorridos', 'tripsApp.push'
 ]);
 
 tripsApp.config(function config($routeProvider, $locationProvider) {

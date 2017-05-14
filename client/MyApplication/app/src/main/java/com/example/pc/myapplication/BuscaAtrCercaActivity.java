@@ -53,7 +53,7 @@ public class BuscaAtrCercaActivity extends AppCompatActivity implements AdapterV
         atraccionesAdp = new AtraccionesListAdp(this, atraccionItems);
         onCiudadAtracc = new ReceiverOnCiudadAtracc(this, atraccionesAdp);
         onAtraccImg = new ReceiverOnAtraccImg(atraccionesAdp);
-        onCiudadAtraccFav = new ReceiverOnCiudadAtraccFav(atraccionesAdp);
+        onCiudadAtraccFav = new ReceiverOnCiudadAtraccFav(atraccionesAdp, this);
         onCiudadAtraccFavDelete = new ReceiverOnCiudadAtraccFavDelete(atraccionesAdp);
 
 
@@ -67,7 +67,7 @@ public class BuscaAtrCercaActivity extends AppCompatActivity implements AdapterV
                 "&" + Consts.RADIO + "=" + tripTP.getRadio();
         InternetClient client = new InfoClient(getApplicationContext(),
                 Consts.GET_ATR_CERC, url, null, Consts.GET, null, true);
-        client.runInBackground();
+        client.createAndRunInBackground();
 
     }
 

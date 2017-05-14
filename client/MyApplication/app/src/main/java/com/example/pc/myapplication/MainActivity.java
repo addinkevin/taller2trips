@@ -21,15 +21,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.pc.myapplication.InternetTools.ImageClient;
 import com.example.pc.myapplication.InternetTools.InfoClient;
 import com.example.pc.myapplication.InternetTools.InternetClient;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAtrNearInMap;
+import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnPublicidadImagen;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnUserAccounts;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnUserImage;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnUserInfo;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnUserLogin;
 import com.example.pc.myapplication.application.TripTP;
 import com.example.pc.myapplication.ciudadesTools.Atraccion;
+import com.example.pc.myapplication.ciudadesTools.Publicidad;
 import com.example.pc.myapplication.commonfunctions.Consts;
 import com.example.pc.myapplication.mapTools.MapInfoWindowAdapter;
 import com.example.pc.myapplication.services.LocationGPSListener;
@@ -58,6 +61,7 @@ public class MainActivity extends AppCompatActivity  implements OnMapReadyCallba
     private ReceiverOnUserImage onUserImage;
     private ReceiverOnUserLogin onUserLogin;
     private TripTP tripTP;
+    private ReceiverOnPublicidadImagen onPubliImg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +84,7 @@ public class MainActivity extends AppCompatActivity  implements OnMapReadyCallba
         onUserInfo = new ReceiverOnUserInfo(this);
         onUserImage = new ReceiverOnUserImage(this,headerView);
         onUserLogin = new ReceiverOnUserLogin(this);
+        onPubliImg = new ReceiverOnPublicidadImagen(this);
 
         LocalBroadcastManager.getInstance(this).registerReceiver(onUserAccounts,
                 new IntentFilter(Consts.GET_USER_ACCOUNTS));
@@ -89,6 +94,8 @@ public class MainActivity extends AppCompatActivity  implements OnMapReadyCallba
                 new IntentFilter(Consts.GET_USER_IMG));
         LocalBroadcastManager.getInstance(this).registerReceiver(onUserLogin,
                 new IntentFilter(Consts.POST_SIGNIN));
+        LocalBroadcastManager.getInstance(this).registerReceiver(onPubliImg,
+                new IntentFilter(Consts.GET_PUBLI_IMG));
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -109,13 +116,25 @@ public class MainActivity extends AppCompatActivity  implements OnMapReadyCallba
 
             InternetClient client = new InfoClient(getApplicationContext(),
                     Consts.GET_USER_ACCOUNTS, urlSplex, header, Consts.GET, null, true);
-            client.runInBackground();
+            client.createAndRunInBackground();
         } else {
             menu.findItem(R.id.favoritos).setVisible(false);
             menu.findItem(R.id.logout).setVisible(false);
             menu.findItem(R.id.link).setVisible(false);
 
         }
+
+        boolean hasPublicidad = getIntent().getBooleanExtra(Consts.HAS_PUBLICIDAD, false);
+        if (hasPublicidad) {
+            Publicidad publi = getIntent().getParcelableExtra(Consts.PUBLICIDAD);
+            onPubliImg.setPublicidad(publi);
+            String url = tripTP.getUrl() + Consts.PUSH + "/" + publi.get_id() + Consts.IMAGEN;
+
+            InternetClient client = new ImageClient(getApplicationContext(),
+                    Consts.GET_PUBLI_IMG, url, null, Consts.GET, null, true, -1);
+            client.createAndRunInBackground();
+        }
+
     }
 
     void locationConfig(){
@@ -159,6 +178,7 @@ public class MainActivity extends AppCompatActivity  implements OnMapReadyCallba
         LocalBroadcastManager.getInstance(this).unregisterReceiver(onUserInfo);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(onUserImage);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(onUserLogin);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(onUserAccounts);
 
         super.onDestroy();
     }

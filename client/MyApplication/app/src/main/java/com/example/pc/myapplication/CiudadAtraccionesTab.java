@@ -1,5 +1,6 @@
 package com.example.pc.myapplication;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -35,6 +36,7 @@ public class CiudadAtraccionesTab extends Fragment implements AdapterView.OnItem
     private ReceiverOnAtraccImg onAtraccImg;
     private ReceiverOnCiudadAtraccFav onCiudadAtraccFav;
     private ReceiverOnCiudadAtraccFavDelete onCiudadAtraccFavDelete;
+    private Activity activity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,22 +47,24 @@ public class CiudadAtraccionesTab extends Fragment implements AdapterView.OnItem
             ciudad = savedInstanceState.getParcelable(Consts.CITY);
         }
 
+        activity = getActivity();
+
         if ( onCiudadAtracc == null) {
             atraccionItems = new ArrayList<>();
             atraccionesAdp = new AtraccionesListAdp(getActivity(),atraccionItems);
 
             onCiudadAtracc = new ReceiverOnCiudadAtracc(getActivity(), atraccionesAdp);
             onAtraccImg = new ReceiverOnAtraccImg(atraccionesAdp);
-            onCiudadAtraccFav = new ReceiverOnCiudadAtraccFav(atraccionesAdp);
+            onCiudadAtraccFav = new ReceiverOnCiudadAtraccFav(atraccionesAdp, activity);
             onCiudadAtraccFavDelete = new ReceiverOnCiudadAtraccFavDelete(atraccionesAdp);
 
-            String url = ((TripTP)getActivity().getApplication()).getUrl() + Consts.ATRACC + "?" + Consts.ID_CIUDAD + "=" + ciudad._id;
+            String url = ((TripTP)activity.getApplication()).getUrl() + Consts.ATRACC + "?" + Consts.ID_CIUDAD + "=" + ciudad._id;
 
-            InternetClient client = new InfoClient(getActivity().getApplicationContext(),
+            InternetClient client = new InfoClient(activity.getApplicationContext(),
                     Consts.GET_CITY_ATR, url, null, Consts.GET, null, true);
-            client.runInBackground();
+            client.createAndRunInBackground();
         } else {
-            atraccionesAdp = new AtraccionesListAdp(getActivity(), atraccionItems);
+            atraccionesAdp = new AtraccionesListAdp(activity, atraccionItems);
         }
         ListView atraccList = (ListView) myFragmentView.findViewById(R.id.atraccList);
         atraccList.setAdapter(atraccionesAdp);
@@ -78,7 +82,7 @@ public class CiudadAtraccionesTab extends Fragment implements AdapterView.OnItem
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent atraccion = new Intent(getActivity(), AtraccionActivity.class);
+        Intent atraccion = new Intent(activity, AtraccionActivity.class);
         atraccion.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         atraccion.putExtra(Consts._ID, atraccionItems.get(position)._id);
         this.startActivity(atraccion);

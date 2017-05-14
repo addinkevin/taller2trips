@@ -17,6 +17,8 @@ import com.example.pc.myapplication.commonfunctions.Consts;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.util.Map;
+
 public class ReceiverOnCiudadAtracc extends BroadcastReceiver {
     private final Activity act;
     private final TripTP tripTP;
@@ -46,9 +48,10 @@ public class ReceiverOnCiudadAtracc extends BroadcastReceiver {
 
                         if (tripTP.isLogin()) {
                             String urlAtrFav = urlConstFav + atraccion._id;
+                            Map<String,String> headers = Consts.getHeaderPaginadoTipoBusqueda("0",Consts.TIPO_BUSQ_TODOS);
                             InternetClient clientFav = new InfoClient(act.getApplicationContext(),
-                                    Consts.GEToPOST_ATR_FAV, urlAtrFav, null, Consts.GET, null, true, i);
-                            clientFav.runInBackground();
+                                    Consts.GEToPOST_ATR_FAV, urlAtrFav, headers, Consts.GET, null, true, i);
+                            clientFav.createAndRunInBackground();
                         }
 
                         if (!atraccion.fotosPath.isEmpty()) {
@@ -58,7 +61,7 @@ public class ReceiverOnCiudadAtracc extends BroadcastReceiver {
 
                             InternetClient client = new ImageClient(act.getApplicationContext(),
                                     Consts.GET_ATR_IMG, url, null, Consts.GET, null, true, i);
-                            client.runInBackground();
+                            client.createAndRunInBackground();
                         }
                     }
                 } catch (JSONException e) {

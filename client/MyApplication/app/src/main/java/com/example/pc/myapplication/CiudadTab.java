@@ -37,7 +37,7 @@ public class CiudadTab extends Fragment {
 
             InternetClient client = new ImageClient(getActivity().getApplicationContext(),
                     Consts.GET_CITY_IMG, url, null, Consts.GET, null, true, -1);
-            client.runInBackground();
+            client.createAndRunInBackground();
         } else {
             ImageView img = (ImageView) myFragmentView.findViewById(R.id.imageTitle);
             img.setImageBitmap(ciudad.imagen);

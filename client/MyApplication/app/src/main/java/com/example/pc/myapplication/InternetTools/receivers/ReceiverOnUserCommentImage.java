@@ -16,10 +16,6 @@ import com.example.pc.myapplication.commonfunctions.Consts;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * Created by PC on 23/04/2017.
- */
-
 public class ReceiverOnUserCommentImage extends BroadcastReceiver {
 
     private final Activity activity;

@@ -57,7 +57,7 @@ public class CiudadRecorridosTab extends Fragment implements AdapterView.OnItemC
 
         InternetClient client = new InfoClient(getActivity().getApplicationContext(),
                 Consts.GET_CITY_REC, url, null, Consts.GET, null, true);
-        client.runInBackground();
+        client.createAndRunInBackground();
 
         ListView atraccList = (ListView) myFragmentView.findViewById(R.id.recList);
         atraccList.setAdapter(recorridosAdp);
@@ -102,9 +102,11 @@ public class CiudadRecorridosTab extends Fragment implements AdapterView.OnItemC
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent atraccion = new Intent(getActivity(), RecorridoActivity.class);
-        atraccion.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        atraccion.putExtra(Consts._ID, recorridoList.get(position).get_id());
-        this.startActivity(atraccion);
+        if (recorridoList.get(position).hasPhoto()) {
+            Intent recAct = new Intent(getActivity(), RecorridoActivity.class);
+            recAct.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            recAct.putExtra(Consts.ID_RECORRIDO, recorridoList.get(position));
+            this.startActivity(recAct);
+        }
     }
 }
