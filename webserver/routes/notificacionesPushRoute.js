@@ -6,7 +6,10 @@ var helperPush = require('../utils/helperPush');
 var almacen = require('../utils/helperAlmacenamiento');
 
 router.get('/push', function(req, res) {
-    NotificacionPush.find(function (err, notificaciones) {
+    NotificacionPush.
+        find({}).
+        populate('id_ciudad').
+        exec(function (err, notificaciones) {
         if (err) {
             res.send(err);
         }
@@ -17,7 +20,10 @@ router.get('/push', function(req, res) {
 });
 
 router.get('/push/:id_push', function(req, res) {
-    NotificacionPush.findById(req.params.id_push, function(err, push) {
+    NotificacionPush.
+        findById(req.params.id_push).
+        populate('id_ciudad').
+        exec(function(err, push) {
         if (push === null) {
             res.status(404).json({"msj": "push no encontrada"});
         }
