@@ -7,6 +7,7 @@ var usuariosRoute = require('./usuariosRoute');
 var favoritosRoute = require('./favoritosRoute');
 var recorridosRoute = require('./recorridosRoute');
 var notificacionesPushRoute = require('./notificacionesPushRoute');
+var visitadosRoute = require('./visitadosRoute');
 
 
 module.exports = function(app, passport) {
@@ -47,5 +48,5 @@ module.exports = function(app, passport) {
     app.use('/api', favoritosRoute);
     app.use('/api', recorridosRoute);
     app.use('/api', notificacionesPushRoute);
-
+    app.use('/api', visitadosRoute);
 };

@@ -6,6 +6,6 @@ var visitadoSchema = mongoose.Schema({
     id_atraccion: {type: Schema.Types.ObjectId, ref: 'Atraccion'},
 });
 
-visitdoSchema.index({id_usuario: 1, id_atraccion: 1}, {unique: true});
+visitadoSchema.index({id_usuario: 1, id_atraccion: 1}, {unique: true});
 
 module.exports = mongoose.model('Visitado', visitadoSchema);
