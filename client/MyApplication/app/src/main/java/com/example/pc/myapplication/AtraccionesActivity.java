@@ -49,7 +49,7 @@ public class AtraccionesActivity extends AppCompatActivity implements AdapterVie
         atraccionesAdp = new AtraccionesListAdp(this, atraccionItems);
         onCiudadAtracc = new ReceiverOnCiudadAtracc(this, atraccionesAdp);
         onAtraccImg = new ReceiverOnAtraccImg(atraccionesAdp);
-        onCiudadAtraccFav = new ReceiverOnCiudadAtraccFav(atraccionesAdp);
+        onCiudadAtraccFav = new ReceiverOnCiudadAtraccFav(atraccionesAdp, this);
         onCiudadAtraccFavDelete = new ReceiverOnCiudadAtraccFavDelete(atraccionesAdp);
 
 
@@ -60,7 +60,7 @@ public class AtraccionesActivity extends AppCompatActivity implements AdapterVie
         String url = tripTP.getUrl() + Consts.ATRACC;
         InternetClient client = new InfoClient(getApplicationContext(),
                 Consts.GET_ATRS, url, null, Consts.GET, null, true);
-        client.runInBackground();
+        client.createAndRunInBackground();
 
     }
 

@@ -13,15 +13,12 @@ import com.example.pc.myapplication.InternetTools.InternetClient;
 import com.example.pc.myapplication.application.TripTP;
 import com.example.pc.myapplication.ciudadesTools.Atraccion;
 import com.example.pc.myapplication.commonfunctions.Consts;
+import com.example.pc.myapplication.singletons.NetClientsSingleton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
-
-/**
- * Created by PC on 26/03/2017.
- */
 
 public class ReceiverOnAtraccion extends BroadcastReceiver {
 
@@ -53,6 +50,7 @@ public class ReceiverOnAtraccion extends BroadcastReceiver {
 
                         InternetClient client = new ImageClient(atrAct.getActivity().getApplicationContext(),
                                 Consts.GET_ATR_IMG_S, urlIMG, null, Consts.GET, null, true, -1);
+                        NetClientsSingleton.getInstance().add(client.createTask());
                         client.runInBackground();
                     }
 
@@ -60,8 +58,8 @@ public class ReceiverOnAtraccion extends BroadcastReceiver {
                     Log.i("IMGConn", "Comienza descarga imagen Plano");
                     InternetClient client = new ImageClient(atrAct.getActivity().getApplicationContext(),
                             Consts.GET_ATR_PLANO, urlPlano, null, Consts.GET, null, true, -1);
+                    NetClientsSingleton.getInstance().add(client.createTask());
                     client.runInBackground();
-
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -72,8 +70,8 @@ public class ReceiverOnAtraccion extends BroadcastReceiver {
                 Toast.makeText(context,"Error JSon vacio", Toast.LENGTH_LONG).show();
             }
         } else {
-            Log.i("IMGConn", "Error Conexión");
-            Toast.makeText(context,"Error Conexión", Toast.LENGTH_LONG).show();
+            Log.i("IMGConn", "Error Conexión ");
+            Toast.makeText(context,"Error Conexión 1", Toast.LENGTH_LONG).show();
         }
     }
 }

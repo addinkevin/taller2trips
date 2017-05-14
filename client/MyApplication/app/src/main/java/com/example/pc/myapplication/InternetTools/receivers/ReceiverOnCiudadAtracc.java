@@ -48,7 +48,7 @@ public class ReceiverOnCiudadAtracc extends BroadcastReceiver {
                             String urlAtrFav = urlConstFav + atraccion._id;
                             InternetClient clientFav = new InfoClient(act.getApplicationContext(),
                                     Consts.GEToPOST_ATR_FAV, urlAtrFav, null, Consts.GET, null, true, i);
-                            clientFav.runInBackground();
+                            clientFav.createAndRunInBackground();
                         }
 
                         if (!atraccion.fotosPath.isEmpty()) {
@@ -58,7 +58,7 @@ public class ReceiverOnCiudadAtracc extends BroadcastReceiver {
 
                             InternetClient client = new ImageClient(act.getApplicationContext(),
                                     Consts.GET_ATR_IMG, url, null, Consts.GET, null, true, i);
-                            client.runInBackground();
+                            client.createAndRunInBackground();
                         }
                     }
                 } catch (JSONException e) {

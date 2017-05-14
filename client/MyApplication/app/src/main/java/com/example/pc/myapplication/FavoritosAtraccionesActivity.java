@@ -42,7 +42,7 @@ public class FavoritosAtraccionesActivity extends AppCompatActivity implements A
 
         onCiudadAtracc = new ReceiverOnCiudadAtracc(this, atraccionesAdp);
         onAtraccImg = new ReceiverOnAtraccImg(atraccionesAdp);
-        onCiudadAtraccFav = new ReceiverOnCiudadAtraccFav(atraccionesAdp);
+        onCiudadAtraccFav = new ReceiverOnCiudadAtraccFav(atraccionesAdp, this);
         onCiudadAtraccFavDelete = new ReceiverOnCiudadAtraccFavDelete(atraccionesAdp);
 
         ListView atraccList = (ListView) findViewById(R.id.favAtr);
@@ -56,7 +56,7 @@ public class FavoritosAtraccionesActivity extends AppCompatActivity implements A
 
         InternetClient client = new InfoClient(getApplicationContext(),
                 Consts.GET_FAV_ATR, url, null, Consts.GET, null, true);
-        client.runInBackground();
+        client.createAndRunInBackground();
 
     }
 

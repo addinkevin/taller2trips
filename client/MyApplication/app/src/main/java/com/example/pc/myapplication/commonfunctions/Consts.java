@@ -138,8 +138,7 @@ public class Consts {
     public static final String SIGNIN = "/signin";
     public static final String PAGINADO = "/paginas";
     public static final String FAVS = "/favorito";
-    public static final String RECORRIDO = "/recorrido";
-    public static final String FAV_IN = "/favIN";
+    public static final String RECORRIDO = "/recorridoPopulate";
 
     //Json Keys
     public static final String NOMBRE = "nombre";
@@ -170,7 +169,7 @@ public class Consts {
     public static final String CALIFICACION = "calificacion";
     public static final String IS_LINKING = "isLinking";
     public static final String ID_USER_SOCIAL = "id_userSocial";
-    public static final String RECORRIDO_ATR = "atracciones";
+    public static final String RECORRIDO_ATR = "ids_atracciones";
 
     //querry param
     public static final String FILENAME = "filename";
