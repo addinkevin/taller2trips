@@ -44,6 +44,14 @@ exports.crearDirectorioImagenesCiudad = function() {
     });
 };
 
+exports.crearDirectorioImagenesNotificacionesPush = function() {
+    mkdirp(constants.dirImagenesNotificacionesPush, function(err) {
+        if (err) {
+            console.log(err);
+        }
+    });
+};
+
 var storagePlanosAtracciones = multer.diskStorage({
     destination: function(req, file, cb) {
         cb(null, constants.dirPlanosAtracciones)
@@ -91,6 +99,15 @@ var storageImagenesCiudad = multer.diskStorage({
     }
 });
 
+var storageImagenesNotificacionesPush = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null, constants.dirImagenesNotificacionesPush)
+    },
+    filename: function(req, file, cb) {
+        cb(null, req.params.id_push + ".png")
+    }
+});
+
 exports.uploadPlanosAtracciones = multer({
     storage: storagePlanosAtracciones
 });
@@ -109,6 +126,10 @@ exports.uploadImagenesAtracciones = multer({
 
 exports.uploadImagenesCiudad = multer({
     storage: storageImagenesCiudad
+});
+
+exports.uploadImagenesNotificacionesPush = multer({
+    storage: storageImagenesNotificacionesPush
 });
 
 exports.borrarMediaAtracciones = function(idAtraccion) {

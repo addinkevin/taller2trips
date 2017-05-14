@@ -13,4 +13,6 @@ var reseniaSchema = mongoose.Schema({
     calificacion: Number
 });
 
+reseniaSchema.index({id_usuario: 1, id_atraccion: 1}, {unique: true});
+
 module.exports = mongoose.model('Resenia', reseniaSchema);
