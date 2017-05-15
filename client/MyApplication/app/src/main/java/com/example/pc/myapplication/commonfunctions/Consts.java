@@ -122,6 +122,7 @@ public class Consts {
     public static final String GET_USER_IMG_PROF = "USERIMGPROF";// una sola imagen, la primera
     public static final String GET_FAV_ATR = "FAVATR";
     public static final String GET_FAV_REC = "FAVREC";
+    public static final String GET_VISIT_ATR = "VISITATR";
     public static final String GEToPOST_ATR_FAV = "ATRFAV";
     public static final String GEToPOST_ATR_VISIT = "ATRVISIT";
     public static final String GEToPOST_REC_FAV = "RECFAV";

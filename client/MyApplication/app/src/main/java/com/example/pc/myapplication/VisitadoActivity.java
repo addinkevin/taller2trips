@@ -13,9 +13,9 @@ import android.widget.ListView;
 import com.example.pc.myapplication.InternetTools.InfoClient;
 import com.example.pc.myapplication.InternetTools.InternetClient;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAtraccImg;
-import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnCiudadAtraccFav;
-import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnCiudadAtraccFavDelete;
-import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnFavAtraccion;
+import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnCiudadAtrVisit;
+import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnCiudadAtrVisitDelete;
+import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnVisitAtraccion;
 import com.example.pc.myapplication.adapters.AtraccionesListAdp;
 import com.example.pc.myapplication.application.TripTP;
 import com.example.pc.myapplication.ciudadesTools.Atraccion;
@@ -25,19 +25,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class FavoritosAtraccionesActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class VisitadoActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     private List<Atraccion> atraccionItems;
     private AtraccionesListAdp atraccionesAdp;
-    private ReceiverOnFavAtraccion onFavAtraccion;
+    private ReceiverOnVisitAtraccion onVisitAtraccion;
+    private ReceiverOnCiudadAtrVisitDelete onCiudadAtraccVisitDelete;
+    private ReceiverOnCiudadAtrVisit onCiudadAtraccVisit;
     private ReceiverOnAtraccImg onAtraccImg;
-    private ReceiverOnCiudadAtraccFav onCiudadAtraccFav;
-    private ReceiverOnCiudadAtraccFavDelete onCiudadAtraccFavDelete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_favaoritos_atracciones);
+        setContentView(R.layout.activity_visitado);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.include);
         toolbar.setTitle(R.string.atracciones);
@@ -45,48 +45,49 @@ public class FavoritosAtraccionesActivity extends AppCompatActivity implements A
 
         atraccionItems = new ArrayList<>();
         atraccionesAdp = new AtraccionesListAdp(this, atraccionItems);
-        atraccionesAdp.setOnlyFavs(true);
+        atraccionesAdp.setOnlyFavs(false);
 
-        onFavAtraccion = new ReceiverOnFavAtraccion(this, atraccionesAdp);
+        onVisitAtraccion = new ReceiverOnVisitAtraccion(this, atraccionesAdp);
         onAtraccImg = new ReceiverOnAtraccImg(atraccionesAdp);
-        onCiudadAtraccFav = new ReceiverOnCiudadAtraccFav(atraccionesAdp, this);
-        onCiudadAtraccFavDelete = new ReceiverOnCiudadAtraccFavDelete(atraccionesAdp);
+        onCiudadAtraccVisit = new ReceiverOnCiudadAtrVisit(this, atraccionesAdp);
+        onCiudadAtraccVisitDelete = new ReceiverOnCiudadAtrVisitDelete(atraccionesAdp);
 
-        ListView atraccList = (ListView) findViewById(R.id.favAtr);
+        ListView atraccList = (ListView) findViewById(R.id.visitAtr);
         atraccList.setAdapter(atraccionesAdp);
         atraccList.setOnItemClickListener(this);
 
         TripTP tripTP = (TripTP)getApplication();
 
-        String url = tripTP.getUrl() + Consts.FAVS + Consts.BUSCAR
+        String url = tripTP.getUrl() + Consts.VISITADO + Consts.BUSCAR
                 + "?" + Consts.ID_USER + "=" + tripTP.getUserID_fromServ();
 
-        Map<String,String> headres = Consts.getHeaderPaginadoTipoBusqueda("0", Consts.TIPO_BUSQ_ATR);
+        Map<String,String> headres = Consts.getHeaderPaginadoGrande("0");
 
         InternetClient client = new InfoClient(getApplicationContext(),
-                Consts.GET_FAV_ATR, url, headres, Consts.GET, null, true);
+                Consts.GET_VISIT_ATR, url, headres, Consts.GET, null, true);
         client.createAndRunInBackground();
-
     }
 
     public void onStart() {
-        super.onStart();
-        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(onFavAtraccion,
-                new IntentFilter(Consts.GET_FAV_ATR));
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(onVisitAtraccion,
+                new IntentFilter(Consts.GET_VISIT_ATR));
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(onAtraccImg,
                 new IntentFilter(Consts.GET_ATR_IMG));
-        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(onCiudadAtraccFav,
-                new IntentFilter(Consts.GEToPOST_ATR_FAV));
-        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(onCiudadAtraccFavDelete,
-                new IntentFilter(Consts.DELETE_ATR_FAV));
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(onCiudadAtraccVisit,
+                new IntentFilter(Consts.GEToPOST_ATR_VISIT));
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(onCiudadAtraccVisitDelete,
+                new IntentFilter(Consts.DELETE_ATR_VISIT));
+        super.onStart();
     }
 
     public void onStop() {
-        super.onStop();
-        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(onFavAtraccion);
+        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(onVisitAtraccion);
         LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(onAtraccImg);
-        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(onCiudadAtraccFav);
-        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(onCiudadAtraccFavDelete);
+        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(onCiudadAtraccVisit);
+        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(onCiudadAtraccVisitDelete);
+
+
+        super.onStop();
     }
 
     @Override
@@ -96,7 +97,4 @@ public class FavoritosAtraccionesActivity extends AppCompatActivity implements A
         atraccion.putExtra(Consts._ID, atraccionItems.get(position)._id);
         this.startActivity(atraccion);
     }
-
-
-
 }
