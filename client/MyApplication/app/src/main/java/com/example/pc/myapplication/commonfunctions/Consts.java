@@ -4,7 +4,10 @@ import android.app.Application;
 
 import com.example.pc.myapplication.application.TripTP;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class Consts {
@@ -148,7 +151,8 @@ public class Consts {
     public static final String PAGINADO = "/paginas";
     public static final String FAVS = "/favorito";
     public static final String VISITADO = "/visitado";
-    public static final String RECORRIDO = "/recorridoPopulate";
+    public static final String RECORRIDO_POPULATE = "/recorridoPopulate";
+    public static final String RECORRIDO = "/recorrido";
     public static final String TOKEN = "/token";
     public static final String USUARIO = "/usuario";
     public static final String PUSH = "/push";
@@ -174,7 +178,7 @@ public class Consts {
     public static final String CLASIFICACION = "clasificacion";
     public static final String ID_CIUDAD = "id_ciudad";
     public static final String FOTOS = "imagenes";
-    public static final String IDIOMA = "idioma"; //tmb se usa como querry
+    public static final String IDIOMA = "idioma"; //tmb se usa como querry y header
     public static final String LATITUD = "latitud"; //tmb se usa como querry
     public static final String LONGITUD = "longitud";//tmb se usa como querry
     public static final String CALIFICACION = "calificacion";
@@ -242,5 +246,18 @@ public class Consts {
         headers.put(Consts.S_SALTO,salto);
         return headers;
     }
+
+    public static Map<String,String> getHeaderIdiomaCategoria () {
+        Map<String,String> headers = new HashMap<>();
+        String idioma;
+        try {
+            idioma = URLEncoder.encode(Locale.getDefault().getLanguage().toLowerCase(), "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            idioma = DEF_IDIOMA;
+        }
+        headers.put(Consts.IDIOMA, idioma);
+        return headers;
+    }
+
 
 }

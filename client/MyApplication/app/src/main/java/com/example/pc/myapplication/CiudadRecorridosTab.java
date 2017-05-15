@@ -25,6 +25,7 @@ import com.example.pc.myapplication.commonfunctions.Consts;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class CiudadRecorridosTab extends Fragment implements AdapterView.OnItemClickListener {
 
@@ -53,10 +54,10 @@ public class CiudadRecorridosTab extends Fragment implements AdapterView.OnItemC
         onCiudadRecFav = new ReceiverOnCiudadRecFav(recorridosAdp);
         onCiudadRecFavDel = new ReceiverOnCiudadRecFavDelete(recorridosAdp);
 
-        String url = tripTP.getUrl() + Consts.RECORRIDO + "?" + Consts.ID_CIUDAD + "=" + ciudad._id;
-
+        String url = tripTP.getUrl() + Consts.RECORRIDO + Consts.BUSCAR + "?" + Consts.ID_CIUDAD + "=" + ciudad._id;
+        Map<String,String> headers = Consts.getHeaderPaginadoGrande("0");
         InternetClient client = new InfoClient(getActivity().getApplicationContext(),
-                Consts.GET_CITY_REC, url, null, Consts.GET, null, true);
+                Consts.GET_CITY_REC, url, headers, Consts.GET, null, true);
         client.createAndRunInBackground();
 
         ListView atraccList = (ListView) myFragmentView.findViewById(R.id.recList);
