@@ -74,10 +74,14 @@ recorridos.controller('recorridoFormController', [ '$scope', '$http', '$routePar
 
         $scope.submitAddRecorrido = function () {
             if (!estaFormularioOk()) return;
-            RecorridosService.agregarRecorrido($scope.recorrido).then(function success() {
+            RecorridosService.agregarRecorrido($scope.recorrido).then(function success(res) {
                 $location.url('/recorridos/');
-            }, function error() {
-                setErrorMsg("Error inesperado al agregar el recorrido.");
+            }, function error(res) {
+                if (res.status == 405) {
+                    setErrorMsg("Error al agregar recorrido: (Nombre recorrido, ciudad) ya repetido");
+                } else {
+                    setErrorMsg("Error inesperado al agregar el recorrido.");
+                }
             });
         };
 
@@ -86,7 +90,11 @@ recorridos.controller('recorridoFormController', [ '$scope', '$http', '$routePar
             RecorridosService.editarRecorrido($scope.recorrido).then(function success(res) {
                 $location.url('/recorridos/');
             }, function error(res) {
-                setErrorMsg("Error inesperado al guardar el recorrido.");
+                if (res.status == 405) {
+                    setErrorMsg("Error al guardar recorrido: (Nombre recorrido, ciudad) ya repetido");
+                } else {
+                    setErrorMsg("Error inesperado al guardar el recorrido.");
+                }
             });
         };
 
