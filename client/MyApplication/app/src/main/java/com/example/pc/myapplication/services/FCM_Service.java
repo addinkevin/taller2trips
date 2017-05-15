@@ -39,7 +39,7 @@ public class FCM_Service extends FirebaseMessagingService {
             Publicidad publicidad = new Publicidad(remoteMessage.getNotification());
 
             Intent intent = new Intent(this, LoginActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
             intent.putExtra(Consts.HAS_PUBLICIDAD,true);
             intent.putExtra(Consts.PUBLICIDAD, publicidad);

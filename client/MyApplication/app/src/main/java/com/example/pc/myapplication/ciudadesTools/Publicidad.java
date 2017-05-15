@@ -10,6 +10,9 @@ import com.google.firebase.messaging.RemoteMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.Locale;
 import java.util.Map;
 
 public class Publicidad implements Parcelable {
@@ -22,7 +25,31 @@ public class Publicidad implements Parcelable {
     public Publicidad(RemoteMessage.Notification data) {
         try {
             JSONObject json = new JSONObject(data.getBody());
-            descripcion = json.getString(Consts.DESCRIPCION);
+            String idioma = null;
+            try {
+                idioma = URLEncoder.encode(Locale.getDefault().getLanguage().toLowerCase(), "utf-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            try {
+                JSONObject descrip = json.getJSONObject(Consts.DESCRIPCION);
+                if (idioma != null) {
+                    if (descrip.has(idioma)) {
+                        descripcion = descrip.getString(idioma);
+
+                    } else if (descrip.has(Consts.DEF_IDIOMA)) {
+                        descripcion = descrip.getString(Consts.DEF_IDIOMA);
+                    } else {
+                        descripcion = "";
+                    }
+                } else {
+                    descripcion = "";
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                descripcion = "";
+            }
+
             link = json.getString(Consts.LINK);
             nombre = data.getTitle();
             _id = json.getString(Consts._ID);
