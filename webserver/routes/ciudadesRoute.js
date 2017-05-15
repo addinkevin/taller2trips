@@ -55,8 +55,8 @@ router.put('/ciudad', function(req, res) {
     req.body.descripcion = JSON.parse(req.body.descripcion);
     var ciudad = {
         nombre: normalizar.nombre(req.body.nombre),
-        descripcion: normalizar.nombre(req.body.descripcion),
-        pais: req.body.pais,
+        descripcion: req.body.descripcion,
+        pais: normalizar.nombre(req.body.pais)
     };
 
     Ciudad.update({_id: req.body._id}, ciudad, function (err) {
