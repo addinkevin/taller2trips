@@ -120,9 +120,9 @@ resenias.controller('reseniasController', [ '$scope', 'HelperResenias', function
 
     $scope.getMensajeBotonBloqueo = function(id, resultado) {
         if (resultado.usuario && resultado.usuario.bloqueado) {
-            return "Bloquear usuario";
-        } else {
             return "Desbloquear usuario";
+        } else {
+            return "Bloquear usuario";
         }
     };
 
@@ -145,10 +145,10 @@ resenias.controller('reseniasController', [ '$scope', 'HelperResenias', function
     };
 
     $scope.bloquearDesbloquearUsuario = function(id, resultado) {
-        if (resultado.usuario) {
-            $scope.bloquearUsuario(id, resultado);
-        } else {
+        if (resultado.usuario.bloqueado) {
             $scope.desbloquearUsuario(id, resultado);
+        } else {
+            $scope.bloquearUsuario(id, resultado);
         }
     };
 

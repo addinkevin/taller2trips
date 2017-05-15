@@ -63,10 +63,11 @@ resenias.service('HelperResenias', [ '$http', '$q', function($http, $q) {
         });
     };
 
-    this.actualizarElEstadoDeBloqueoRestoDeResenias = function(resultados, usuario) {
+    this.actualizarElEstadoDeBloqueoRestoDeResenias = function(resultados, resultado) {
+        var usuario = resultado.usuario;
         for (var i = 0; i < resultados.length; i++) {
-            var usuarioResenia = resultados.usuario;
-            if (usuarioResenia && usuarioResenia.id_usuario == usuario.id_usuario) {
+            var usuarioResenia = resultados[i].usuario;
+            if (usuarioResenia && usuarioResenia._id === usuario._id) {
                 usuarioResenia.bloqueado = usuario.bloqueado;
             }
         }
