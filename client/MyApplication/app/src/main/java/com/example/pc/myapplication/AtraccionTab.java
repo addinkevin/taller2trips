@@ -65,6 +65,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 
 public class AtraccionTab extends Fragment implements View.OnClickListener, MediaPlayer.OnPreparedListener, GoogleMap.OnMapClickListener, OnMapReadyCallback, View.OnTouchListener, GoogleMap.OnInfoWindowClickListener, DialogInterface.OnCancelListener {
@@ -132,7 +133,7 @@ public class AtraccionTab extends Fragment implements View.OnClickListener, Medi
 
         Intent atrAct = new Intent(activity, AtraccionActivity.class);
         atrAct.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        atrAct.putExtra(Consts.RECORRIDO, true);
+        atrAct.putExtra(Consts.RECORRIDO_POPULATE, true);
         atrAct.putExtra(Consts._ID, atraccions.get(pos)._id);
         atrAct.putExtra(Consts.POS, pos);
         atrAct.putParcelableArrayListExtra(Consts.ATRACC, (ArrayList<Atraccion>) atraccions);
@@ -160,7 +161,7 @@ public class AtraccionTab extends Fragment implements View.OnClickListener, Medi
         disponible = true;
         floatingVisible = true;
 
-        isRecorrido = activity.getIntent().getBooleanExtra(Consts.RECORRIDO, false);
+        isRecorrido = activity.getIntent().getBooleanExtra(Consts.RECORRIDO_POPULATE, false);
         nextAct = (FrameLayout) fragView.findViewById(R.id.nextAtr);
         prevAct = (FrameLayout) fragView.findViewById(R.id.prevAtr);
 
@@ -290,8 +291,10 @@ public class AtraccionTab extends Fragment implements View.OnClickListener, Medi
         progressDialog.setCancelable(true);
         progressDialog.setOnCancelListener(this);
 
+        Map<String,String> headerIdioma = Consts.getHeaderIdiomaCategoria();
+
         InternetClient client = new InfoClient(activity.getApplicationContext(),
-                Consts.GET_ATR, urlConst, null, Consts.GET, null, true);
+                Consts.GET_ATR, urlConst, headerIdioma, Consts.GET, null, true);
         NetClientsSingleton.getInstance().add(client.createTask());
         client.runInBackground();
 

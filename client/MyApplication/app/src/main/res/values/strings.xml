@@ -16,6 +16,7 @@
     <string name="ciudades">Cities</string>
     <string name="ubicarme">Where am I?</string>
     <string name="favoritos">Favorites</string>
+    <string name="visitados">Visits</string>
     <string name="informacion">Info</string>
     <string name="videos">Video</string>
     <string name="fotos">Pictures</string>
@@ -67,8 +68,6 @@
     <string name="mapa">Map</string>
     <string name="addToFavs">Added to Favorites.</string>
     <string name="addToVisit">Added to Visits.</string>
-
-
 
 
 </resources>

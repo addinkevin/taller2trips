@@ -29,6 +29,7 @@ public class AtraccionesListAdp extends BaseAdapter {
     private final TripTP tripTP;
     List<Atraccion> atraccionItems; /**< Lista de todos los items de List*/
     ArrayList<Boolean> needUpdate;
+    private Boolean onlyFavs = null;
 
     public AtraccionesListAdp(Activity activity, List<Atraccion> atraccionItems) {
         this.activity = activity;
@@ -69,6 +70,10 @@ public class AtraccionesListAdp extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public void setOnlyFavs(Boolean onlyFavs) {
+        this.onlyFavs = onlyFavs;
+    }
+
     private class ViewHolder {
         int position = -1;
         ImageView atraccionPic;
@@ -106,6 +111,13 @@ public class AtraccionesListAdp extends BaseAdapter {
             holder.atraccionPic = (ImageView) view.findViewById(R.id.imageView);
             holder.favPic = (ImageView) view.findViewById(R.id.heartFav);
             holder.visitPic = (ImageView) view.findViewById(R.id.starVisit);
+
+            if (onlyFavs != null) {
+                if (onlyFavs)
+                    holder.visitPic.setVisibility(View.GONE);
+                else
+                    holder.favPic.setVisibility(View.GONE);
+            }
 
             final Atraccion rowPos = atraccionItems.get(position);
 

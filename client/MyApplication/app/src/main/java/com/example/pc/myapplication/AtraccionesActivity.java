@@ -13,6 +13,8 @@ import android.widget.ListView;
 import com.example.pc.myapplication.InternetTools.InfoClient;
 import com.example.pc.myapplication.InternetTools.InternetClient;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAtraccImg;
+import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnCiudadAtrVisit;
+import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnCiudadAtrVisitDelete;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnCiudadAtracc;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnCiudadAtraccFav;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnCiudadAtraccFavDelete;
@@ -32,6 +34,8 @@ public class AtraccionesActivity extends AppCompatActivity implements AdapterVie
     private ReceiverOnAtraccImg onAtraccImg;
     private ReceiverOnCiudadAtraccFav onCiudadAtraccFav;
     private ReceiverOnCiudadAtraccFavDelete onCiudadAtraccFavDelete;
+    private ReceiverOnCiudadAtrVisit onCiudadAtraccVisit;
+    private ReceiverOnCiudadAtrVisitDelete onCiudadAtraccVisitDelete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +55,8 @@ public class AtraccionesActivity extends AppCompatActivity implements AdapterVie
         onAtraccImg = new ReceiverOnAtraccImg(atraccionesAdp);
         onCiudadAtraccFav = new ReceiverOnCiudadAtraccFav(atraccionesAdp, this);
         onCiudadAtraccFavDelete = new ReceiverOnCiudadAtraccFavDelete(atraccionesAdp);
+        onCiudadAtraccVisit = new ReceiverOnCiudadAtrVisit(this, atraccionesAdp);
+        onCiudadAtraccVisitDelete = new ReceiverOnCiudadAtrVisitDelete(atraccionesAdp);
 
 
         ListView atraccList = (ListView) findViewById(R.id.atraccList);
@@ -79,8 +85,12 @@ public class AtraccionesActivity extends AppCompatActivity implements AdapterVie
                 new IntentFilter(Consts.GET_ATR_IMG));
         LocalBroadcastManager.getInstance(this).registerReceiver(onCiudadAtraccFav,
                 new IntentFilter(Consts.GEToPOST_ATR_FAV));
+        LocalBroadcastManager.getInstance(this).registerReceiver(onCiudadAtraccVisit,
+                new IntentFilter(Consts.GEToPOST_ATR_VISIT));
         LocalBroadcastManager.getInstance(this).registerReceiver(onCiudadAtraccFavDelete,
                 new IntentFilter(Consts.DELETE_ATR_FAV));
+        LocalBroadcastManager.getInstance(this).registerReceiver(onCiudadAtraccVisitDelete,
+                new IntentFilter(Consts.DELETE_ATR_VISIT));
         super.onStart();
     }
 
@@ -90,5 +100,7 @@ public class AtraccionesActivity extends AppCompatActivity implements AdapterVie
         LocalBroadcastManager.getInstance(this).unregisterReceiver(onAtraccImg);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(onCiudadAtraccFav);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(onCiudadAtraccFavDelete);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(onCiudadAtraccVisit);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(onCiudadAtraccVisitDelete);
     }
 }

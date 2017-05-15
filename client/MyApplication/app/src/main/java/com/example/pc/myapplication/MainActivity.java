@@ -119,6 +119,7 @@ public class MainActivity extends AppCompatActivity  implements OnMapReadyCallba
             client.createAndRunInBackground();
         } else {
             menu.findItem(R.id.favoritos).setVisible(false);
+            menu.findItem(R.id.visitado).setVisible(false);
             menu.findItem(R.id.logout).setVisible(false);
             menu.findItem(R.id.link).setVisible(false);
 
@@ -242,6 +243,10 @@ public class MainActivity extends AppCompatActivity  implements OnMapReadyCallba
             Intent favRecAct = new Intent(this, FavoritosRecorridosActivity.class);
             favRecAct.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(favRecAct);
+        } else if (id == R.id.visitAtracciones) {
+            Intent visitAct = new Intent(this, VisitadoActivity.class);
+            visitAct.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(visitAct);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

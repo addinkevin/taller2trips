@@ -30,13 +30,11 @@ public class FCM_Service extends FirebaseMessagingService {
 
         Log.i(TAG, "From: " + remoteMessage.getFrom());
 
-        // Check if message contains a data payload.
-        if (remoteMessage.getNotification() != null) {
+        if (remoteMessage.getData() != null && remoteMessage.getData().size() > 0) {
 
-            Log.i(TAG, "Message data payload: " + remoteMessage.getNotification().getBody());
+            Log.i(TAG, "Message data payload: " +  remoteMessage.getData());
 
-
-            Publicidad publicidad = new Publicidad(remoteMessage.getNotification());
+            Publicidad publicidad = new Publicidad(remoteMessage.getData());
 
             Intent intent = new Intent(this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

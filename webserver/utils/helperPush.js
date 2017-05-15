@@ -20,7 +20,7 @@ var procesarQuery = function(res) {
     var tokens = [];
     for (i = 0; i < res.length; i++) {
         var token = res[i].id_usuario.token_push;
-        if (!contieneElemento(tokens, token)) {
+        if (!contieneElemento(tokens, token) && token !== "") {
             tokens.push(token);
         };
     };
@@ -37,9 +37,11 @@ var procesarNotificacion = function(tokens, push) {
     delete notificacion.nombre;
     delete notificacion.__v;
     var payload = {
-        notification: {
-            title: titulo,
-            body: JSON.stringify(notificacion) 
+        data: {
+            nombre: titulo,
+            link: notificacion.link,
+			descripcion: JSON.stringify(notificacion.descripcion),
+			_id: JSON.stringify(notificacion._id)
         }
     };
     var options = {};

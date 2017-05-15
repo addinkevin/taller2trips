@@ -4,6 +4,7 @@ var constants = require('../config/constants');
 var router = express.Router();
 var Atraccion = require('../models/atracciones');
 var almacen = require('../utils/helperAlmacenamiento');
+var helperAtracciones = require('../utils/helperAtracciones');
 var haversine = require('../utils/haversine');
 
 router.get('/atraccion', function(req, res) {
@@ -60,6 +61,8 @@ router.get('/atraccion/:id_atraccion', function(req, res) {
             res.status(404).json({"msj": "atraccion no encontrada"});
         }
         else {
+            var idioma = req.headers["idioma"];
+            atraccion.clasificacion = helperAtracciones.obtenerClasificacion(atraccion.clasificacion, idioma);
             res.status(200).json(atraccion);
         }
     });
