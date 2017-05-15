@@ -54,6 +54,7 @@
     <string name="ok">OK</string>
     <string name="share_button">Compatir</string>
     <string name="cancel_button">Cancelar</string>
+    <string name="accept_button">Aceptar</string>
     <string name="no_comment_alert">Se el primero en hacer una reseña.</string>
     <string name="add_favorite">Agregar a favaritos.</string>
     <string name="rem_favorite">Eliminar de favoritos.</string>
@@ -62,6 +63,8 @@
     <string name="back">Volver</string>
     <string name="mapa">Mapa</string>
     <string name="addToFavs">Agregado a Favoritos.</string>
+    <string name="addToVisit">Agregado a Visitados.</string>
+
 
 
 

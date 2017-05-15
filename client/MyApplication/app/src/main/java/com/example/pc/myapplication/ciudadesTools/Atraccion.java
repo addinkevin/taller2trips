@@ -40,7 +40,9 @@ public class Atraccion implements Parcelable{
     public float longitud;
     public String moneda;
     private Boolean fav;
+    private Boolean visit;
     private String id_fav;
+    private String id_visit;
 
     public Atraccion(JSONObject jsonO) throws JSONException {
         this._id = jsonO.getString(Consts._ID);
@@ -104,6 +106,10 @@ public class Atraccion implements Parcelable{
 
     public boolean isFavSetted() {
         return fav != null;
+    }
+
+    public boolean isVisitSetted() {
+        return visit != null;
     }
 
     public String getId_fav() {
@@ -172,5 +178,24 @@ public class Atraccion implements Parcelable{
 
     public LatLng getLatLng() {
         return new LatLng(latitud, longitud);
+    }
+
+    public Boolean isVisit() {
+        if (visit == null) {
+            return false;
+        }
+        return visit;
+    }
+
+    public void setIsVisit(Boolean visit) {
+        this.visit = visit;
+    }
+
+    public String getId_visit() {
+        return id_visit;
+    }
+
+    public void setId_visit(String id_visit) {
+        this.id_visit = id_visit;
     }
 }
