@@ -14,6 +14,7 @@ router.get('/visitado/buscar', function(req, res) {
             sort({"_id": -1}).
             limit(Number(cantidad)).
             skip(Number(salto)).
+			populate('id_atraccion').
             exec(function(err, visitados) {
                 if (err) {
                     res.send(err);

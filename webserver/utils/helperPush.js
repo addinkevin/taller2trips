@@ -37,9 +37,11 @@ var procesarNotificacion = function(tokens, push) {
     delete notificacion.nombre;
     delete notificacion.__v;
     var payload = {
-        notification: {
-            title: titulo,
-            body: JSON.stringify(notificacion) 
+        data: {
+            nombre: titulo,
+            link: notificacion.link,
+			descripcion: JSON.stringify(notificacion.descripcion),
+			_id: JSON.stringify(notificacion._id)
         }
     };
     var options = {};

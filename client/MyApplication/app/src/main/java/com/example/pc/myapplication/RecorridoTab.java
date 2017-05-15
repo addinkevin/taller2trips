@@ -1,9 +1,7 @@
 package com.example.pc.myapplication;
 
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,7 +66,7 @@ public class RecorridoTab  extends Fragment {
     public void empezarEn(int index) {
         Intent atrAct = new Intent(getActivity(), AtraccionActivity.class);
         atrAct.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        atrAct.putExtra(Consts.RECORRIDO, true);
+        atrAct.putExtra(Consts.RECORRIDO_POPULATE, true);
         atrAct.putExtra(Consts._ID, recorrido.getAtraccionAt(index)._id);
         atrAct.putExtra(Consts.POS, index);
         atrAct.putParcelableArrayListExtra(Consts.ATRACC, (ArrayList<Atraccion>) recorrido.getAtracciones());

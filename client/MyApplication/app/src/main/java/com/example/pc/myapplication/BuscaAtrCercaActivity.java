@@ -13,6 +13,8 @@ import android.widget.ListView;
 import com.example.pc.myapplication.InternetTools.InfoClient;
 import com.example.pc.myapplication.InternetTools.InternetClient;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAtraccImg;
+import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnCiudadAtrVisit;
+import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnCiudadAtrVisitDelete;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnCiudadAtracc;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnCiudadAtraccFav;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnCiudadAtraccFavDelete;
@@ -34,6 +36,8 @@ public class BuscaAtrCercaActivity extends AppCompatActivity implements AdapterV
     private ReceiverOnAtraccImg onAtraccImg;
     private ReceiverOnCiudadAtraccFav onCiudadAtraccFav;
     private ReceiverOnCiudadAtraccFavDelete onCiudadAtraccFavDelete;
+    private ReceiverOnCiudadAtrVisit onCiudadAtraccVisit;
+    private ReceiverOnCiudadAtrVisitDelete onCiudadAtraccVisitDelete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +59,8 @@ public class BuscaAtrCercaActivity extends AppCompatActivity implements AdapterV
         onAtraccImg = new ReceiverOnAtraccImg(atraccionesAdp);
         onCiudadAtraccFav = new ReceiverOnCiudadAtraccFav(atraccionesAdp, this);
         onCiudadAtraccFavDelete = new ReceiverOnCiudadAtraccFavDelete(atraccionesAdp);
+        onCiudadAtraccVisit = new ReceiverOnCiudadAtrVisit(this, atraccionesAdp);
+        onCiudadAtraccVisitDelete = new ReceiverOnCiudadAtrVisitDelete(atraccionesAdp);
 
 
         ListView atraccList = (ListView) findViewById(R.id.atraccList);
@@ -86,8 +92,12 @@ public class BuscaAtrCercaActivity extends AppCompatActivity implements AdapterV
                 new IntentFilter(Consts.GET_ATR_IMG));
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(onCiudadAtraccFav,
                 new IntentFilter(Consts.GEToPOST_ATR_FAV));
+        LocalBroadcastManager.getInstance(this).registerReceiver(onCiudadAtraccVisit,
+                new IntentFilter(Consts.GEToPOST_ATR_VISIT));
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(onCiudadAtraccFavDelete,
                 new IntentFilter(Consts.DELETE_ATR_FAV));
+        LocalBroadcastManager.getInstance(this).registerReceiver(onCiudadAtraccVisitDelete,
+                new IntentFilter(Consts.DELETE_ATR_VISIT));
         super.onStart();
     }
 
@@ -96,6 +106,8 @@ public class BuscaAtrCercaActivity extends AppCompatActivity implements AdapterV
         LocalBroadcastManager.getInstance(this).unregisterReceiver(onAtraccImg);
         LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(onCiudadAtraccFav);
         LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(onCiudadAtraccFavDelete);
+        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(onCiudadAtraccVisit);
+        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(onCiudadAtraccVisitDelete);
         super.onStop();
     }
 

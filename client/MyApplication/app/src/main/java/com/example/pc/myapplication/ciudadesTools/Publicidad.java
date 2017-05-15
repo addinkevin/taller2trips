@@ -70,6 +70,40 @@ public class Publicidad implements Parcelable {
         link =  data[3];
     }
 
+    public Publicidad(Map<String, String> data) {
+
+            String idioma = null;
+            try {
+                idioma = URLEncoder.encode(Locale.getDefault().getLanguage().toLowerCase(), "utf-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            try {
+                JSONObject descrip = new JSONObject(data.get(Consts.DESCRIPCION));
+                if (idioma != null) {
+                    if (descrip.has(idioma)) {
+                        descripcion = descrip.getString(idioma);
+
+                    } else if (descrip.has(Consts.DEF_IDIOMA)) {
+                        descripcion = descrip.getString(Consts.DEF_IDIOMA);
+                    } else {
+                        descripcion = "";
+                    }
+                } else {
+                    descripcion = "";
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                descripcion = "";
+            }
+
+            link = data.get(Consts.LINK);
+            nombre = data.get(Consts.NOMBRE);
+            _id =  data.get(Consts._ID).replace("\"", "");
+
+
+    }
+
     public String getLink() {
         return link;
     }

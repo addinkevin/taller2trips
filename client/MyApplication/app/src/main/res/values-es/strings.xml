@@ -16,6 +16,7 @@
     <string name="ciudades">Ciudades</string>
     <string name="ubicarme">Ubicarme</string>
     <string name="favoritos">Favoritos</string>
+    <string name="visitados">Visitados</string>
     <string name="informacion">Información</string>
     <string name="videos">Video</string>
     <string name="fotos">Imágenes</string>
@@ -49,6 +50,9 @@
     <string name="login_alert">No iniciaste sesión, no puedes hacer reseñas.</string>
     <string name="rate">Califica esta atracción:</string>
     <string name="share_dialog">¿Compartir en redes sociales?</string>
+    <string name="share_accounts_dialog">¿Compartir en todas las redes sociales?</string>
+    <string name="share_hear_button">Solo aquí</string>
+    <string name="share_all_button">En todas</string>
     <string name="make_review">Has una reseña.</string>
     <string name="banned">Estas bloqueado no puedes hacer reseñas.</string>
     <string name="ok">OK</string>
@@ -64,6 +68,8 @@
     <string name="mapa">Mapa</string>
     <string name="addToFavs">Agregado a Favoritos.</string>
     <string name="addToVisit">Agregado a Visitados.</string>
+    <string name="please_wait">Por favor espere…</string>
+
 
 
 
