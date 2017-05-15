@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.widget.Toast;
 
+import com.example.pc.myapplication.R;
 import com.example.pc.myapplication.adapters.AtraccionesListAdp;
 import com.example.pc.myapplication.commonfunctions.Consts;
 
@@ -38,7 +40,8 @@ public class ReceiverOnCiudadAtraccFav extends BroadcastReceiver {
         } catch (JSONException e) {
             try {
                 JSONObject atrFav = new JSONObject(jsonOut);
-                setIsFavAndIdFav(id,succes && jsonOut != null,atrFav);
+                setIsFavAndIdFav(id,succes && jsonOut != null, atrFav);
+                Toast.makeText(activity, R.string.addToFavs, Toast.LENGTH_SHORT).show();
             } catch (JSONException e1) {
                 setIsFav(id,false);
             }
@@ -56,7 +59,6 @@ public class ReceiverOnCiudadAtraccFav extends BroadcastReceiver {
         setIsFav(id,isFav);
         if ( isFav && fav != null) {
             atraccionesAdp.setId_fav(id, fav.getString(Consts._ID));
-            //Toast.makeText(activity, R.string.addToFavs, Toast.LENGTH_SHORT).show();
         }
     }
 }

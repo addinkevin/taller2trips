@@ -15,6 +15,8 @@ import android.widget.ListView;
 import com.example.pc.myapplication.InternetTools.InfoClient;
 import com.example.pc.myapplication.InternetTools.InternetClient;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAtraccImg;
+import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnCiudadAtrVisit;
+import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnCiudadAtrVisitDelete;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnCiudadAtracc;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnCiudadAtraccFav;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnCiudadAtraccFavDelete;
@@ -37,6 +39,8 @@ public class CiudadAtraccionesTab extends Fragment implements AdapterView.OnItem
     private ReceiverOnCiudadAtraccFav onCiudadAtraccFav;
     private ReceiverOnCiudadAtraccFavDelete onCiudadAtraccFavDelete;
     private Activity activity;
+    private ReceiverOnCiudadAtrVisit onCiudadAtraccVisit;
+    private ReceiverOnCiudadAtrVisitDelete onCiudadAtraccVisitDelete;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -51,12 +55,14 @@ public class CiudadAtraccionesTab extends Fragment implements AdapterView.OnItem
 
         if ( onCiudadAtracc == null) {
             atraccionItems = new ArrayList<>();
-            atraccionesAdp = new AtraccionesListAdp(getActivity(),atraccionItems);
+            atraccionesAdp = new AtraccionesListAdp(activity,atraccionItems);
 
-            onCiudadAtracc = new ReceiverOnCiudadAtracc(getActivity(), atraccionesAdp);
+            onCiudadAtracc = new ReceiverOnCiudadAtracc(activity, atraccionesAdp);
             onAtraccImg = new ReceiverOnAtraccImg(atraccionesAdp);
             onCiudadAtraccFav = new ReceiverOnCiudadAtraccFav(atraccionesAdp, activity);
             onCiudadAtraccFavDelete = new ReceiverOnCiudadAtraccFavDelete(atraccionesAdp);
+            onCiudadAtraccVisit = new ReceiverOnCiudadAtrVisit(activity, atraccionesAdp);
+            onCiudadAtraccVisitDelete = new ReceiverOnCiudadAtrVisitDelete(atraccionesAdp);
 
             String url = ((TripTP)activity.getApplication()).getUrl() + Consts.ATRACC + "?" + Consts.ID_CIUDAD + "=" + ciudad._id;
 
@@ -95,8 +101,12 @@ public class CiudadAtraccionesTab extends Fragment implements AdapterView.OnItem
                 new IntentFilter(Consts.GET_ATR_IMG));
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(onCiudadAtraccFav,
                 new IntentFilter(Consts.GEToPOST_ATR_FAV));
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(onCiudadAtraccVisit,
+                new IntentFilter(Consts.GEToPOST_ATR_VISIT));
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(onCiudadAtraccFavDelete,
                 new IntentFilter(Consts.DELETE_ATR_FAV));
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(onCiudadAtraccVisitDelete,
+                new IntentFilter(Consts.DELETE_ATR_VISIT));
         super.onStart();
     }
 
@@ -105,6 +115,10 @@ public class CiudadAtraccionesTab extends Fragment implements AdapterView.OnItem
         LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(onAtraccImg);
         LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(onCiudadAtraccFav);
         LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(onCiudadAtraccFavDelete);
+        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(onCiudadAtraccVisit);
+        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(onCiudadAtraccVisitDelete);
+
+
         super.onStop();
     }
 

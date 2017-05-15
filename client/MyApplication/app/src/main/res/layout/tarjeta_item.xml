@@ -30,11 +30,22 @@
         android:textStyle="bold" />
 
     <ImageView
-        android:id="@+id/starFav"
+        android:id="@+id/heartFav"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:scaleType="centerCrop"
         android:layout_alignTop="@+id/imageView"
+        android:layout_margin="4dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+    <ImageView
+        android:id="@+id/starVisit"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:scaleType="centerCrop"
+        android:layout_margin="4dp"
+        android:layout_alignTop="@+id/imageView"
+        android:layout_toLeftOf="@+id/heartFav"
+        android:layout_toStartOf="@+id/heartFav" />
 </RelativeLayout>

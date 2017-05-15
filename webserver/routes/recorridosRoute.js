@@ -17,6 +17,42 @@ router.get('/recorridoPopulate', function(req, res) {
         });
 });
 
+router.get('/recorridoPopulateFiltro', function(req, res) {
+    var query = {};
+    var matchNombreCiudad, matchNombreRecorrido;
+    if (req.query.nombre_ciudad !== undefined) {
+        matchNombreCiudad = new RegExp(req.query.nombre_ciudad, 'i');
+    } else {
+        matchNombreCiudad = new RegExp('.*');
+    }
+
+    if (req.query.nombre_recorrido !== undefined) {
+        matchNombreRecorrido = new RegExp(req.query.nombre_recorrido, 'i');
+    } else {
+        matchNombreRecorrido = new RegExp('.*');
+    }
+
+    Recorrido
+        .find({nombre: matchNombreRecorrido})
+        .populate('ids_atracciones')
+        .populate( {
+            path: 'id_ciudad',
+            select: 'nombre',
+            match: { 'nombre': matchNombreCiudad }
+        })
+        .exec(function(err, recorridos) {
+            if (err) {
+                res.send(err);
+            }
+            else {
+                recorridos = recorridos.filter(function(recorridos) {
+                    return recorridos.id_ciudad;
+                });
+                res.status(200).json(recorridos);
+            }
+        });
+});
+
 router.get('/recorrido', function(req, res) {
     Recorrido.find(function (err, recorridos) {
         if (err) {

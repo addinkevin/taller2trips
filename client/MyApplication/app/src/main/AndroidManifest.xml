@@ -27,15 +27,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
         <service
-            android:name=".services.FCM_Service"
-            android:exported="false">
+            android:name=".services.FCM_Service">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
         <service
-            android:name=".services.FCM_InstanceService"
-            android:exported="false">
+            android:name=".services.FCM_InstanceService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>

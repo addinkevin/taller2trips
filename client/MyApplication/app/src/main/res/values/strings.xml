@@ -54,6 +54,7 @@
     <string name="ok">OK</string>
     <string name="rate">Rate attraction:</string>
     <string name="cancel_button">Cancel</string>
+    <string name="accept_button">Accept</string>
     <string name="banned">You are banned.</string>
     <string name="banned_alert">You are banned, cannot make reviews.</string>
     <string name="login_alert">You are not logged, cannot make reviews.</string>
@@ -65,6 +66,8 @@
     <string name="back">Back</string>
     <string name="mapa">Map</string>
     <string name="addToFavs">Added to Favorites.</string>
+    <string name="addToVisit">Added to Visits.</string>
+
 
 
 
