@@ -79,12 +79,12 @@ push.controller('pushFormController',
         }
 
         function checkFecha() {
-            if (!$scope.push.fecha) {
+            if (!$scope.push.fechahora) {
                 setFormularioErrorMsg("Debe especificar una fecha para la publicación de la notificación push");
                 return false;
             }
 
-            if ($scope.push.fecha < new Date()) {
+            if ($scope.push.fechahora < new Date()) {
                 setFormularioErrorMsg("Debe especificar una fecha posterior al dia de hoy");
                 return false;
             }
@@ -99,6 +99,8 @@ push.controller('pushFormController',
 
         function submitAddPush() {
             if (!estaFormularioOk()) return;
+            createFecha();
+            createHora();
             PushService.addPush($scope.push).then(function success() {
                 $location.url('/push/');
             }, function error() {
@@ -108,6 +110,8 @@ push.controller('pushFormController',
 
         function submitEditPush() {
             if (!estaFormularioOk()) return;
+            createFecha();
+            createHora();
             PushService.editPush($scope.push).then(function success() {
                 $location.url('/push/');
             }, function error() {
@@ -116,7 +120,7 @@ push.controller('pushFormController',
         }
 
         function createFecha() {
-            var dia = parseInt($scope.push.fechahora.getDay());
+            var dia = parseInt($scope.push.fechahora.getDate());
             var mes = parseInt($scope.push.fechahora.getMonth()) + 1;
             var anio = parseInt($scope.push.fechahora.getFullYear());
 
@@ -128,6 +132,7 @@ push.controller('pushFormController',
             }
 
             $scope.push.fecha = dia + "/" + mes + "/" + anio;
+            console.log($scope.push.fecha);
         }
 
         function createHora() {
@@ -143,11 +148,10 @@ push.controller('pushFormController',
             }
 
             $scope.push.hora = hora + ":" + minutos;
+            console.log($scope.push.hora);
         }
 
         $scope.submitPush = function() {
-            createFecha();
-            createHora();
             if (editForm) {
                 submitEditPush();
             } else {
@@ -179,6 +183,8 @@ push.controller('pushFormController',
         function createFechaHora(push) {
             var fechaSplit = push.fecha.split("/");
             var horaSplit = push.hora.split(":");
+            console.log(fechaSplit);
+            console.log(horaSplit);
 
             var year = parseInt(fechaSplit[2]);
             var month = parseInt(fechaSplit[1]) - 1;
