@@ -152,9 +152,9 @@ public class RecorridosListAdp extends BaseAdapter {
 
             if (tripTP.isLogin() && rowPos.isFavSetted()) {
                 if (rowPos.isFav()) {
-                    holder.favPic.setImageResource(R.drawable.star);
+                    holder.favPic.setImageResource(R.drawable.heart);
                 } else {
-                    holder.favPic.setImageResource(R.drawable.star_outline);
+                    holder.favPic.setImageResource(R.drawable.heart_outline);
                 }
             }
 

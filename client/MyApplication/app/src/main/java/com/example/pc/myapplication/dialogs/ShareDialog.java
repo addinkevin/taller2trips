@@ -85,13 +85,13 @@ public class ShareDialog {
         sendToServer(atraccion, comment, ciudad, ratingBar, tripTP, act);
     }
 
-    public static void showSelectAccount(final Activity act, final String comment, final String atraccion, final String ciudad, final int rating) {
+    public static void showSelectAccount(final Activity act, final String comment, final String atraccion, final String ciudad, int rating) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(act);
         LayoutInflater infl = act.getLayoutInflater();
         View view = infl.inflate(R.layout.share_dialog,null);
-        RatingBar ratingBar = (RatingBar)view.findViewById(R.id.ratingBar);
-        ratingBar.setVisibility(View.GONE);
+        final RatingBar ratingBar = (RatingBar)view.findViewById(R.id.ratingBar);
+        ratingBar.setRating(rating);
         final TripTP tripTP = (TripTP) act.getApplication();
         builder.setTitle(R.string.app_name);
         builder.setView(view);
@@ -103,12 +103,12 @@ public class ShareDialog {
                 }).setNeutralButton(R.string.share_hear_button, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        shareSplex(comment,tripTP,act,atraccion,ciudad,rating,true);
+                        shareSplex(comment,tripTP,act,atraccion,ciudad, (int) ratingBar.getRating(),true);
                         dialog.dismiss();
                     }
                 }).setPositiveButton(R.string.share_all_button, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        shareSplex(comment,tripTP,act,atraccion,ciudad,rating,false);
+                        shareSplex(comment,tripTP,act,atraccion,ciudad,(int) ratingBar.getRating(),false);
                         dialog.dismiss();
                     }
                 });

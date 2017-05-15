@@ -26,14 +26,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <service
-            android:name=".services.FCM_Service">
+        <service android:name=".services.FCM_Service">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service
-            android:name=".services.FCM_InstanceService">
+        <service android:name=".services.FCM_InstanceService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
@@ -79,7 +77,8 @@
         <activity android:name=".FullImageMapActivity" />
         <activity android:name=".RecorridoActivity" />
         <activity android:name=".FavoritosRecorridosActivity" />
-        <activity android:name=".FavoritosAtraccionesActivity"></activity>
+        <activity android:name=".FavoritosAtraccionesActivity" />
+        <activity android:name=".VisitadoActivity"></activity>
     </application>
 
 </manifest>
