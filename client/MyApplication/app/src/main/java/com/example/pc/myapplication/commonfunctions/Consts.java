@@ -123,8 +123,10 @@ public class Consts {
     public static final String GET_FAV_ATR = "FAVATR";
     public static final String GET_FAV_REC = "FAVREC";
     public static final String GEToPOST_ATR_FAV = "ATRFAV";
+    public static final String GEToPOST_ATR_VISIT = "ATRVISIT";
     public static final String GEToPOST_REC_FAV = "RECFAV";
     public static final String DELETE_ATR_FAV = "DELATRFAV";
+    public static final String DELETE_ATR_VISIT = "VISITDELATR";
     public static final String DELETE_REC_FAV = "DELRECFAV";
     public static final String GET_CITY_REC = "RECCITY";
     public static final String GET_REC_FIRST_ATR_IMG = "FIRTATRREC";
@@ -144,6 +146,7 @@ public class Consts {
     public static final String SIGNIN = "/signin";
     public static final String PAGINADO = "/paginas";
     public static final String FAVS = "/favorito";
+    public static final String VISITADO = "/visitado";
     public static final String RECORRIDO = "/recorridoPopulate";
     public static final String TOKEN = "/token";
     public static final String USUARIO = "/usuario";
@@ -227,8 +230,15 @@ public class Consts {
     }
 
     public static Map<String,String> getHeaderPaginadoTipoBusqueda (String salto, String busqueda) {
-        Map<String,String> headers = getHeaderPaginado(salto);
+        Map<String,String> headers = getHeaderPaginadoGrande(salto);
         headers.put(TIPO_BUSQUEDA, busqueda);
+        return headers;
+    }
+
+    public static Map<String,String> getHeaderPaginadoGrande (String salto) {
+        Map<String,String> headers = new HashMap<>();
+        headers.put(Consts.S_CANTIDAD, "1000");
+        headers.put(Consts.S_SALTO,salto);
         return headers;
     }
 

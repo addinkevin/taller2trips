@@ -94,7 +94,7 @@ public class RecorridosListAdp extends BaseAdapter {
             holder = new ViewHolder();
             holder.recorridoName = (TextView) view.findViewById(R.id.textView2);
             holder.recorridoPic = (ImageView) view.findViewById(R.id.imageView);
-            holder.favPic = (ImageView) view.findViewById(R.id.starFav);
+            holder.favPic = (ImageView) view.findViewById(R.id.heartFav);
 
             final Recorrido rowPos = atraccionItems.get(position);
 

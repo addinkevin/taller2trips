@@ -50,4 +50,15 @@ router.post('/visitado', function(req, res) {
     });
 });
 
+router.delete('/visitado/:id_visitado', function(req,res) {
+    Visitado.remove({_id: req.params.id_visitado}, function (err) {
+        if (err) {
+            res.send(err)
+        }
+        else {
+            res.status(200).json({"msj": "exito"});
+        }
+    });
+});
+
 module.exports = router;

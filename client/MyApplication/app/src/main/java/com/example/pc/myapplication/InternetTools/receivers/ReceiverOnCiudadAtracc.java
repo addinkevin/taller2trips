@@ -42,16 +42,26 @@ public class ReceiverOnCiudadAtracc extends BroadcastReceiver {
                     String urlConstFav = tripTP.getUrl() + Consts.FAVS + Consts.BUSCAR
                             + "?" + Consts.ID_USER + "=" + tripTP.getUserID_fromServ()
                             + "&" + Consts.ID_ATR + "=" ;
+                    String urlConstVisit = tripTP.getUrl() + Consts.VISITADO + Consts.BUSCAR
+                            + "?" + Consts.ID_USER + "=" + tripTP.getUserID_fromServ()
+                            + "&" + Consts.ID_ATR + "=" ;
                     for (int i = 0; i < jsonA.length(); i++) {
                         Atraccion atraccion = new Atraccion(jsonA.getJSONObject(i));
                         adp.add(atraccion);
 
                         if (tripTP.isLogin()) {
                             String urlAtrFav = urlConstFav + atraccion._id;
-                            Map<String,String> headers = Consts.getHeaderPaginadoTipoBusqueda("0",Consts.TIPO_BUSQ_TODOS);
+                            Map<String,String> headersFav = Consts.getHeaderPaginadoTipoBusqueda("0",Consts.TIPO_BUSQ_TODOS);
                             InternetClient clientFav = new InfoClient(act.getApplicationContext(),
-                                    Consts.GEToPOST_ATR_FAV, urlAtrFav, headers, Consts.GET, null, true, i);
+                                    Consts.GEToPOST_ATR_FAV, urlAtrFav, headersFav, Consts.GET, null, true, i);
                             clientFav.createAndRunInBackground();
+
+                            String urlAtrVisit = urlConstVisit + atraccion._id;
+                            Map<String,String> headersVisit = Consts.getHeaderPaginadoGrande("0");
+                            InternetClient clientVisit = new InfoClient(act.getApplicationContext(),
+                                    Consts.GEToPOST_ATR_VISIT, urlAtrVisit, headersVisit, Consts.GET, null, true, i);
+                            clientVisit.createAndRunInBackground();
+
                         }
 
                         if (!atraccion.fotosPath.isEmpty()) {
