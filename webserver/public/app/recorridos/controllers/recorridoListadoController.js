@@ -2,6 +2,22 @@ var recorridos = angular.module('tripsApp.recorridos');
 
 recorridos.controller('recorridoListadoController', [ '$scope', '$http', '$location', 'IdiomaService', 'RecorridosService',
     function($scope, $http, $location, IdiomaService, RecorridosService) {
+
+        function setErrorMsg(msgError) {
+            var msg = "<div class='alert alert-danger alert-fixed text-center'>" +
+                "<button type='button' class='close' data-dismiss='alert'>&times;</button>" +
+                msgError +
+                "</div>";
+            $("#errorContainer").html(msg);
+        }
+
+        function setInfoMsg(msgInfo) {
+            var msg = "<div class='alert alert-info alert-fixed text-center'>" +
+                msgInfo +
+                "</div>";
+            $("#infoContainer").html(msg);
+        }
+
         $scope.recorridos = [];
         $scope.myInterval = 0;
         $scope.noWrapSlides = false;
@@ -46,7 +62,16 @@ recorridos.controller('recorridoListadoController', [ '$scope', '$http', '$locat
 
         $scope.buscarRecorridos = function() {
             console.log("Buscando recorridos...");
-            // TODO
+            RecorridosService.getResultados($scope.filtros).then(
+                function success(res) {
+                    $scope.recorridos = res.data;
+                    makeSlides();
+                    makeIdiomas();
+                },
+                function error(res) {
+                    setErrorMsg("No se pudo cargar el listado de recorridos.");
+                }
+            )
         };
 
         $scope.deleteRecorrido = function (recorrido) {
@@ -128,7 +153,5 @@ recorridos.controller('recorridoListadoController', [ '$scope', '$http', '$locat
         };
 
         $scope.init();
-
-
 
 }]);
