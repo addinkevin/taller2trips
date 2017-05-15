@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity  implements OnMapReadyCallba
         LocalBroadcastManager.getInstance(this).unregisterReceiver(onUserInfo);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(onUserImage);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(onUserLogin);
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(onUserAccounts);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(onPubliImg);
 
         super.onDestroy();
     }
