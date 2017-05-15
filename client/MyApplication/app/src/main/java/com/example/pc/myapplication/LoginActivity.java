@@ -79,7 +79,7 @@ public class LoginActivity extends AppCompatActivity implements FacebookCallback
         loginFacebook = (LoginButton)findViewById(R.id.login_button);
 
         progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Por favor espere...");
+        progressDialog.setMessage(getResources().getString(R.string.please_wait));
         progressDialog.setCancelable(false);
 
         onSignLogin = new ReceiverOnSingLogin(this, progressDialog, isLinking);

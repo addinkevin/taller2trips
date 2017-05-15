@@ -68,6 +68,7 @@
     <string name="mapa">Map</string>
     <string name="addToFavs">Added to Favorites.</string>
     <string name="addToVisit">Added to Visits.</string>
+    <string name="please_wait">Please wait…</string>
 
 
 </resources>
