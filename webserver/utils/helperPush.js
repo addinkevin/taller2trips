@@ -20,7 +20,7 @@ var procesarQuery = function(res) {
     var tokens = [];
     for (i = 0; i < res.length; i++) {
         var token = res[i].id_usuario.token_push;
-        if (!contieneElemento(tokens, token)) {
+        if (!contieneElemento(tokens, token) && token !== "") {
             tokens.push(token);
         };
     };
