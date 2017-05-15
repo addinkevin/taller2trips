@@ -29,7 +29,6 @@ router.get('/usuario/:id_usuario', function(req, res) {
 });
 
 router.post('/signin', function(req, res) {
-    //var auth_token =
     var auth_token = req.get('Authorization').split(" ")[1];
     login.procesarLogin(auth_token, req, res);
 });
@@ -74,10 +73,22 @@ router.put('/usuario', function(req, res) {
     });
 });
 
+
 router.delete('/usuario/:id_usuario', function(req,res) {
     User.remove({_id: req.params.id_usuario}, function (err) {
         if (err) {
             res.send(err)
+        }
+        else {
+            res.status(200).json({"msj": "exito"});
+        }
+    });
+});
+
+router.put('/usuario/:id_usuario/token', function(req, res) {
+    User.update({_id: req.params.id_usuario}, {token_push: req.body.token_push}, function (err) {
+        if (err) {
+            req.send(err);
         }
         else {
             res.status(200).json({"msj": "exito"});

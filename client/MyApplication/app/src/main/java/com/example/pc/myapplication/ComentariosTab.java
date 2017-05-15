@@ -5,14 +5,13 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.pc.myapplication.InternetTools.InfoClient;
 import com.example.pc.myapplication.InternetTools.InternetClient;
@@ -28,6 +27,7 @@ import com.example.pc.myapplication.ciudadesTools.Comentario;
 import com.example.pc.myapplication.commonfunctions.Consts;
 import com.example.pc.myapplication.dialogs.AlertDialog;
 import com.example.pc.myapplication.dialogs.ShareDialog;
+import com.example.pc.myapplication.singletons.NetClientsSingleton;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
@@ -40,11 +40,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.example.pc.myapplication.commonfunctions.Consts.PERMISSION;
 import static com.example.pc.myapplication.commonfunctions.Consts.S_FACEBOOK;
@@ -77,12 +75,13 @@ public class ComentariosTab extends Fragment {
         adapter = new CommentListAdapter(activity, rowsItems);
         final ListView commentsListView = (ListView) fragView.findViewById(R.id.atraccList);
         commentsListView.setAdapter(adapter);
+        TextView noCommentMssg = (TextView) fragView.findViewById(R.id.textView);
 
         isDownloagind = new AtomicBoolean(true);
 
         onShare = new ReceiverOnShare(activity);
-        onCommentPost = new ReceiverOnCommentPost(activity,commentText, rowsItems, adapter, commentsListView);
-        onCommentGet = new ReceiverOnCommentsGet(activity, rowsItems, adapter, commentsListView, isDownloagind);
+        onCommentPost = new ReceiverOnCommentPost(activity,commentText, rowsItems, adapter, commentsListView, noCommentMssg);
+        onCommentGet = new ReceiverOnCommentsGet(activity, rowsItems, adapter, commentsListView, isDownloagind, noCommentMssg);
         onProf = new ReceiverOnProfPic(activity);
         onProfImage = new ReceiverOnUserCommentImage(activity, commentsListView, rowsItems, adapter);
 
@@ -129,12 +128,13 @@ public class ComentariosTab extends Fragment {
 
         InternetClient client = new InfoClient(activity.getApplicationContext(),
                 Consts.GET_COMMENT, urlServ, headers, Consts.GET, null, true);
+        NetClientsSingleton.getInstance().add(client.createTask());
         client.runInBackground();
     }
 
     public void makeComment() {
         final String comment = commentText.getText().toString();
-        if (!comment.isEmpty() && atraccion != null && !tripTP.isBanned()) {
+        if (!comment.isEmpty() && atraccion != null) {
             if (tripTP.getSocialDef().equals(S_FACEBOOK)) {
                 new GraphRequest(AccessToken.getCurrentAccessToken(),
                         "/" + tripTP.getUserID_fromSocial() + "/permissions",
@@ -172,8 +172,6 @@ public class ComentariosTab extends Fragment {
             } else if (tripTP.getSocialDef().equals(S_TWITTER)) {
                 ShareDialog.show(getActivity(), comment, atraccion._id, atraccion.idCiudad);
             }
-        } else if(tripTP.isBanned()) {
-            AlertDialog.show(activity, R.string.banned);
         } else {
             AlertDialog.show(activity, R.string.make_review);
         }
@@ -195,13 +193,16 @@ public class ComentariosTab extends Fragment {
     }
 
     public void onStop() {
+        unregister();
+        super.onStop();
+    }
+
+    public void unregister() {
         LocalBroadcastManager.getInstance(activity.getApplicationContext()).unregisterReceiver(onShare);
         LocalBroadcastManager.getInstance(activity.getApplicationContext()).unregisterReceiver(onCommentPost);
         LocalBroadcastManager.getInstance(activity.getApplicationContext()).unregisterReceiver(onCommentGet);
         LocalBroadcastManager.getInstance(activity.getApplicationContext()).unregisterReceiver(onProf);
         LocalBroadcastManager.getInstance(activity.getApplicationContext()).unregisterReceiver(onProfImage);
-
-        super.onStop();
     }
 
     public void attachAtraccion(Atraccion atraccion) {

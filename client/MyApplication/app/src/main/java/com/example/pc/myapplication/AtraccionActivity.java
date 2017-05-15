@@ -1,16 +1,29 @@
 package com.example.pc.myapplication;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Window;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.example.pc.myapplication.adapters.AtraccionTabAdapter;
 import com.example.pc.myapplication.application.TripTP;
+import com.example.pc.myapplication.ciudadesTools.Atraccion;
+import com.example.pc.myapplication.commonfunctions.Consts;
 import com.example.pc.myapplication.dialogs.AlertDialog;
+import com.example.pc.myapplication.singletons.ImagesSingleton;
+import com.example.pc.myapplication.singletons.NetClientsSingleton;
+import com.example.pc.myapplication.singletons.PosVideoSingleton;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AtraccionActivity extends AppCompatActivity{
 
@@ -21,13 +34,13 @@ public class AtraccionActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         setContentView(R.layout.activity_atraccion);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.include);
         toolbar.setTitle((R.string.atraccion));
         setSupportActionBar(toolbar);
-
         tripTP = (TripTP) getApplication();
 
         ViewPager mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -59,15 +72,11 @@ public class AtraccionActivity extends AppCompatActivity{
     }
 
     public void makeComment(View view) {
-        if (!tripTP.isBanned() && tripTP.isLogin()) {
+        if (tripTP.isLogin()) {
             atraccionTabAdp.makeComment();
         } else {
-            if (tripTP.isBanned())
-                AlertDialog.show(this,R.string.banned_alert);
-            else if (!tripTP.isLogin()) {
-                AlertDialog.show(this,R.string.login_alert);
-
-            }
+            AlertDialog.show(this,R.string.login_alert);
         }
     }
+
 }

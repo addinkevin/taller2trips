@@ -1,0 +1,113 @@
+<div>
+    <div class='page-header'>
+        <div class='btn-toolbar pull-right'>
+            <div class='btn-group'>
+                <a href="#/recorridos/add" class="btn btn-primary" role="button">Agregar recorrido</a>
+            </div>
+        </div>
+        <h1>Listado de recorridos</h1>
+
+    </div>
+
+    <!-- Error header -->
+    <div id="errorContainer">
+
+    </div>
+    <div id="infoContainer">
+
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">Filtros</div>
+        <div class="panel-body">
+            <form class="buscadorResenias">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-btn search-panel">
+                            <select class="form-control" style="width:auto;"
+                                    ng-model="filtroSelected"
+                                    ng-options="filtro as (filtro.descripcion) for filtro in opcionesDeFiltro">
+                            </select>
+                        </div>
+
+                        <input type="text" class="form-control" ng-model="contenidoFiltro">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" ng-click="agregarFiltro()">Agregar filtro</button>
+                        </span>
+                    </div>
+                </div>
+
+                <div id="filtros" class="form-group">
+                    <div class="row">
+                        <div class="col-sm-3" ng-repeat="(id,filtro) in filtros">
+                            <div class="panel panel-default box-filtro">
+                                <div class="panel-body">
+                                    <div class="text-center">
+                                        <input type="button" style="float:right;"
+                                               class="link" ng-click="deleteFiltro(id)" value="&times;">
+
+                                        <p><strong>{{filtro.filtro.descripcion}}</strong></p>
+                                        <p>{{filtro.contenido}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button class="btn btn-primary" type="button" ng-click="buscarRecorridos()">Buscar reseñas<span class="glyphicon glyphicon-search" style="margin-left:5%;"></span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="panel-custom" ng-show="recorridos.length == 0">
+        <h3 class="subheader">No hay recorridos para mostrar</h3>
+    </div>
+
+    <div class="panel panel-default" ng-show="recorridos.length > 0" ng-repeat="(id,recorrido) in recorridos | filter:search">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-xs-6 col-md-3">
+                    <div uib-carousel active="active" interval="myInterval" no-wrap="noWrapSlides">
+                        <div uib-slide ng-repeat="slide in recorrido.slides track by slide.id" index="slide.id">
+                            <img ng-src="{{slide.src}}" style="margin:auto;" class="img-responsive">
+                            <div class="carousel-caption">
+                                <p>{{slide.caption}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6 col-md-9">
+                    <h3>{{recorrido.nombre}}</h3>
+                    <div class="row">
+                        <label class="col-sm-2 col-form-label">Ciudad</label>
+                        <div class="col-sm-10">
+                            {{getNombreCiudad(recorrido)}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-2 col-form-label">Atracciones</label>
+                        <div class="col-sm-10">
+                            {{getListadoDeAtracciones(recorrido)}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-2 col-form-label">Idiomas</label>
+                        <div class="col-sm-10">
+                            <span class="label label-info" style="margin-right:3px;" ng-repeat="idioma in recorrido.idiomasCargados">{{idioma.nombre}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <div class="btn-group" role="group" aria-label="edit-remove">
+                <a href="#/recorridos/edit/{{recorrido._id}}" class="btn btn-default" role="button">Editar</a>
+                <button type="button" class="btn btn-default" ng-click="deleteRecorrido(recorrido)">Borrar</button>
+            </div>
+        </div>
+    </div>
+</div>

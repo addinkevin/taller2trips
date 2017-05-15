@@ -1,4 +1,7 @@
-var tripsApp = angular.module('tripsApp', ["ngRoute", 'tripsApp.ciudades', 'tripsApp.atracciones', 'tripsApp.resenias']);
+var tripsApp = angular.module('tripsApp', [
+    "ngRoute", 'ui.bootstrap', 'tripsApp.ciudades', 'tripsApp.atracciones', 'tripsApp.resenias',
+    'tripsApp.recorridos', 'tripsApp.push'
+]);
 
 tripsApp.config(function config($routeProvider, $locationProvider) {
     $routeProvider.when('/home', {

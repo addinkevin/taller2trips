@@ -8,10 +8,11 @@
     <string name="probar">Probar</string>
 
     <string name="buscar_cercanos">Buscar atracciones cercanas</string>
+    <string name="acciones">Acciones</string>
     <string name="cercanoTitle">Atracciones cercanas</string>
     <string name="atracciones">Atracciones</string>
     <string name="atraccion">Atracción</string>
-    <string name="recorridos">Mapa</string>
+    <string name="recorridos">Recorridos</string>
     <string name="ciudades">Ciudades</string>
     <string name="ubicarme">Ubicarme</string>
     <string name="favoritos">Favoritos</string>
@@ -53,6 +54,15 @@
     <string name="ok">OK</string>
     <string name="share_button">Compatir</string>
     <string name="cancel_button">Cancelar</string>
+    <string name="no_comment_alert">Se el primero en hacer una reseña.</string>
+    <string name="add_favorite">Agregar a favaritos.</string>
+    <string name="rem_favorite">Eliminar de favoritos.</string>
+    <string name="fav_post_err">No se pudo guardar el Favorito, intenta mas tarde.</string>
+    <string name="fav_post_succ">Guardado en favoritos.</string>
+    <string name="back">Volver</string>
+    <string name="mapa">Mapa</string>
+    <string name="addToFavs">Agregado a Favoritos.</string>
+
 
 
 

@@ -73,4 +73,5 @@ public class AtraccionTabAdapter extends FragmentPagerAdapter {
     public void makeComment() {
         ((ComentariosTab)pagesLayout[1]).makeComment();
     }
+
 }

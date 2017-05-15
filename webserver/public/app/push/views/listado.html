@@ -1,0 +1,80 @@
+<div>
+    <div class='page-header'>
+        <div class='btn-toolbar pull-right'>
+            <div class='btn-group'>
+                <a href="#/push/add" class="btn btn-primary" role="button">Agregar push</a>
+            </div>
+        </div>
+        <h1>Listado de pushes</h1>
+    </div>
+
+    <!-- Error header -->
+    <div id="errorContainer">
+
+    </div>
+    <div id="infoContainer">
+
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <form class="buscadorPushes">
+                <input ng-model="search.nombre" type="text" class="form-control formularioBuscar" placeholder="Buscar...">
+            </form>
+        </div>
+    </div>
+
+    <div class="panel-custom" ng-show="pushes.length == 0">
+        <h3 class="subheader">No hay recorridos para mostrar</h3>
+    </div>
+
+    <div class="panel panel-default" ng-show="pushes.length > 0" ng-repeat="(id,push) in pushes | filter:search">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-xs-6 col-md-3">
+                    <img ng-src="{{push.imagen.imgSrc}}" style="margin:auto;" class="img-responsive">
+                </div>
+                <div class="col-xs-6 col-md-9">
+                    <h3>{{push.nombre}}</h3>
+                    <div class="row">
+                        <label class="col-sm-2 col-form-label">Ciudad</label>
+                        <div class="col-sm-10">
+                            {{getNombreCiudad(push)}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-2 col-form-label">Fecha de publicación</label>
+                        <div class="col-sm-10">
+                            {{getFechaDePublicacion(push)}}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <label class="col-sm-2 col-form-label">Estado</label>
+                        <div class="col-sm-10">
+                            {{getEstado(push)}}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <label class="col-sm-2 col-form-label">Idiomas</label>
+                        <div class="col-sm-10">
+                            <span class="label label-info" style="margin-right:3px;" ng-repeat="idioma in push.idiomasCargados">{{idioma.nombre}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <div class='btn-toolbar pull-right'>
+                <div class='btn-group'>
+                    <button type="button" class="btn btn-default" ng-click="enviarPush(push)">Enviar ahora</button>
+                </div>
+            </div>
+            <div class="btn-group" role="group" aria-label="edit-remove">
+                <a href="#/push/edit/{{push._id}}" class="btn btn-default" role="button">Editar</a>
+                <button type="button" class="btn btn-default" ng-click="deletePush(push)">Borrar</button>
+            </div>
+        </div>
+    </div>
+</div>

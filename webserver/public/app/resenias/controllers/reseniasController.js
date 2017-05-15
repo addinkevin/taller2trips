@@ -52,12 +52,24 @@ resenias.controller('reseniasController', [ '$scope', 'HelperResenias', function
     $scope.contenidoFiltro = "";
     $scope.filtros = [];
     $scope.resultados = [];
+    $scope.filtrosDic = {};
 
     $scope.agregarFiltro = function() {
-        $scope.filtros.push( {
-            filtro: $scope.filtroSelected,
-            contenido: $scope.contenidoFiltro
+        if ($scope.contenidoFiltro == "") {
+            return;
+        }
+        var element = $scope.filtros.find(function(element) {
+            return element.filtro == $scope.filtroSelected;
         });
+        if (element) {
+            element.contenido = $scope.contenidoFiltro;
+        } else {
+            $scope.filtros.push( {
+                filtro: $scope.filtroSelected,
+                contenido: $scope.contenidoFiltro
+            });
+        }
+        $scope.contenidoFiltro = "";
     };
 
     $scope.deleteFiltro = function(id) {

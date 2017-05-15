@@ -14,8 +14,10 @@ import com.example.pc.myapplication.InternetTools.InfoClient;
 import com.example.pc.myapplication.InternetTools.InternetClient;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAtraccImg;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnCiudadAtracc;
+import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnCiudadAtraccFav;
+import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnCiudadAtraccFavDelete;
 import com.example.pc.myapplication.application.TripTP;
-import com.example.pc.myapplication.atraccionesTools.AtraccionesListAdp;
+import com.example.pc.myapplication.adapters.AtraccionesListAdp;
 import com.example.pc.myapplication.ciudadesTools.Atraccion;
 import com.example.pc.myapplication.commonfunctions.Consts;
 import com.example.pc.myapplication.singletons.GpsSingleton;
@@ -30,6 +32,8 @@ public class BuscaAtrCercaActivity extends AppCompatActivity implements AdapterV
     private AtraccionesListAdp atraccionesAdp;
     private ReceiverOnCiudadAtracc onCiudadAtracc;
     private ReceiverOnAtraccImg onAtraccImg;
+    private ReceiverOnCiudadAtraccFav onCiudadAtraccFav;
+    private ReceiverOnCiudadAtraccFavDelete onCiudadAtraccFavDelete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +51,10 @@ public class BuscaAtrCercaActivity extends AppCompatActivity implements AdapterV
 
         atraccionItems = new ArrayList<>();
         atraccionesAdp = new AtraccionesListAdp(this, atraccionItems);
-        onCiudadAtracc = new ReceiverOnCiudadAtracc(this, view, atraccionItems);
-        onAtraccImg = new ReceiverOnAtraccImg(atraccionItems, atraccionesAdp);
+        onCiudadAtracc = new ReceiverOnCiudadAtracc(this, atraccionesAdp);
+        onAtraccImg = new ReceiverOnAtraccImg(atraccionesAdp);
+        onCiudadAtraccFav = new ReceiverOnCiudadAtraccFav(atraccionesAdp, this);
+        onCiudadAtraccFavDelete = new ReceiverOnCiudadAtraccFavDelete(atraccionesAdp);
 
 
         ListView atraccList = (ListView) findViewById(R.id.atraccList);
@@ -61,7 +67,7 @@ public class BuscaAtrCercaActivity extends AppCompatActivity implements AdapterV
                 "&" + Consts.RADIO + "=" + tripTP.getRadio();
         InternetClient client = new InfoClient(getApplicationContext(),
                 Consts.GET_ATR_CERC, url, null, Consts.GET, null, true);
-        client.runInBackground();
+        client.createAndRunInBackground();
 
     }
 
@@ -74,17 +80,23 @@ public class BuscaAtrCercaActivity extends AppCompatActivity implements AdapterV
     }
 
     public void onStart() {
-        super.onStart();
         LocalBroadcastManager.getInstance(this).registerReceiver(onCiudadAtracc,
                 new IntentFilter(Consts.GET_ATR_CERC));
         LocalBroadcastManager.getInstance(this).registerReceiver(onAtraccImg,
                 new IntentFilter(Consts.GET_ATR_IMG));
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(onCiudadAtraccFav,
+                new IntentFilter(Consts.GEToPOST_ATR_FAV));
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(onCiudadAtraccFavDelete,
+                new IntentFilter(Consts.DELETE_ATR_FAV));
+        super.onStart();
     }
 
     public void onStop() {
-        super.onStop();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(onCiudadAtracc);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(onAtraccImg);
+        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(onCiudadAtraccFav);
+        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(onCiudadAtraccFavDelete);
+        super.onStop();
     }
 
 }

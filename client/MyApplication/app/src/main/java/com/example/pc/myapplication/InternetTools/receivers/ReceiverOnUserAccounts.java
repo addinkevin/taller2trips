@@ -67,14 +67,14 @@ public class ReceiverOnUserAccounts extends BroadcastReceiver {
 
                         TextView nameTxt = (TextView) headerView.findViewById(R.id.nameProf);
                         nameTxt.setText(name);
-                        tripTP.setNameFB(name);
+                        tripTP.setNameFB(name.split(" ")[0]);
 
                         String url = Consts.SPLEX_URL + Consts.SOCIAL_ACC + "/" + id;
                         Map<String,String> header = Consts.getSplexHeader(tripTP);
 
                         InternetClient client = new InfoClient(activity.getApplicationContext(),
                                 Consts.GET_USER_INFO, url, header, Consts.GET, null, true);
-                        client.runInBackground();
+                        client.createAndRunInBackground();
                     }
 
                 } catch (JSONException e) {

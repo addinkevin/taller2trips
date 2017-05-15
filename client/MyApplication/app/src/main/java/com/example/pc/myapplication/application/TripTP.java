@@ -3,6 +3,7 @@ package com.example.pc.myapplication.application;
 
 import android.app.Application;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.preference.PreferenceManager;
 
 import com.example.pc.myapplication.commonfunctions.Consts;
@@ -19,15 +20,18 @@ public class TripTP extends Application {
     private String socialDef = null;
     private int socialDefID;
     private String userID_fromSocial = null;
-    private boolean banned = false;
     private boolean login = false;
     private String userID_fromServ = null;
     private boolean hasMultipleAccounts;
     private String screenName = null;
     private String nameFB = null;
+    private String tokenFCM = null;
+
 
     private static final String TWITTER_KEY = "SImsg2WXUTa6XGUxmr678Jtro ";
     private static final String TWITTER_SECRET = "BSlApiUVD8wOyoBuWzFS8wv31leVCUQ5XlA2Z7sdXY57XkG3wd";
+    private Bitmap imgBanner = null;
+    private Bitmap imageUser = null;
 
     public void onCreate() {
         TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
@@ -122,6 +126,15 @@ public class TripTP extends Application {
 
     public void setUserID_fromServ(String userID_fromServ) {
         this.userID_fromServ = userID_fromServ;
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(Consts.ID_USER, userID_fromServ);
+        editor.apply();
+    }
+
+    public String getLastUserLogged() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        return sharedPreferences.getString(Consts.ID_USER, "");
     }
 
     public boolean isLogin() {
@@ -130,14 +143,6 @@ public class TripTP extends Application {
 
     public void setLogin(boolean login) {
         this.login = login;
-    }
-
-    public boolean isBanned() {
-        return banned;
-    }
-
-    public void setBanned(boolean banned) {
-        this.banned = banned;
     }
 
     public boolean hasMultipleAccounts() {
@@ -162,5 +167,37 @@ public class TripTP extends Application {
 
     public void setNameFB(String nameFB) {
         this.nameFB = nameFB;
+    }
+
+    public void setImgBanner(Bitmap imgBanner) {
+        this.imgBanner = imgBanner;
+    }
+
+    public Bitmap getImgBanner() {
+        return imgBanner;
+    }
+
+    public void setImgProf(Bitmap imageUser) {
+        this.imageUser = imageUser;
+    }
+
+    public Bitmap getImageUser() {
+        return imageUser;
+    }
+
+    public String getTokenFCM() {
+        if (tokenFCM == null || tokenFCM.isEmpty()) {
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            tokenFCM = sharedPreferences.getString(Consts.TOKEN, "");
+        }
+        return tokenFCM;
+    }
+
+    public void setTokenFCM(String tokenFCM) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.putString(Consts.TOKEN, tokenFCM);
+        edit.apply();
+        this.tokenFCM = tokenFCM;
     }
 }

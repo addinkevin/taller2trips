@@ -4,6 +4,11 @@ var ciudadesRoute = require('./ciudadesRoute');
 var atraccionesRoute = require('./atraccionesRoute');
 var reseniasRoute = require('./reseniasRoute');
 var usuariosRoute = require('./usuariosRoute');
+var favoritosRoute = require('./favoritosRoute');
+var recorridosRoute = require('./recorridosRoute');
+var notificacionesPushRoute = require('./notificacionesPushRoute');
+var visitadosRoute = require('./visitadosRoute');
+
 
 module.exports = function(app, passport) {
     var router = express.Router();
@@ -29,8 +34,6 @@ module.exports = function(app, passport) {
     });
 
     function isLoggedIn(req, res, next) {
-        //return next(); // Uncomment to test without authentication.
-
         if (req.isAuthenticated())
             return next();
 
@@ -42,4 +45,8 @@ module.exports = function(app, passport) {
     app.use('/api', atraccionesRoute);
     app.use('/api', reseniasRoute);
     app.use('/api', usuariosRoute);
+    app.use('/api', favoritosRoute);
+    app.use('/api', recorridosRoute);
+    app.use('/api', notificacionesPushRoute);
+    app.use('/api', visitadosRoute);
 };

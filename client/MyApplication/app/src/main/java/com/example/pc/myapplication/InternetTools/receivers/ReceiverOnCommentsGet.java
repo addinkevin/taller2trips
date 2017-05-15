@@ -6,23 +6,27 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.pc.myapplication.InternetTools.ImageClient;
 import com.example.pc.myapplication.InternetTools.InfoClient;
 import com.example.pc.myapplication.InternetTools.InternetClient;
+import com.example.pc.myapplication.R;
 import com.example.pc.myapplication.adapters.CommentListAdapter;
 import com.example.pc.myapplication.adapters.ScrollListMaintainer;
 import com.example.pc.myapplication.ciudadesTools.Comentario;
 import com.example.pc.myapplication.commonfunctions.Consts;
+import com.example.pc.myapplication.dialogs.AlertDialog;
+import com.example.pc.myapplication.singletons.NetClientsSingleton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class ReceiverOnCommentsGet extends BroadcastReceiver{
 
@@ -31,14 +35,16 @@ public class ReceiverOnCommentsGet extends BroadcastReceiver{
     private CommentListAdapter adapter;
     private ListView commentsListView;
     private AtomicBoolean isDownloagind;
+    private TextView noCommentMssg;
     private boolean firstDownload = true;
 
-    public ReceiverOnCommentsGet(Activity activity, List<Comentario> rowsItems, CommentListAdapter adapter, ListView commentsListView, AtomicBoolean isDownloagind) {
+    public ReceiverOnCommentsGet(Activity activity, List<Comentario> rowsItems, CommentListAdapter adapter, ListView commentsListView, AtomicBoolean isDownloagind, TextView noCommentMssg) {
         this.activity = activity;
         this.rowsItems = rowsItems;
         this.adapter = adapter;
         this.commentsListView = commentsListView;
         this.isDownloagind = isDownloagind;
+        this.noCommentMssg = noCommentMssg;
     }
 
     @Override
@@ -62,6 +68,7 @@ public class ReceiverOnCommentsGet extends BroadcastReceiver{
 
                             InternetClient client = new InfoClient(activity.getApplicationContext(),
                                     Consts.GET_PROF, urlServ, null, Consts.GET, null, true, rowsItems.size()-1);
+                            NetClientsSingleton.getInstance().add(client.createTask());
                             client.runInBackground();
                         } else if (comentario.provider.equals(Consts.S_TWITTER)){
 
@@ -70,11 +77,13 @@ public class ReceiverOnCommentsGet extends BroadcastReceiver{
 
                             InternetClient client = new ImageClient(activity.getApplicationContext(),
                                     Consts.GET_USER_IMG_PROF, urlServ, null, Consts.GET, null, true, rowsItems.size() -1);
+                            NetClientsSingleton.getInstance().add(client.createTask());
                             client.runInBackground();
                         }
 
                     }
                     if (res.length() > 0) {
+                        noCommentMssg.setVisibility(View.GONE);
                         adapter.addRowItem(rowsItems);
                         if (firstDownload) {
                             firstDownload = false;
@@ -84,6 +93,9 @@ public class ReceiverOnCommentsGet extends BroadcastReceiver{
                             ScrollListMaintainer.maintainScrollPosition(commentsListView, positionBeforeReload);
                         }
                     } else {
+                        if (firstDownload) {
+                            AlertDialog.show(activity, R.string.no_comment_alert);
+                        }
                         toTheTop = true;
                     }
 

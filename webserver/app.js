@@ -8,6 +8,11 @@ var expressSession = require('express-session');
 var flash = require('connect-flash');
 var passport = require('passport');
 var cors = require('cors');
+var notificacionesPush = require('./utils/helperPush');
+
+
+// Notifcaciones Push
+notificacionesPush.inicializarMensajeriaGoogle();
 
 // Express
 var app = express();
