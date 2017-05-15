@@ -17,6 +17,8 @@ import com.example.pc.myapplication.commonfunctions.Consts;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.util.Map;
+
 public class ReceiverOnCiudadRecorrido extends BroadcastReceiver {
 
     private final TripTP tripTP;
@@ -57,8 +59,9 @@ public class ReceiverOnCiudadRecorrido extends BroadcastReceiver {
 
                         if (tripTP.isLogin()) {
                             String urlAtrFav = urlConstFav + recorrido.get_id();
+                            Map<String,String> headers = Consts.getHeaderPaginadoTipoBusqueda("0",Consts.TIPO_BUSQ_TODOS);
                             InternetClient clientFav = new InfoClient(activity.getApplicationContext(),
-                                    Consts.GEToPOST_REC_FAV, urlAtrFav, null, Consts.GET, null, true, i);
+                                    Consts.GEToPOST_REC_FAV, urlAtrFav, headers, Consts.GET, null, true, i);
                             clientFav.createAndRunInBackground();
                         }
                     }

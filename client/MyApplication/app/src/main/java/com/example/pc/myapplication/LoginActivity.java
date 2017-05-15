@@ -58,7 +58,6 @@ public class LoginActivity extends AppCompatActivity implements FacebookCallback
 
         isLinking = getIntent().getBooleanExtra(Consts.IS_LINKING, false);
 
-
         FacebookSdk.sdkInitialize(getApplicationContext());
 
         loginTwitter = (TwitterLoginButton) findViewById(R.id.twitter_login_button);
@@ -80,7 +79,7 @@ public class LoginActivity extends AppCompatActivity implements FacebookCallback
         loginFacebook = (LoginButton)findViewById(R.id.login_button);
 
         progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Por favor espere...");
+        progressDialog.setMessage(getResources().getString(R.string.please_wait));
         progressDialog.setCancelable(false);
 
         onSignLogin = new ReceiverOnSingLogin(this, progressDialog, isLinking);

@@ -25,6 +25,8 @@ public class TripTP extends Application {
     private boolean hasMultipleAccounts;
     private String screenName = null;
     private String nameFB = null;
+    private String tokenFCM = null;
+
 
     private static final String TWITTER_KEY = "SImsg2WXUTa6XGUxmr678Jtro ";
     private static final String TWITTER_SECRET = "BSlApiUVD8wOyoBuWzFS8wv31leVCUQ5XlA2Z7sdXY57XkG3wd";
@@ -124,6 +126,15 @@ public class TripTP extends Application {
 
     public void setUserID_fromServ(String userID_fromServ) {
         this.userID_fromServ = userID_fromServ;
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(Consts.ID_USER, userID_fromServ);
+        editor.apply();
+    }
+
+    public String getLastUserLogged() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        return sharedPreferences.getString(Consts.ID_USER, "");
     }
 
     public boolean isLogin() {
@@ -172,5 +183,21 @@ public class TripTP extends Application {
 
     public Bitmap getImageUser() {
         return imageUser;
+    }
+
+    public String getTokenFCM() {
+        if (tokenFCM == null || tokenFCM.isEmpty()) {
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            tokenFCM = sharedPreferences.getString(Consts.TOKEN, "");
+        }
+        return tokenFCM;
+    }
+
+    public void setTokenFCM(String tokenFCM) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.putString(Consts.TOKEN, tokenFCM);
+        edit.apply();
+        this.tokenFCM = tokenFCM;
     }
 }

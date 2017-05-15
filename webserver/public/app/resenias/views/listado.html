@@ -15,7 +15,7 @@
                 <div class="form-group">
                     <div class="input-group">
                         <div class="input-group-btn search-panel">
-                            <select class="form-control" style="width:160px;"
+                            <select class="form-control" style="width:auto;"
                                     ng-model="filtroSelected"
                                     ng-options="filtro as (filtro.descripcion) for filtro in opcionesDeFiltro">
                             </select>
@@ -83,7 +83,7 @@
                     <td>{{getDescripcion(id,resultado)}}</td>
                     <td>
                         <div class="btn-group" role="group" aria-label="edit-remove">
-                            <button type="button" class="btn btn-default btn-block" ng-click="bloquearUsuario(id, resultado)">Bloquear usuario</button>
+                            <button type="button" class="btn btn-default btn-block" ng-click="bloquearDesbloquearUsuario(id, resultado)">{{getMensajeBotonBloqueo(id, resultado)}}</button>
                             <button type="button" class="btn btn-default btn-block" ng-click="borrarResenia(id,resultado)">Borrar reseña</button>
                         </div>
                     </td>

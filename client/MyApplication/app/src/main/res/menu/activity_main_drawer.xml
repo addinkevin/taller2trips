@@ -59,6 +59,21 @@
                 </group>
             </menu>
         </item>
+
+        <item
+            android:id="@+id/visitado"
+            android:icon="@drawable/star"
+            android:title="@string/visitados">
+            <menu >
+                <group android:checkableBehavior="none">
+                    <item
+                        android:id="@+id/visitAtracciones"
+                        android:icon="@drawable/museum"
+                        android:title="@string/atracciones" />
+
+                </group>
+            </menu>
+        </item>
     </group>
 
 </menu>

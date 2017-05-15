@@ -8,6 +8,21 @@ recorridos.service('RecorridosService', ['$http', 'IdiomaService', function ($ht
         });
     };
 
+    this.getResultados = function (filtros) {
+        var data = {};
+        var self = this;
+        for (var i = 0; i < filtros.length; i++) {
+            var filtro = filtros[i];
+            data[filtro.filtro.filtroName] = filtro.contenido;
+        }
+
+        return $http({
+            method: 'GET',
+            url : '/api/recorridoPopulateFiltro',
+            params: data
+        });
+    };
+
     this.getCiudades = function() {
         return $http({
             method: 'GET',

@@ -12,4 +12,6 @@ var recorridoSchema = mongoose.Schema({
     id_ciudad: {type: Schema.Types.ObjectId, ref: 'Ciudad' }
 });
 
+recorridoSchema.index({nombre: 1, id_ciudad: 1}, {unique: true});
+
 module.exports = mongoose.model('Recorrido', recorridoSchema);

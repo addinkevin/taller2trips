@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "781113974826",
-    "firebase_url": "https://triptp-dfcdb.firebaseio.com",
-    "project_id": "triptp-dfcdb",
-    "storage_bucket": "triptp-dfcdb.appspot.com"
+    "project_number": "159848236728",
+    "firebase_url": "https://taller-trips.firebaseio.com",
+    "project_id": "taller-trips",
+    "storage_bucket": "taller-trips.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:781113974826:android:2fc334eea851491d",
+        "mobilesdk_app_id": "1:159848236728:android:2fc334eea851491d",
         "android_client_info": {
           "package_name": "com.example.pc.myapplication"
         }
       },
       "oauth_client": [
         {
-          "client_id": "781113974826-kkkj9j99fcsp910h55trql6oi3m2i1ap.apps.googleusercontent.com",
+          "client_id": "159848236728-8kb6a8l3uis1m0pga6mk6bp20vc1seoa.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyD2kTutvNofPirbfQ_5jOkPbFuFYQqwEvs"
+          "current_key": "AIzaSyAS2C_ifiBMKNEOkFzqQjl4hxZ8AGnuUiY"
         }
       ],
       "services": {

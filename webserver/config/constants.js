@@ -1,4 +1,5 @@
 module.exports = {
+    idiomaDefault: "es",
     loginMessageType: 'login-message',
     wrongPassword: 'Contraseña incorrecta.',
     noUserFound: 'No se encuentra el usuario',
@@ -6,5 +7,6 @@ module.exports = {
     dirPlanosAtracciones: "./contenido/planosAtracciones/",
     dirVideosAtracciones: "./contenido/videosAtracciones/",
     dirAudiosAtracciones: "./contenido/audiosAtracciones/",
-    dirImagenesAtracciones: "./contenido/imagenesAtracciones/"
+    dirImagenesAtracciones: "./contenido/imagenesAtracciones/",
+    dirImagenesNotificacionesPush: "./contenido/imagenesNotificacionesPush/"
 };

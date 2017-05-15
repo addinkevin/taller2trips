@@ -9,10 +9,56 @@
 
     </div>
 
+    <!-- Error header -->
+    <div id="errorContainer">
+
+    </div>
+    <div id="infoContainer">
+
+    </div>
+
     <div class="panel panel-default">
+        <div class="panel-heading">Filtros</div>
         <div class="panel-body">
-            <form class="buscadorRecorridos">
-                <input ng-model="search.nombre" type="text" class="form-control formularioBuscar" placeholder="Buscar...">
+            <form class="buscadorResenias">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-btn search-panel">
+                            <select class="form-control" style="width:auto;"
+                                    ng-model="filtroSelected"
+                                    ng-options="filtro as (filtro.descripcion) for filtro in opcionesDeFiltro">
+                            </select>
+                        </div>
+
+                        <input type="text" class="form-control" ng-model="contenidoFiltro">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" ng-click="agregarFiltro()">Agregar filtro</button>
+                        </span>
+                    </div>
+                </div>
+
+                <div id="filtros" class="form-group">
+                    <div class="row">
+                        <div class="col-sm-3" ng-repeat="(id,filtro) in filtros">
+                            <div class="panel panel-default box-filtro">
+                                <div class="panel-body">
+                                    <div class="text-center">
+                                        <input type="button" style="float:right;"
+                                               class="link" ng-click="deleteFiltro(id)" value="&times;">
+
+                                        <p><strong>{{filtro.filtro.descripcion}}</strong></p>
+                                        <p>{{filtro.contenido}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button class="btn btn-primary" type="button" ng-click="buscarRecorridos()">Buscar reseñas<span class="glyphicon glyphicon-search" style="margin-left:5%;"></span></button>
+                </div>
             </form>
         </div>
     </div>
@@ -64,5 +110,4 @@
             </div>
         </div>
     </div>
-
 </div>

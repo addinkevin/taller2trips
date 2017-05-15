@@ -4,6 +4,7 @@ var router = express.Router();
 var Ciudad = require('../models/ciudades');
 var Atraccion = require('../models/atracciones');
 var almacen = require('../utils/helperAlmacenamiento');
+var normalizar = require('../utils/normalizar');
 
 router.get('/ciudad', function(req, res) {
     Ciudad.find(function (err, ciudades) {
@@ -34,8 +35,8 @@ router.get('/ciudad/:id_ciudad', function(req, res) {
 router.post('/ciudad', function(req, res) {
     req.body.descripcion = JSON.parse(req.body.descripcion);
     var ciudad = new Ciudad({
-        nombre: req.body.nombre,
-        pais: req.body.pais,
+        nombre: normalizar.nombre(req.body.nombre),
+        pais: normalizar.nombre(req.body.pais),
         descripcion: req.body.descripcion
     });
 
@@ -53,10 +54,9 @@ router.post('/ciudad', function(req, res) {
 router.put('/ciudad', function(req, res) {
     req.body.descripcion = JSON.parse(req.body.descripcion);
     var ciudad = {
-        nombre: req.body.nombre,
+        nombre: normalizar.nombre(req.body.nombre),
         descripcion: req.body.descripcion,
-        pais: req.body.pais,
-        foto: req.body.foto
+        pais: normalizar.nombre(req.body.pais)
     };
 
     Ciudad.update({_id: req.body._id}, ciudad, function (err) {

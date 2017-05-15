@@ -29,6 +29,7 @@ public class AtraccionesListAdp extends BaseAdapter {
     private final TripTP tripTP;
     List<Atraccion> atraccionItems; /**< Lista de todos los items de List*/
     ArrayList<Boolean> needUpdate;
+    private Boolean onlyFavs = null;
 
     public AtraccionesListAdp(Activity activity, List<Atraccion> atraccionItems) {
         this.activity = activity;
@@ -51,8 +52,17 @@ public class AtraccionesListAdp extends BaseAdapter {
         atraccionItems.get(index).setIsFav(isFav);
     }
 
+    public void setIsVisit(int index, boolean isVisit) {
+        atraccionItems.get(index).setIsVisit(isVisit);
+    }
+
+
     public void setId_fav(int index, String id_fav) {
         atraccionItems.get(index).setId_fav(id_fav);
+    }
+
+    public void setId_visit(int index, String id_visit) {
+        atraccionItems.get(index).setId_visit(id_visit);
     }
 
     public void addImgToPos(Bitmap img, int imgID) {
@@ -60,10 +70,15 @@ public class AtraccionesListAdp extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public void setOnlyFavs(Boolean onlyFavs) {
+        this.onlyFavs = onlyFavs;
+    }
+
     private class ViewHolder {
         int position = -1;
         ImageView atraccionPic;
         ImageView favPic;
+        ImageView visitPic;
         TextView atraccionName;
         boolean setted = false;
     }
@@ -94,7 +109,15 @@ public class AtraccionesListAdp extends BaseAdapter {
             holder = new ViewHolder();
             holder.atraccionName = (TextView) view.findViewById(R.id.textView2);
             holder.atraccionPic = (ImageView) view.findViewById(R.id.imageView);
-            holder.favPic = (ImageView) view.findViewById(R.id.starFav);
+            holder.favPic = (ImageView) view.findViewById(R.id.heartFav);
+            holder.visitPic = (ImageView) view.findViewById(R.id.starVisit);
+
+            if (onlyFavs != null) {
+                if (onlyFavs)
+                    holder.visitPic.setVisibility(View.GONE);
+                else
+                    holder.favPic.setVisibility(View.GONE);
+            }
 
             final Atraccion rowPos = atraccionItems.get(position);
 
@@ -138,6 +161,43 @@ public class AtraccionesListAdp extends BaseAdapter {
                 }
             });
 
+            holder.visitPic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (rowPos.isVisitSetted()) {
+                        String url = tripTP.getUrl() + Consts.VISITADO;
+
+                        if (!rowPos.isVisit()) {
+                            rowPos.setIsVisit(null); //block button
+                            JSONObject body = new JSONObject();
+                            try {
+                                body.put(Consts.ID_ATR, rowPos._id);
+                                body.put(Consts.ID_USER, tripTP.getUserID_fromServ());
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                            Map<String,String> header = Consts.getHeaderJSON();
+
+                            InternetClient client = new InfoClient(activity.getApplicationContext(),
+                                    Consts.GEToPOST_ATR_VISIT, url, header, Consts.POST, body.toString(), true, position);
+                            client.createAndRunInBackground();
+
+                        } else {
+                            if (rowPos.getId_visit() != null) {
+                                rowPos.setIsVisit(null); //block button
+                                String urlDelete = url + "/" + rowPos.getId_visit();
+                                InternetClient client = new InfoClient(activity.getApplicationContext(),
+                                        Consts.DELETE_ATR_VISIT, urlDelete, null, Consts.DELETE, null, true, position);
+                                client.createAndRunInBackground();
+
+                            }
+
+                        }
+                    }
+                }
+            });
+
             if (!rowPos.fotosBitmap.isEmpty()) {
                 holder.atraccionPic.setImageBitmap(rowPos.fotosBitmap.get(0));
                 if (!tripTP.isLogin()) {
@@ -150,11 +210,17 @@ public class AtraccionesListAdp extends BaseAdapter {
                 holder.setted =true;
             }
 
-            if (tripTP.isLogin() && rowPos.isFavSetted()) {
+            if (tripTP.isLogin() && (rowPos.isFavSetted() || rowPos.isVisitSetted())) {
                 if (rowPos.isFav()) {
-                    holder.favPic.setImageResource(R.drawable.star);
+                    holder.favPic.setImageResource(R.drawable.heart);
                 } else {
-                    holder.favPic.setImageResource(R.drawable.star_outline);
+                    holder.favPic.setImageResource(R.drawable.heart_outline);
+                }
+
+                if (rowPos.isVisit()) {
+                    holder.visitPic.setImageResource(R.drawable.star);
+                } else {
+                    holder.visitPic.setImageResource(R.drawable.star_outline);
                 }
             }
 

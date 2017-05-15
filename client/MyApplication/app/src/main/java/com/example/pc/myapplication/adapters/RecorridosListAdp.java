@@ -21,13 +21,14 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class RecorridosListAdp extends BaseAdapter {
 
     private final Activity activity;
     private final TripTP tripTP;
-    List<Recorrido> atraccionItems; /**< Lista de todos los items de List*/
-    ArrayList<Boolean> needUpdate;
+    private List<Recorrido> atraccionItems; /**< Lista de todos los items de List*/
+    private ArrayList<Boolean> needUpdate;
 
     public RecorridosListAdp(Activity activity, List<Recorrido> atraccionItems) {
         this.activity = activity;
@@ -93,7 +94,7 @@ public class RecorridosListAdp extends BaseAdapter {
             holder = new ViewHolder();
             holder.recorridoName = (TextView) view.findViewById(R.id.textView2);
             holder.recorridoPic = (ImageView) view.findViewById(R.id.imageView);
-            holder.favPic = (ImageView) view.findViewById(R.id.starFav);
+            holder.favPic = (ImageView) view.findViewById(R.id.heartFav);
 
             final Recorrido rowPos = atraccionItems.get(position);
 
@@ -116,8 +117,10 @@ public class RecorridosListAdp extends BaseAdapter {
                                 e.printStackTrace();
                             }
 
+                            Map<String,String> header = Consts.getHeaderJSON();
+
                             InternetClient client = new InfoClient(activity.getApplicationContext(),
-                                    Consts.GEToPOST_REC_FAV, url, null, Consts.POST, body.toString(), true, position);
+                                    Consts.GEToPOST_REC_FAV, url, header, Consts.POST, body.toString(), true, position);
                             client.createAndRunInBackground();
 
                         } else {
@@ -149,9 +152,9 @@ public class RecorridosListAdp extends BaseAdapter {
 
             if (tripTP.isLogin() && rowPos.isFavSetted()) {
                 if (rowPos.isFav()) {
-                    holder.favPic.setImageResource(R.drawable.star);
+                    holder.favPic.setImageResource(R.drawable.heart);
                 } else {
-                    holder.favPic.setImageResource(R.drawable.star_outline);
+                    holder.favPic.setImageResource(R.drawable.heart_outline);
                 }
             }
 

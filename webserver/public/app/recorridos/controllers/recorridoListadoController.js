@@ -2,10 +2,77 @@ var recorridos = angular.module('tripsApp.recorridos');
 
 recorridos.controller('recorridoListadoController', [ '$scope', '$http', '$location', 'IdiomaService', 'RecorridosService',
     function($scope, $http, $location, IdiomaService, RecorridosService) {
+
+        function setErrorMsg(msgError) {
+            var msg = "<div class='alert alert-danger alert-fixed text-center'>" +
+                "<button type='button' class='close' data-dismiss='alert'>&times;</button>" +
+                msgError +
+                "</div>";
+            $("#errorContainer").html(msg);
+        }
+
+        function setInfoMsg(msgInfo) {
+            var msg = "<div class='alert alert-info alert-fixed text-center'>" +
+                msgInfo +
+                "</div>";
+            $("#infoContainer").html(msg);
+        }
+
         $scope.recorridos = [];
         $scope.myInterval = 0;
         $scope.noWrapSlides = false;
         $scope.active = 0;
+
+        $scope.opcionesDeFiltro = [
+            {
+                'filtroName': 'nombre_recorrido',
+                'descripcion': 'Nombre del recorrido'
+            },
+            {
+                'filtroName': 'nombre_ciudad',
+                'descripcion': 'Ciudad'
+            }
+        ];
+
+        $scope.filtroSelected = $scope.opcionesDeFiltro[0];
+        $scope.filtros = [];
+        $scope.contenidoFiltro = "";
+
+        $scope.agregarFiltro = function() {
+            if ($scope.contenidoFiltro == "") {
+                return;
+            }
+            var element = $scope.filtros.find(function(element) {
+                return element.filtro == $scope.filtroSelected;
+            });
+            if (element) {
+                element.contenido = $scope.contenidoFiltro;
+            } else {
+                $scope.filtros.push( {
+                    filtro: $scope.filtroSelected,
+                    contenido: $scope.contenidoFiltro
+                });
+            }
+            $scope.contenidoFiltro = "";
+        };
+
+        $scope.deleteFiltro = function(id) {
+            $scope.filtros.splice(id,1);
+        };
+
+        $scope.buscarRecorridos = function() {
+            console.log("Buscando recorridos...");
+            RecorridosService.getResultados($scope.filtros).then(
+                function success(res) {
+                    $scope.recorridos = res.data;
+                    makeSlides();
+                    makeIdiomas();
+                },
+                function error(res) {
+                    setErrorMsg("No se pudo cargar el listado de recorridos.");
+                }
+            )
+        };
 
         $scope.deleteRecorrido = function (recorrido) {
             RecorridosService.deleteRecorrido(recorrido).then(function success(res) {
@@ -86,7 +153,5 @@ recorridos.controller('recorridoListadoController', [ '$scope', '$http', '$locat
         };
 
         $scope.init();
-
-
 
 }]);
