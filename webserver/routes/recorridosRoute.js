@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var Recorrido = require('../models/recorridos');
+var normalizar = require('../utils/normalizar');
 
 router.get('/recorridoPopulate', function(req, res) {
     Recorrido
@@ -114,9 +115,9 @@ router.post('/recorrido', function(req, res) {
 
     atracciones = req.body.ids_atracciones.split(",");
     var recorrido = new Recorrido({
-        nombre: req.body.nombre,
+        nombre: normalizar.nombre(req.body.nombre),
         ids_atracciones: atracciones,
-        id_ciudad: req.body.id_ciudad,
+        id_ciudad: normalizar.nombre(req.body.id_ciudad),
         descripcion: req.body.descripcion
     });
 
@@ -135,10 +136,10 @@ router.put('/recorrido', function(req, res) {
     req.body.descripcion = JSON.parse(req.body.descripcion);
     atracciones = req.body.ids_atracciones.split(",");
     var recorrido = {
-        nombre: req.body.nombre,
+        nombre: normalizar.nombre(req.body.nombre),
         descripcion: req.body.descripcion,
         ids_atracciones: atracciones,
-        id_ciudad: req.body.id_ciudad
+        id_ciudad: normalizar.nombre(req.body.id_ciudad)
     };
 
     Recorrido.update({_id: req.body._id}, recorrido, function (err) {
