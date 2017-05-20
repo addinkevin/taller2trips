@@ -71,6 +71,8 @@ router.get('/atraccion/:id_atraccion', function(req, res) {
 
 router.post('/atraccion', function(req, res) {
     req.body.descripcion = JSON.parse(req.body.descripcion);
+    var puntos = req.body.ids_puntos.split(",");
+
     var atraccion = new Atraccion({
         nombre: req.body.nombre,
         descripcion: req.body.descripcion,
@@ -82,7 +84,9 @@ router.post('/atraccion', function(req, res) {
         duracion: req.body.duracion,
         clasificacion: req.body.clasificacion,
         latitud: req.body.latitud,
-        longitud: req.body.longitud
+        longitud: req.body.longitud,
+        recorrible: req.body.recorrible,
+        ids_puntos: puntos
     });
 
     atraccion.save(function(err, atraccion) {
@@ -98,6 +102,8 @@ router.post('/atraccion', function(req, res) {
 
 router.put('/atraccion', function(req, res) {
     req.body.descripcion = JSON.parse(req.body.descripcion);
+    var puntos = req.body.ids_puntos.split(",");
+    
     var atraccion = {
         nombre: req.body.nombre,
         descripcion: req.body.descripcion,
@@ -109,7 +115,9 @@ router.put('/atraccion', function(req, res) {
         duracion: req.body.duracion,
         clasificacion: req.body.clasificacion,
         latitud: req.body.latitud,
-        longitud: req.body.longitud
+        longitud: req.body.longitud,
+        recorrible: req.body.recorrible,
+        ids_puntos: puntos
     }
 
     Atraccion.update({_id: req.body._id}, atraccion, function (err) {
