@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 
 var atraccionSchema = mongoose.Schema({
     // mongoose automaticamente agrega el campo id que corresponde al _id de mongodb
@@ -26,7 +27,9 @@ var atraccionSchema = mongoose.Schema({
     latitud: Number,
     longitud: Number,
     idiomas_audio: [String],
-    imagenes: [String]
+    imagenes: [String],
+    ids_puntos: [{ type: Schema.Types.ObjectId, ref: 'PuntoInteres'}],
+    recorrible: Boolean
 });
 
 module.exports = mongoose.model('Atraccion', atraccionSchema);
