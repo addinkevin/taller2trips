@@ -101,7 +101,7 @@ function Atraccion() {
     this.videos = [];
     this.planos = [];
     this.mapInfo = {};
-
+    this.ids_puntos = [];
 }
 
 atraccionesApp.controller('atraccionesAddEditController',
@@ -719,6 +719,27 @@ atraccionesApp.controller('atraccionesAddEditController',
             };
 
             $scope.inicializar();
+
+            // Puntos de interes
+            var move = function (origin, destination) {
+                var temp = $scope.atraccion.ids_puntos[destination];
+                $scope.atraccion.ids_puntos[destination] = $scope.atraccion.ids_puntos[origin];
+                $scope.atraccion.ids_puntos[origin] = temp;
+            };
+
+            $scope.listadoMoveUp = function(id, punto) {
+                if (id == 0) return;
+                move(id, id-1);
+            };
+
+            $scope.listadoMoveDown = function(id, punto) {
+                if (id == $scope.atraccion.ids_puntos.length -1) return;
+                move(id, id+1);
+            };
+
+            $scope.listadoRemove = function(id, punto) {
+                $scope.atraccion.ids_puntos.splice(id,1);
+            };
         }
     ]
 );

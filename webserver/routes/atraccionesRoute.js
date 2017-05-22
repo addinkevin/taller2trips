@@ -67,6 +67,27 @@ router.get('/atraccion/:id_atraccion', function(req, res) {
         }
     });
 });
+
+router.get('/atraccionPopulate/:id_atraccion', function(req, res) {
+    var search = Atraccion
+        .find({_id: req.params.id_atraccion})
+        .populate('ids_puntos');
+
+    search.exec(function(err, atraccion) {
+        if (err) {
+            res.send(err);
+        }
+        else if (atraccion === null) {
+            res.status(404).json({"msj": "atraccion no encontrado"});
+        }
+        else {
+            var idioma = req.headers["idioma"];
+            atraccion.clasificacion = helperAtracciones.obtenerClasificacion(atraccion.clasificacion, idioma);
+            res.status(200).json(atraccion);
+        }
+    });
+
+});
         
 
 router.post('/atraccion', function(req, res) {
