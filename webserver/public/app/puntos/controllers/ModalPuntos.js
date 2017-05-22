@@ -57,11 +57,14 @@ puntos.controller('ModalInstanceCtrl', ['$scope', '$uibModalInstance', 'PuntosSe
         };
 
         $scope.uploadImageClick = function() {
+            console.log(event);
             if (!event.target.files[0]) return;
+            console.log(event.target);
             $scope.punto.imagenes.push({
                 imgSrc: window.URL.createObjectURL(event.target.files[0]),
                 imgFile: event.target.files[0]
             });
+            event.target.value = "";
             $scope.$digest();
         };
 
