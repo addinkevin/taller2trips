@@ -156,6 +156,15 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
             });
     };
 
+    this.obtenerIdsPuntos = function(puntos) {
+        var ids = [];
+        for (var i = 0; i < puntos.length; i++) {
+            ids.push(puntos[i]._id);
+        }
+
+        return ids;
+    };
+
     this.addAtraccion = function(atraccion, callback) {
         var data = {
             "nombre": atraccion.nombre,
@@ -168,7 +177,9 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
             "clasificacion": atraccion.clasificacionSelected,
             "id_ciudad": atraccion.ciudadSelected._id,
             "latitud": atraccion.lat,
-            "longitud": atraccion.lng
+            "longitud": atraccion.lng,
+            "recorrible": atraccion.recorrible,
+            "ids_puntos": ""
         };
 
         return $http({
@@ -186,6 +197,7 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
     };
 
     this.editAtraccion = function (atraccion, callback) {
+        console.log("IDSPUNTOS:", this.obtenerIdsPuntos(atraccion.ids_puntos).join());
         var data = {
             "_id": atraccion._id,
             "nombre": atraccion.nombre,
@@ -198,7 +210,9 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
             "clasificacion": atraccion.clasificacionSelected,
             "id_ciudad": atraccion.ciudadSelected._id,
             "latitud": atraccion.lat,
-            "longitud": atraccion.lng
+            "longitud": atraccion.lng,
+            "recorrible": atraccion.recorrible,
+            "ids_puntos": this.obtenerIdsPuntos(atraccion.ids_puntos).join()
         };
 
         return $http({
@@ -227,7 +241,7 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
     };
 
     this.getAtraccion = function(atraccionId, callback) {
-        return $http.get('/api/atraccion/'+atraccionId).then(
+        return $http.get('/api/atraccionPopulate/'+atraccionId).then(
             function success(res) {
                 callback(res.data, null);
             },

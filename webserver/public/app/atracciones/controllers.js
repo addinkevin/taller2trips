@@ -105,8 +105,8 @@ function Atraccion() {
 }
 
 atraccionesApp.controller('atraccionesAddEditController',
-    [ '$scope', '$location', '$http','$routeParams', 'ServerService', '$q', 'IdiomaService', '$timeout',
-        function ($scope, $location, $http, $routeParams, ServerService, $q, IdiomaService, $timeout) {
+    [ '$scope', '$location', '$http','$routeParams', 'ServerService', '$q', 'IdiomaService', '$timeout', 'PuntosService',
+        function ($scope, $location, $http, $routeParams, ServerService, $q, IdiomaService, $timeout, PuntosService) {
 
             $scope.sendingInformation = false;
             $scope.editForm = $routeParams.id;
@@ -115,11 +115,6 @@ atraccionesApp.controller('atraccionesAddEditController',
             $scope.atraccion.idiomas = [];
             $scope.idiomaFormulario = $scope.atraccion.idiomas[0];
             $scope.deleteRequests = [];
-
-            $scope.alert = {
-                class : 'hide',
-                msg: ''
-            };
 
             $scope.updateDescripcion = function() {
                 $scope.idiomaFormulario.statusModificado = true;
@@ -219,19 +214,35 @@ atraccionesApp.controller('atraccionesAddEditController',
                     var parametro = validateList[i].parametro;
                     var msg = validateList[i].msg;
                     if ((!validador && !atraccion[parametro]) || (validador && !validador(atraccion[parametro]))) {
-                        $scope.alert.msg = msg;
+                        setFormularioErrorMsg(msg);
                         return false;
                     }
                 }
                 return true;
             };
 
-            $scope.setInfoMsg = function(msgError) {
-                var msg = "<div class='alert alert-info alert-fixed text-center'>" +
+            function setFormularioErrorMsg(msgError) {
+                var msg = "<div class='alert alert-danger text-center'>" +
+                    "<button type='button' class='close' data-dismiss='alert'>&times;</button>" +
                     msgError +
                     "</div>";
+                $("#error-en-formulario").html(msg);
+            }
+
+            function setErrorMsg(msgError) {
+                var msg = "<div class='alert alert-danger alert-fixed text-center'>" +
+                    "<button type='button' class='close' data-dismiss='alert'>&times;</button>" +
+                    msgError +
+                    "</div>";
+                $("#errorContainer").html(msg);
+            }
+
+            function setInfoMsg(msgInfo) {
+                var msg = "<div class='alert alert-info alert-fixed text-center'>" +
+                    msgInfo +
+                    "</div>";
                 $("#infoContainer").html(msg);
-            };
+            }
 
 
             $scope.createInfoInternacionalizacionAtraccionExistente = function() {
@@ -354,9 +365,17 @@ atraccionesApp.controller('atraccionesAddEditController',
                                 'horaCierre': 'hora_cierre',
                                 'lat': 'latitud',
                                 'lng': 'longitud',
-                                'idiomasAudio': 'idiomas_audio'
+                                'idiomasAudio': 'idiomas_audio',
+                                'recorrible': 'recorrible'
                             }
                         );
+
+
+                        $scope.atraccion.ids_puntos = data.ids_puntos;
+                        for (var i = 0; i < data.ids_puntos.length;i++) {
+                            var punto = data.ids_puntos[i];
+                            PuntosService.loadRecursosPunto(punto);
+                        }
 
                         $timeout($scope.createInfoInternacionalizacionAtraccionExistente, 1);
 
@@ -375,12 +394,9 @@ atraccionesApp.controller('atraccionesAddEditController',
             };
 
             $scope.editAtraccion = function(atraccion) {
-                if (!$scope.validateAtraccion(atraccion)) {
-                    $scope.alert.class = '';
-                    return;
-                }
+                if (!$scope.validateAtraccion(atraccion)) return;
 
-                $scope.setInfoMsg("Enviando información al servidor");
+                setInfoMsg("Enviando información al servidor");
                 $scope.sendingInformation = true;
 
                 ServerService.editAtraccion(atraccion, function(data, err) {
@@ -493,7 +509,7 @@ atraccionesApp.controller('atraccionesAddEditController',
                     imgSrc: window.URL.createObjectURL(event.target.files[0]),
                     imgFile: event.target.files[0]
                 });
-                console.log($scope.atraccion.imagenes);
+                event.target.value = "";
                 $scope.$digest();
             };
 
@@ -506,6 +522,7 @@ atraccionesApp.controller('atraccionesAddEditController',
                     vidSrc: window.URL.createObjectURL(event.target.files[0]),
                     vidFile: event.target.files[0]
                 });
+                event.target.value = "";
                 $scope.$digest();
             };
 
@@ -530,6 +547,7 @@ atraccionesApp.controller('atraccionesAddEditController',
                     $scope.atraccion.audios[$scope.idiomaFormulario.code].push(newAudio);
                 }
 
+                event.target.value = "";
                 $scope.$digest();
             };
 
@@ -544,6 +562,7 @@ atraccionesApp.controller('atraccionesAddEditController',
                     imgSrc: window.URL.createObjectURL(event.target.files[0]),
                     imgFile: event.target.files[0]
                 });
+                event.target.value = "";
                 $scope.$digest();
             };
 
@@ -564,6 +583,10 @@ atraccionesApp.controller('atraccionesAddEditController',
                         console.log(err.msg);
                     }
                 });
+            };
+
+            $scope.procesarPuntosDeInteres = function(atraccion) {
+                return PuntosService.procesarPuntosDeInteres(atraccion);
             };
 
             $scope.addRecursosImagenes = function(atraccion) {
@@ -595,30 +618,30 @@ atraccionesApp.controller('atraccionesAddEditController',
                 var promiseImagenes = $scope.addRecursosImagenes(atraccion);
                 var promiseVideos = $scope.addRecursosVideos(atraccion);
                 var promiseAudios = $scope.addRecursosAudios(atraccion);
+                var promisePuntosDeInteres = $scope.procesarPuntosDeInteres(atraccion);
 
-                return $q.all([ promisePlanos, promiseImagenes, promiseAudios, promiseVideos]);
+                return $q.all([ promisePlanos, promiseImagenes, promiseAudios, promiseVideos, promisePuntosDeInteres]);
             };
 
             $scope.addAtraccion = function(atraccion) {
-                if (!$scope.validateAtraccion(atraccion)) {
-                    $scope.alert.class = '';
-                    return;
-                }
+                if (!$scope.validateAtraccion(atraccion)) return;
 
-                $scope.setInfoMsg("Enviando información al servidor...");
+                setInfoMsg("Enviando información al servidor...");
                 $scope.sendingInformation = true;
 
                 ServerService.addAtraccion(atraccion, function(data, err) {
                     if (err) {
-                        console.log(err.msg);
+                        setErrorMsg(err.msg);
                         $location.url('/atracciones/');
                     } else {
                         $scope.addRecursos(atraccion).then(
                             function success() {
-                                $location.url('/atracciones/');
+                                ServerService.editAtraccion(atraccion, function(data, err) {
+                                    $location.url('/atracciones/');
+                                });
                             },
                             function error() {
-                                $location.url('/atracciones/');
+                                setErrorMsg("Error al guardar la información de la atracción.");
                             }
                         );
                     }
@@ -629,6 +652,7 @@ atraccionesApp.controller('atraccionesAddEditController',
                 $scope.loadCiudades();
                 if ($scope.editForm) {
                     $scope.initEdit();
+                    console.log($scope.atraccion);
                 } else {
                     $scope.initAdd();
                 }
@@ -739,7 +763,15 @@ atraccionesApp.controller('atraccionesAddEditController',
 
             $scope.listadoRemove = function(id, punto) {
                 $scope.atraccion.ids_puntos.splice(id,1);
+
+                if (punto._id === undefined) return;
+
+                $scope.deleteRequests.push(function() {
+                    return PuntosService.deletePunto(punto);
+                });
             };
+
+
         }
     ]
 );

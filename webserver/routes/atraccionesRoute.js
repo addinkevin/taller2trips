@@ -70,7 +70,7 @@ router.get('/atraccion/:id_atraccion', function(req, res) {
 
 router.get('/atraccionPopulate/:id_atraccion', function(req, res) {
     var search = Atraccion
-        .find({_id: req.params.id_atraccion})
+        .findById({_id: req.params.id_atraccion})
         .populate('ids_puntos');
 
     search.exec(function(err, atraccion) {
@@ -81,6 +81,7 @@ router.get('/atraccionPopulate/:id_atraccion', function(req, res) {
             res.status(404).json({"msj": "atraccion no encontrado"});
         }
         else {
+            console.log(atraccion);
             var idioma = req.headers["idioma"];
             atraccion.clasificacion = helperAtracciones.obtenerClasificacion(atraccion.clasificacion, idioma);
             res.status(200).json(atraccion);
@@ -92,7 +93,6 @@ router.get('/atraccionPopulate/:id_atraccion', function(req, res) {
 
 router.post('/atraccion', function(req, res) {
     req.body.descripcion = JSON.parse(req.body.descripcion);
-    var puntos = req.body.ids_puntos.split(",");
 
     var atraccion = new Atraccion({
         nombre: req.body.nombre,
@@ -107,7 +107,6 @@ router.post('/atraccion', function(req, res) {
         latitud: req.body.latitud,
         longitud: req.body.longitud,
         recorrible: req.body.recorrible,
-        ids_puntos: puntos
     });
 
     atraccion.save(function(err, atraccion) {
@@ -139,7 +138,7 @@ router.put('/atraccion', function(req, res) {
         longitud: req.body.longitud,
         recorrible: req.body.recorrible,
         ids_puntos: puntos
-    }
+    };
 
     Atraccion.update({_id: req.body._id}, atraccion, function (err) {
         if (err) {

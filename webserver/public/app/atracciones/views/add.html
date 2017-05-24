@@ -26,6 +26,8 @@
     <!-- Error header -->
     <div id="infoContainer">
     </div>
+    <div id="errorContainer">
+    </div>
 
     <div class="panel-custom" ng-show="ciudades.length == 0">
         <h3 class="subheader">No hay ciudades agregadas. Agrega una ciudad primero.</h3>
@@ -85,11 +87,19 @@
                     </div>
                 </div>
 
-                <!-- Plano -->
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Plano</label>
+                    <label class="col-sm-2 col-form-label">Recorrible</label>
                     <div class="col-sm-10">
-                        <h4>Información</h4>
+                        <p>¿La atracción es recorrible? Si es recorrible, entonces deberá subir un plano y al menos un punto de interés.</p>
+                        <input type="checkbox" ng-model="atraccion.recorrible"> Recorrible
+                    </div>
+                </div>
+
+                <!-- Plano -->
+                <div class="form-group row" ng-show="atraccion.recorrible">
+                    <label class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-10">
+                        <h4>Información sobre el plano a subir</h4>
                         <p>El formato de la imagen debe ser png.</p>
                         <p>El tamaño de la imagen debería ser 1920x1080 para una mejor visualización en la aplicación móvil.</p>
                         <label class="btn btn-primary">
@@ -111,7 +121,7 @@
                                     <li class="list-group-item clearfix" ng-repeat="(id,punto) in atraccion.ids_puntos">
                                         {{punto.nombre}}
                                         <span class="pull-right">
-                                            <span class="btn btn-xs btn-default" ng-click="editarPunto(atraccion,punto)">Editar</span>
+                                            <span class="btn btn-xs btn-default" ng-click="editarPunto(atraccion,punto, id)">Editar</span>
 
                                             <span class="btn btn-xs btn-default" ng-click="listadoMoveUp(id)">
                                                 <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
@@ -236,10 +246,9 @@
                     </div>
                 </div>
 
-                <div class="alert alert-danger {{alert.class}}">
-                    {{alert.msg}}
+                <!-- Error header -->
+                <div id="error-en-formulario">
                 </div>
-
 
                 <div class="form-group row">
                     <button type="button" ng-click="submitAtraccion()" class="btn btn-primary center-block">{{submitButton}}</button>

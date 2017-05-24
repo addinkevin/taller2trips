@@ -7,6 +7,8 @@ puntos.controller('ModalPuntos', ['$scope', '$uibModal', 'PuntosService', functi
             ariaDescribedBy: 'modal-body',
             templateUrl: 'app/puntos/views/form.html',
             controller: 'ModalInstanceCtrl',
+            keyboard: false,
+            backdrop: 'static',
             scope: $scope,
             size: 'lg',
             resolve: {
@@ -28,8 +30,15 @@ puntos.controller('ModalPuntos', ['$scope', '$uibModal', 'PuntosService', functi
         })
     };
 
-    $scope.editarPunto = function(atraccion, punto) {
+    $scope.editarPunto = function(atraccion, punto, id) {
         $scope.showFormPuntos(punto).then(function (result) {
+            for (var i = 0; i < result.deleteRequests.length; i++) {
+                $scope.deleteRequests.push(result.deleteRequests[i]);
+            }
+
+            result.deleteRequests = [];
+
+            atraccion.ids_puntos[id] = result;
 
         }, function() {
 
@@ -39,10 +48,18 @@ puntos.controller('ModalPuntos', ['$scope', '$uibModal', 'PuntosService', functi
 
 puntos.controller('ModalInstanceCtrl', ['$scope', '$uibModalInstance', 'PuntosService', 'IdiomaService', 'punto',
     function ($scope, $uibModalInstance, PuntosService, IdiomaService, punto) {
-        $scope.punto = punto;
+        $scope.punto = PuntosService.copiarPunto(punto);
 
         $scope.idiomas = IdiomaService.getIdiomas();
         $scope.idiomaModalSelected = $scope.idiomas[0];
+
+        function setFormularioErrorMsg(msgError) {
+            var msg = "<div class='alert alert-danger text-center'>" +
+                "<button type='button' class='close' data-dismiss='alert'>&times;</button>" +
+                msgError +
+                "</div>";
+            $("#error-en-formulario-punto").html(msg);
+        }
 
         $scope.ok = function () {
             $uibModalInstance.close($scope.punto);
@@ -53,13 +70,52 @@ puntos.controller('ModalInstanceCtrl', ['$scope', '$uibModalInstance', 'PuntosSe
         };
 
         $scope.submitPunto = function() {
+            if (!estaFormularioOk()) return;
             $uibModalInstance.close($scope.punto);
         };
 
+        function checkNombre() {
+            if ($scope.punto.nombre.length == 0) {
+                setFormularioErrorMsg("Debe ingresar un nombre para el punto de interés");
+                return false;
+            }
+            return true;
+        }
+
+        function checkDescripcion() {
+            var alMenosUnIdioma = false;
+            for (var i = 0; i < $scope.idiomas.length; i++) {
+                var idioma = $scope.idiomas[i];
+                if ($scope.punto.descripcion[idioma.code] != "") {
+                    alMenosUnIdioma = true;
+                    break;
+                }
+            }
+
+            if (!alMenosUnIdioma) {
+                setFormularioErrorMsg("Debe ingresar la descripción del punto de interés en al menos un idioma");
+            }
+
+            return alMenosUnIdioma;
+        }
+
+        function checkImagen() {
+            if ($scope.punto.imagenes.length == 0) {
+                setFormularioErrorMsg("Debe subir al menos una imagen para el punto de interés.");
+                return false;
+            }
+
+            return true;
+        }
+
+        function estaFormularioOk() {
+            console.log($scope.punto);
+            return  !(!checkNombre() || !checkDescripcion() || !checkImagen());
+        }
+
+
         $scope.uploadImageClick = function() {
-            console.log(event);
             if (!event.target.files[0]) return;
-            console.log(event.target);
             $scope.punto.imagenes.push({
                 imgSrc: window.URL.createObjectURL(event.target.files[0]),
                 imgFile: event.target.files[0]
@@ -71,14 +127,9 @@ puntos.controller('ModalInstanceCtrl', ['$scope', '$uibModalInstance', 'PuntosSe
         $scope.deleteImage = function(id, puntoImagen) {
             $scope.punto.imagenes.splice(id,1);
             if (!puntoImagen.imgFile) { // Alojada en el server hay que mandar el request de delete.
-                $scope.deleteRequests.push(
+                $scope.punto.deleteRequests.push(
                     function() {
-                        return new Promise.resolve();
-                        return ServerService.deleteImageAtraccion($scope.atraccion, atraccionImagen, function(data, error) {
-                            if (error) {
-                                console.log(error.msg);
-                            }
-                        });
+                        return PuntosService.deleteImagenPunto($scope.punto, puntoImagen);
                     }
                 );
             }
@@ -103,22 +154,44 @@ puntos.controller('ModalInstanceCtrl', ['$scope', '$uibModalInstance', 'PuntosSe
                 $scope.punto.audios[$scope.idiomaModalSelected.code].push(newAudio);
             }
 
+            event.target.value = "";
             $scope.$digest();
         };
 
         $scope.deleteAudio = function(id, puntoAudio) {
             $scope.punto.audios[$scope.idiomaFormulario.code].splice(id,1);
             if (!puntoAudio.audFile) { // Alojada en el server hay que mandar el request de delete.
-                $scope.deleteRequests.push(
+                $scope.punto.deleteRequests.push(
                     function() {
-                        return new Promise.resolve();
-                        return ServerService.deleteAudioAtraccion($scope.atraccion, atraccionAudio, function(data, error) {
-                            if (error) {
-                                console.log(error.msg);
-                            }
-                        });
+                        return PuntosService.deleteAudioPunto($scope.punto, puntoAudio);
                     }
                 );
             }
         };
+
+        $scope.uploadVideoClick = function(event) {
+            if (!event.target.files[0]) return;
+            if ($scope.punto.videos[0]) {
+                $scope.deleteVideo(0,$scope.punto.videos[0]);
+            }
+            $scope.punto.videos.push({
+                vidSrc: window.URL.createObjectURL(event.target.files[0]),
+                vidFile: event.target.files[0]
+            });
+            event.target.value = "";
+            $scope.$digest();
+        };
+
+        $scope.deleteVideo = function(id, puntoVideo) {
+            $scope.punto.videos.splice(id,1);
+            if (!puntoVideo.vidFile) { // Alojada en el server hay que mandar el request de delete.
+                $scope.punto.deleteRequests.push(
+                    function() {
+                        return PuntosService.deleteVideoPunto($scope.punto, puntoVideo);
+                    }
+                );
+            }
+        };
+
+
 }]);
