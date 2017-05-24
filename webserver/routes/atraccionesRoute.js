@@ -106,7 +106,7 @@ router.post('/atraccion', function(req, res) {
         clasificacion: req.body.clasificacion,
         latitud: req.body.latitud,
         longitud: req.body.longitud,
-        recorrible: req.body.recorrible,
+        recorrible: req.body.recorrible
     });
 
     atraccion.save(function(err, atraccion) {
@@ -137,8 +137,11 @@ router.put('/atraccion', function(req, res) {
         latitud: req.body.latitud,
         longitud: req.body.longitud,
         recorrible: req.body.recorrible,
-        ids_puntos: puntos
     };
+
+    if (req.body.ids_puntos != "") {
+        atraccion.ids_puntos = puntos;
+    }
 
     Atraccion.update({_id: req.body._id}, atraccion, function (err) {
         if (err) {

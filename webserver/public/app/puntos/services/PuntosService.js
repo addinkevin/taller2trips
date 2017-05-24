@@ -22,7 +22,7 @@ puntos.service('PuntosService', ['$http', 'IdiomaService', '$q', function ($http
     };
 
     this.loadPuntoVideo = function(punto) {
-        var vidUrl = '/api/punto/'+ punto._id + '/video';
+        var vidUrl = '/api/punto/'+ punto._id + '/video' + '?date=' + new Date().getTime();
         $http.get(vidUrl).then(
             function success(res) {
                 punto.videos.push({vidSrc:vidUrl});
@@ -220,7 +220,6 @@ puntos.service('PuntosService', ['$http', 'IdiomaService', '$q', function ($http
     };
 
     this.uploadRecursosPunto = function(punto) {
-        console.log("Subuiendo recursos de:", punto);
         var requests = [this.uploadImagenesPunto(punto),this.uploadAudiosPunto(punto),this.uploadVideosPunto(punto)];
         return $q.all(requests);
     };

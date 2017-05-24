@@ -197,7 +197,6 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
     };
 
     this.editAtraccion = function (atraccion, callback) {
-        console.log("IDSPUNTOS:", this.obtenerIdsPuntos(atraccion.ids_puntos).join());
         var data = {
             "_id": atraccion._id,
             "nombre": atraccion.nombre,
@@ -306,7 +305,6 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
 
         for (var i = 0; i < atraccion.videos.length; i++) {
             var vidFile = atraccion.videos[i].vidFile;
-            console.log(vidFile);
             if (vidFile) {
                 requests.push(this._uploadFormData(url, {
                     video: vidFile
@@ -382,7 +380,6 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
 
     this.deleteVideoAtraccion = function(atraccion, atraccionVideo, callback) {
         var vidUrl = atraccionVideo.vidSrc;
-        console.log(vidUrl);
         return $http.delete(vidUrl).then(
             function success() {
                 callback(null, null);

@@ -109,7 +109,6 @@ puntos.controller('ModalInstanceCtrl', ['$scope', '$uibModalInstance', 'PuntosSe
         }
 
         function estaFormularioOk() {
-            console.log($scope.punto);
             return  !(!checkNombre() || !checkDescripcion() || !checkImagen());
         }
 
@@ -192,6 +191,4 @@ puntos.controller('ModalInstanceCtrl', ['$scope', '$uibModalInstance', 'PuntosSe
                 );
             }
         };
-
-
 }]);
