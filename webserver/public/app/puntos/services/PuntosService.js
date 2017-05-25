@@ -236,11 +236,13 @@ puntos.service('PuntosService', ['$http', 'IdiomaService', '$q', function ($http
                 req = this.editPunto(atraccion, punto);
             }
 
-            req.then(function() {
-                return self.uploadRecursosPunto(punto);
-            });
+            var reqThen = (function(p) {
+                return req.then(function() {
+                    return self.uploadRecursosPunto(p);
+                });
+            }(punto))
 
-            requests.push(req);
+            requests.push(reqThen);
         }
 
         return $q.all(requests);
