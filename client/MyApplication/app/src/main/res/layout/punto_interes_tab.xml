@@ -17,7 +17,7 @@
         android:fillViewport="true"
         android:overScrollMode="never"
         android:scrollbars="vertical"
-        tools:context="com.example.pc.myapplication.AtraccionActivity">
+        tools:context="com.example.pc.myapplication.PuntoInteresActivity">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -204,16 +204,6 @@
 
                 </LinearLayout>
             </LinearLayout>
-
-            <com.google.android.gms.maps.MapView
-                android:id="@+id/map2"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginStart="5dp" />
 
             <TextView
                 android:id="@+id/video"

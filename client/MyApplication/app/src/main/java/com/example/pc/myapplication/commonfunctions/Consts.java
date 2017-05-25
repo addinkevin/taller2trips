@@ -1,6 +1,7 @@
 package com.example.pc.myapplication.commonfunctions;
 
 import android.app.Application;
+import android.content.IntentFilter;
 
 import com.example.pc.myapplication.application.TripTP;
 
@@ -178,6 +179,7 @@ public class Consts {
     public static final String CLASIFICACION = "clasificacion";
     public static final String ID_CIUDAD = "id_ciudad";
     public static final String FOTOS = "imagenes";
+    public static final String IDS_PUNTOS_INTERES = "ids_puntos_interes";
     public static final String IDIOMA = "idioma"; //tmb se usa como querry y header
     public static final String LATITUD = "latitud"; //tmb se usa como querry
     public static final String LONGITUD = "longitud";//tmb se usa como querry
@@ -189,6 +191,7 @@ public class Consts {
     public static final String LINK = "link";
     public static final String HAS_PUBLICIDAD = "hasPubli";
     public static final String PUBLICIDAD = "publicidad";
+    public static final String RECORRIBLE = "recorrible";
 
 
     //querry param
@@ -206,6 +209,13 @@ public class Consts {
     public static final int CANT_STARS = 5;
     public static final int DEF_RADIO = 25;
     public static final String DEF_IDIOMA = "en";
+    public static final String ATR_RECORRIBLE = "recatr";
+    public static final String GET_CHECK_AUD_PI = "AUDP";
+    public static final String GET_PI = "PI";
+    public static final String GET_CHECK_VID_PI = "VIDPI";
+    public static final String GET_ATR_IMG_S_PI = "IMGSPI";
+    public static final String GET_VID_THU_PI = "THUVIDPI";
+    public static final String PI = "/puntoInteres";
 
     public static Map<String, String> getSplexHeader(Application secret) {
        return getSplexHeader(secret, false);

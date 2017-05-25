@@ -43,6 +43,7 @@
     <string name="noVideo">There is no video to show.</string>
     <string name="comment">Comment</string>
     <string name="comments">Comments</string>
+    <string name="interest">Interest</string>
     <string name="review">Comment</string>
     <string name="comment_succes">Successful review.</string>
     <string name="comment_fail">Fail review.</string>
