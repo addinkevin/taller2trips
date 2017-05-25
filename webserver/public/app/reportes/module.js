@@ -1,0 +1,1 @@
+var reportes = angular.module("tripsApp.reportes", ['ngRoute']);
