@@ -61,6 +61,22 @@ reportes.controller("Report1Controller", [ '$scope', function($scope) {
             .attr("dy", ".71em")
             .style("text-anchor", "end")
             .text("Visitas");
+
+        // text label for the y axis
+        svg.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 0 - m.left)
+            .attr("x",0 - (h / 2))
+            .attr("dy", "1em")
+            .style("text-anchor", "middle")
+            .text("Visitas");
+
+        svg.append("text")
+            .attr("transform",
+                "translate(" + (w/2) + " ," +
+                (h + m.top + 20) + ")")
+            .style("text-anchor", "middle")
+            .text("Atracciones");
     }
 
     var data = [
