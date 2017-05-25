@@ -7,11 +7,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.pc.myapplication.AtraccionTab;
 import com.example.pc.myapplication.InternetTools.ImageClient;
 import com.example.pc.myapplication.InternetTools.InternetClient;
+import com.example.pc.myapplication.PuntoInteresTab;
 import com.example.pc.myapplication.application.TripTP;
-import com.example.pc.myapplication.ciudadesTools.Atraccion;
+import com.example.pc.myapplication.ciudadesTools.PuntoInteres;
 import com.example.pc.myapplication.commonfunctions.Consts;
 import com.example.pc.myapplication.singletons.NetClientsSingleton;
 
@@ -20,14 +20,19 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-public class ReceiverOnAtraccion extends BroadcastReceiver {
+/**
+ * Created by PC on 19/05/2017.
+ */
 
-    private AtraccionTab atrAct;
+public class ReceiverOnPuntoInteres extends BroadcastReceiver{
+
+    private PuntoInteresTab piTab;
     private View view;
 
-    public ReceiverOnAtraccion(AtraccionTab atraccionActivity, View view) {
-        this.atrAct = atraccionActivity;
+    public ReceiverOnPuntoInteres(PuntoInteresTab puntoInteresTab, View view) {
+        this.piTab = puntoInteresTab;
         this.view = view;
+
     }
 
     @Override
@@ -37,19 +42,19 @@ public class ReceiverOnAtraccion extends BroadcastReceiver {
             String jsonOut = intent.getStringExtra(Consts.JSON_OUT);
             if (jsonOut != null) {
                 try {
-                    Atraccion atraccion = new Atraccion(new JSONObject(jsonOut));
-                    atrAct.attachAtraccion(atraccion);
-                    List fotos = atraccion.fotosPath;
+                    PuntoInteres puntoInteres = new PuntoInteres(new JSONObject(jsonOut));
+                    piTab.attachPuntoInteres(puntoInteres);
+                    List fotos = puntoInteres.fotosPath;
 
-                    TripTP app =  atrAct.getAplicacion();
-                    String urlConst = app.getUrl() + Consts.ATRACC + "/" + atraccion._id
+                    TripTP app =  piTab.getAplicacion();
+                    String urlConst = app.getUrl() + Consts.PI + "/" + puntoInteres._id
                             + Consts.IMAGEN + "?" + Consts.FILENAME + "=";
 
                     for(int i = 0; i < fotos.size(); i++) {
                         String urlIMG = urlConst  + fotos.get(i);
 
-                        InternetClient client = new ImageClient(atrAct.getAplicationContext(),
-                                Consts.GET_ATR_IMG_S, urlIMG, null, Consts.GET, null, true, -1);
+                        InternetClient client = new ImageClient(piTab.getAplicationContext(),
+                                Consts.GET_ATR_IMG_S_PI, urlIMG, null, Consts.GET, null, true, -1);
                         NetClientsSingleton.getInstance().add(client.createTask());
                         client.runInBackground();
                     }
@@ -67,4 +72,5 @@ public class ReceiverOnAtraccion extends BroadcastReceiver {
             Toast.makeText(context,"Error Conexión 1", Toast.LENGTH_LONG).show();
         }
     }
+
 }

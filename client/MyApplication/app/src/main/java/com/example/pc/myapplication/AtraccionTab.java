@@ -1,6 +1,7 @@
 package com.example.pc.myapplication;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -33,9 +34,9 @@ import android.widget.Toast;
 
 import com.example.pc.myapplication.InternetTools.InfoClient;
 import com.example.pc.myapplication.InternetTools.InternetClient;
+import com.example.pc.myapplication.InternetTools.ReadMapTask;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAtraccion;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAtraccionImgs;
-import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAtraccionPlano;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnAudCheck;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnVidCheck;
 import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnVidThumbnail;
@@ -50,12 +51,15 @@ import com.example.pc.myapplication.mediaPlayers.VideoPlayer;
 import com.example.pc.myapplication.singletons.ImagesSingleton;
 import com.example.pc.myapplication.singletons.NetClientsSingleton;
 import com.example.pc.myapplication.singletons.PosVideoSingleton;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -75,7 +79,6 @@ public class AtraccionTab extends Fragment implements View.OnClickListener, Medi
     public int FIRST_PAGE = PAGES * LOOPS / 2;
     private static final long DOUBLE_PRESS_INTERVAL = 250;//double tap
 
-
     private View view;
     private String _id;
     private boolean isProgressCanceled;
@@ -88,7 +91,6 @@ public class AtraccionTab extends Fragment implements View.OnClickListener, Medi
     private ReceiverOnAtraccion onAtraccion;
     private ReceiverOnAtraccionImgs onAtraccionImgs;
     private ReceiverOnVidThumbnail onAtrVidThumb;
-    private ReceiverOnAtraccionPlano onAtrPlano;
     private ReceiverOnVidCheck onVidCheck;
     private ReceiverOnAudCheck onAudCheck;
     private VideoPlayer videoPlayerView;
@@ -110,6 +112,9 @@ public class AtraccionTab extends Fragment implements View.OnClickListener, Medi
     private FrameLayout prevAct;
     private boolean disponible;
     private boolean floatingVisible;
+    private boolean recorrible;
+    private PuntoInteresesTab puntoInteresesTab;
+    private ArrayList<Atraccion> recorridoAtrs;
 
     public void hideFloating(View view) {
 
@@ -135,12 +140,16 @@ public class AtraccionTab extends Fragment implements View.OnClickListener, Medi
         atrAct.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         atrAct.putExtra(Consts.RECORRIDO_POPULATE, true);
         atrAct.putExtra(Consts._ID, atraccions.get(pos)._id);
+        atrAct.putExtra(Consts.ATR_RECORRIBLE, atraccions.get(pos).isRecorrible());
         atrAct.putExtra(Consts.POS, pos);
         atrAct.putParcelableArrayListExtra(Consts.ATRACC, (ArrayList<Atraccion>) atraccions);
         startActivity(atrAct);
         disponible = true;
         unregister();
         comentariosTab.unregister();
+        if (recorrible) {
+            puntoInteresesTab.unregister();
+        }
         activity.finish();
     }
 
@@ -156,6 +165,7 @@ public class AtraccionTab extends Fragment implements View.OnClickListener, Medi
 
         if ( _id == null || _id.isEmpty()) {
             _id = activity.getIntent().getStringExtra(Consts._ID);
+            recorrible = activity.getIntent().getBooleanExtra(Consts.ATR_RECORRIBLE, false);
         }
 
         disponible = true;
@@ -176,17 +186,17 @@ public class AtraccionTab extends Fragment implements View.OnClickListener, Medi
             Atraccion nextAtr = null;
             Atraccion prevAtr = null;
             final int index = activity.getIntent().getIntExtra(Consts.POS, -1);
-            final List<Atraccion> atraccions = activity.getIntent().getParcelableArrayListExtra(Consts.ATRACC);
+            recorridoAtrs = activity.getIntent().getParcelableArrayListExtra(Consts.ATRACC);
 
-            if (atraccions.size() > index + 1) {
-                nextAtr = atraccions.get(index + 1);
+            if (recorridoAtrs.size() > index + 1) {
+                nextAtr = recorridoAtrs.get(index + 1);
             }
 
             if (index - 1 >= 0) {
-                prevAtr = atraccions.get(index - 1);
+                prevAtr = recorridoAtrs.get(index - 1);
             }
 
-            if (nextAtr != null && index + 1 < atraccions.size()) {
+            if (nextAtr != null && index + 1 < recorridoAtrs.size()) {
                 TextView nextNameV = (TextView) nextAct.findViewById(R.id.nextAtrName);
                 nextNameV.setText(nextAtr.nombre);
                 nextAct.setOnClickListener(new View.OnClickListener() {
@@ -194,7 +204,7 @@ public class AtraccionTab extends Fragment implements View.OnClickListener, Medi
                     public void onClick(View v) {
                         if (disponible) {
                             disponible = false;
-                            goToAtraccion(atraccions, index + 1);
+                            goToAtraccion(recorridoAtrs, index + 1);
                         }
                     }
                 });
@@ -216,7 +226,7 @@ public class AtraccionTab extends Fragment implements View.OnClickListener, Medi
                     if (disponible) {
                         disponible = false;
                         if (index - 1 >= 0) {
-                            goToAtraccion(atraccions, index - 1);
+                            goToAtraccion(recorridoAtrs, index - 1);
                         } else {
                             activity.onBackPressed();
                         }
@@ -246,7 +256,6 @@ public class AtraccionTab extends Fragment implements View.OnClickListener, Medi
         onAtraccion = new ReceiverOnAtraccion(this, view);
         onAtraccionImgs = new ReceiverOnAtraccionImgs(view, adapter, pager);
         onAtrVidThumb = new ReceiverOnVidThumbnail(view,heightVideo,weigthVideo);
-        onAtrPlano = new ReceiverOnAtraccionPlano(view);
         onVidCheck = new ReceiverOnVidCheck(view, urlConst);
         onAudCheck = new ReceiverOnAudCheck(view);
 
@@ -331,15 +340,84 @@ public class AtraccionTab extends Fragment implements View.OnClickListener, Medi
     }
 
     private void setMapContent() {
+        if (isRecorrido) {
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            for (int i = 0; i < recorridoAtrs.size(); i++) {
+                Atraccion atraccion = recorridoAtrs.get(i);
+                builder.include(atraccion.getLatLng());
+                float color ;
+                if (atraccion._id.equals(_id)) {
+                    color = BitmapDescriptorFactory.HUE_RED;
+                } else {
+                    color = BitmapDescriptorFactory.HUE_CYAN;
+                }
+                setMapContent(atraccion, i, color);
+                if (i + 1 < recorridoAtrs.size()) {
+                    Atraccion atraccionNext = recorridoAtrs.get(i + 1);
+                    traceRoute(atraccion.getLatLng(), atraccionNext.getLatLng());
+                }
+            }
+            CameraUpdate cu;
+            if (recorridoAtrs.size() > 1 ) {
+                LatLngBounds bounds = builder.build();
+                cu = CameraUpdateFactory.newLatLngBounds(bounds, 50);
+            } else {
+                Atraccion atraccion = recorridoAtrs.get(0);
+                cu = CameraUpdateFactory.newLatLngZoom(atraccion.getLatLng(), 12.0f);
+            }
+
+            map.animateCamera(cu);
+        } else {
+            LatLng latLng = new LatLng(atraccion.latitud, atraccion.longitud);
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));
+            map.addMarker(new MarkerOptions()
+                    .title(atraccion.nombre)
+                    .snippet(atraccion.descripcion)
+                    .position(latLng)
+                    .flat(true))
+                    .setTag(0);
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12.0f));
+        }
+    }
+
+    private void traceRoute(LatLng ini, LatLng fin) {
+        String url = getMapsApiDirectionsUrl(ini, fin);
+        ReadMapTask downloadTask = new ReadMapTask(map, activity.getApplicationContext());
+        downloadTask.execute(url);
+    }
+
+    private String  getMapsApiDirectionsUrl(LatLng origin,LatLng dest) {
+        // Origin of route
+        String str_origin = "origin="+origin.latitude+","+origin.longitude;
+
+        // Destination of route
+        String str_dest = "destination="+dest.latitude+","+dest.longitude;
+
+
+        // Sensor enabled
+        String sensor = "sensor=false";
+
+        // Building the parameters to the web service
+        String parameters = str_origin+"&"+str_dest+"&"+sensor;
+
+        // Output format
+        String output = "json";
+
+        // Building the url to the web service
+        String url = "https://maps.googleapis.com/maps/api/directions/"+output+"?"+parameters;
+
+        return url;
+    }
+
+    private void setMapContent(Atraccion atraccion, int i, float color) {
         LatLng latLng = new LatLng(atraccion.latitud, atraccion.longitud);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));
         map.addMarker(new MarkerOptions()
                 .title(atraccion.nombre)
                 .snippet(atraccion.descripcion)
+                .icon(BitmapDescriptorFactory.defaultMarker(color))
                 .position(latLng)
                 .flat(true))
-                .setTag(0);
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12.0f));
+                .setTag(i);
     }
 
     public void onStart() {
@@ -353,8 +431,6 @@ public class AtraccionTab extends Fragment implements View.OnClickListener, Medi
                 new IntentFilter(Consts.GET_ATR_IMG_S));
         LocalBroadcastManager.getInstance(activity.getApplicationContext()).registerReceiver(onAtrVidThumb,
                 new IntentFilter(Consts.GET_VID_THU));
-        LocalBroadcastManager.getInstance(activity.getApplicationContext()).registerReceiver(onAtrPlano,
-                new IntentFilter(Consts.GET_ATR_PLANO));
         super.onStart();
 
     }
@@ -371,7 +447,6 @@ public class AtraccionTab extends Fragment implements View.OnClickListener, Medi
         LocalBroadcastManager.getInstance(activity.getApplicationContext()).unregisterReceiver(onAudCheck);
         LocalBroadcastManager.getInstance(activity.getApplicationContext()).unregisterReceiver(onAtraccionImgs);
         LocalBroadcastManager.getInstance(activity.getApplicationContext()).unregisterReceiver(onAtrVidThumb);
-        LocalBroadcastManager.getInstance(activity.getApplicationContext()).unregisterReceiver(onAtrPlano);
     }
 
     @Override
@@ -452,6 +527,11 @@ public class AtraccionTab extends Fragment implements View.OnClickListener, Medi
     public void attachAtraccion(final Atraccion atraccion) {
         this.atraccion = atraccion;
         comentariosTab.attachAtraccion(atraccion);
+
+        if (recorrible) {
+            puntoInteresesTab.attachAtraccion(atraccion);
+        }
+
         if (map != null) {
             setMapContent();
         }
@@ -509,6 +589,14 @@ public class AtraccionTab extends Fragment implements View.OnClickListener, Medi
 
         ScrollView scroll = (ScrollView) view.findViewById(R.id.vertScrollView);
         scroll.scrollTo(0,0);
+    }
+
+    public TripTP getAplicacion() {
+        return (TripTP) activity.getApplication();
+    }
+
+    public Context getAplicationContext() {
+        return activity.getApplicationContext();
     }
 
     @Override
@@ -685,5 +773,9 @@ public class AtraccionTab extends Fragment implements View.OnClickListener, Medi
 
     public void setComentariosTab(ComentariosTab comentariosTab) {
         this.comentariosTab = comentariosTab;
+    }
+
+    public void setPuntoInteresesTab(PuntoInteresesTab puntoInteresesTab) {
+        this.puntoInteresesTab = puntoInteresesTab;
     }
 }

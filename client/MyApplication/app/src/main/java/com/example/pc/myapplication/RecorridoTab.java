@@ -68,6 +68,7 @@ public class RecorridoTab  extends Fragment {
         atrAct.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         atrAct.putExtra(Consts.RECORRIDO_POPULATE, true);
         atrAct.putExtra(Consts._ID, recorrido.getAtraccionAt(index)._id);
+        atrAct.putExtra(Consts.ATR_RECORRIBLE, recorrido.getAtraccionAt(index).isRecorrible());
         atrAct.putExtra(Consts.POS, index);
         atrAct.putParcelableArrayListExtra(Consts.ATRACC, (ArrayList<Atraccion>) recorrido.getAtracciones());
         startActivity(atrAct);

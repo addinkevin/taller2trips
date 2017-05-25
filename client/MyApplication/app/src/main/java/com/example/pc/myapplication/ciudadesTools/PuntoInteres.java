@@ -17,11 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * Created by PC on 26/03/2017.
- */
-
-public class Atraccion implements Parcelable{
+public class PuntoInteres implements Parcelable {
 
     public String _id;
     public String nombre;
@@ -43,10 +39,8 @@ public class Atraccion implements Parcelable{
     private Boolean visit;
     private String id_fav;
     private String id_visit;
-    private boolean recorrible;
-    private List<PuntoInteres> puntosInteres = new ArrayList<>();
 
-    public Atraccion(JSONObject jsonO) throws JSONException {
+    public PuntoInteres(JSONObject jsonO) throws JSONException {
         this._id = jsonO.getString(Consts._ID);
         this.nombre = jsonO.getString(Consts.NOMBRE);
         fav = null;
@@ -73,7 +67,7 @@ public class Atraccion implements Parcelable{
             }
         } catch (JSONException e) {
             e.printStackTrace();
-             descripcion = "";
+            descripcion = "";
         }
 
         this.moneda = jsonO.getString(Consts.MONEDA);
@@ -93,19 +87,6 @@ public class Atraccion implements Parcelable{
 
         latitud = (float) jsonO.getDouble(Consts.LATITUD);
         longitud = (float) jsonO.getDouble(Consts.LONGITUD);
-
-        try {
-            recorrible = jsonO.getBoolean(Consts.RECORRIBLE);
-        } catch (JSONException e) {
-            recorrible = false;
-        }
-
-        if (recorrible) {
-            JSONArray jsonP = jsonO.getJSONArray(Consts.IDS_PUNTOS_INTERES);
-            for(int i = 0; i < jsonP.length(); i++) {
-                this.puntosInteres.add(new PuntoInteres(jsonP.getJSONObject(i)));
-            }
-        }
     }
 
     public void setIsFav(Boolean fav) {
@@ -135,7 +116,7 @@ public class Atraccion implements Parcelable{
         this.id_fav = id_fav;
     }
 
-    protected Atraccion(Parcel in) {
+    protected PuntoInteres(Parcel in) {
 
         String[] data = new String[9];
         float[] position = new float[2];
@@ -157,18 +138,17 @@ public class Atraccion implements Parcelable{
         id_fav =  data[8];
         latitud = position[0];
         longitud = position[1];
-        this.recorrible = recorrible[0];
     }
 
-    public static final Creator<Atraccion> CREATOR = new Creator<Atraccion>() {
+    public static final Creator<PuntoInteres> CREATOR = new Creator<PuntoInteres>() {
         @Override
-        public Atraccion createFromParcel(Parcel in) {
-            return new Atraccion(in);
+        public PuntoInteres createFromParcel(Parcel in) {
+            return new PuntoInteres(in);
         }
 
         @Override
-        public Atraccion[] newArray(int size) {
-            return new Atraccion[size];
+        public PuntoInteres[] newArray(int size) {
+            return new PuntoInteres[size];
         }
     };
 
@@ -180,19 +160,18 @@ public class Atraccion implements Parcelable{
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeStringArray(new String[] {_id,
-                        nombre,
-                        descripcion,
-                        horaApert,
-                        horaCierre,
-                        clasificacion,
-                        idCiudad,
-                        moneda,
-                        id_fav,});
+                nombre,
+                descripcion,
+                horaApert,
+                horaCierre,
+                clasificacion,
+                idCiudad,
+                moneda,
+                id_fav,});
         dest.writeFloatArray(new float[] {
-                        latitud,
-                        longitud});
+                latitud,
+                longitud});
         dest.writeStringList(fotosPath);
-        dest.writeBooleanArray(new boolean[]{recorrible});
     }
 
     public LatLng getLatLng() {
@@ -216,17 +195,5 @@ public class Atraccion implements Parcelable{
 
     public void setId_visit(String id_visit) {
         this.id_visit = id_visit;
-    }
-
-    public boolean isRecorrible() {
-        return recorrible;
-    }
-
-    public void setRecorrible(boolean recorrible) {
-        this.recorrible = recorrible;
-    }
-
-    public List<PuntoInteres> getPuntosInteres() {
-        return puntosInteres;
     }
 }

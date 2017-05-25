@@ -95,6 +95,7 @@ public class VisitadoActivity extends AppCompatActivity implements AdapterView.O
         Intent atraccion = new Intent(this, AtraccionActivity.class);
         atraccion.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         atraccion.putExtra(Consts._ID, atraccionItems.get(position)._id);
+        atraccion.putExtra(Consts.ATR_RECORRIBLE, atraccionItems.get(position).isRecorrible());
         this.startActivity(atraccion);
     }
 }
