@@ -1,5 +1,5 @@
 module.exports = {
-    idiomaDefault: "en",
+    idiomaDefault: "es",
     loginMessageType: 'login-message',
     wrongPassword: 'Contraseña incorrecta.',
     noUserFound: 'No se encuentra el usuario',
@@ -8,5 +8,8 @@ module.exports = {
     dirVideosAtracciones: "./contenido/videosAtracciones/",
     dirAudiosAtracciones: "./contenido/audiosAtracciones/",
     dirImagenesAtracciones: "./contenido/imagenesAtracciones/",
-    dirImagenesNotificacionesPush: "./contenido/imagenesNotificacionesPush/"
+    dirImagenesNotificacionesPush: "./contenido/imagenesNotificacionesPush/",
+    dirVideosPuntos: "./contenido/videosPuntos/",
+    dirAudiosPuntos: "./contenido/audiosPuntos/",
+    dirImagenesPuntos: "./contenido/imagenesPuntos/"
 };
