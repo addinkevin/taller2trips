@@ -1,18 +1,90 @@
 <div class="container">
     <h1 class="text-center">Bienvenidos</h1>
     <div id="reporte1" ng-controller="Report1Controller">
-        <h3>Atracciones más visitadas en los últimos 12 meses</h3>
-        <div id="graficoReporte1">
+        <div class="row">
+            <h3>Atracciones más visitadas en los últimos 12 meses</h3>
+            <div id="graficoReporte1">
 
+            </div>
         </div>
     </div>
 
-    <div id="reporte2">
-        <h3>Usuarios únicos globales</h3>
+    <div id="reporte2" ng-controller="Report2Controller">
+        <div class="form-group row">
+            <h3>Usuarios únicos globales</h3>
+            <div class="col-md-6">
+                Fecha inicial
+                <span class="input-group">
+                    <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="fechaInicio"
+                           is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true"
+                           current-text="Hoy" close-text="Cerrar" clear-text="Borrar" alt-input-formats="altInputFormats" />
+                    <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+                </span>
+            </div>
+
+            <div class="col-md-6">
+                Fecha final
+                <span class="input-group">
+                    <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="fechaFin"
+                           is-open="popup2.opened" datepicker-options="dateOptions" ng-required="true"
+                           current-text="Hoy" close-text="Cerrar" clear-text="Borrar" alt-input-formats="altInputFormats"/>
+                    <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+                </span>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <span class="nput-group">
+                <button type="button" ng-click="submitAtraccion()" class="btn btn-primary">Cargar reporte</button>
+            </span>
+
+        </div>
+
+        <div class="row">
+            <div id="graficoReporte2" style="overflow-x:auto;">
+
+            </div>
+        </div>
     </div>
 
     <div id="reporte3" ng-controller="Report3Controller">
-        <h3>Usuarios únicos por pais</h3>
+        <div class="form-group row">
+            <h3>Usuarios únicos por pais</h3>
+            <div class="col-md-6">
+                Fecha inicial
+                <span class="input-group">
+                    <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="fechaInicio"
+                           is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true"
+                           current-text="Hoy" close-text="Cerrar" clear-text="Borrar" alt-input-formats="altInputFormats" />
+                    <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+                </span>
+            </div>
+
+            <div class="col-md-6">
+                Fecha final
+                <span class="input-group">
+                    <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="fechaFin"
+                           is-open="popup2.opened" datepicker-options="dateOptions" ng-required="true"
+                           current-text="Hoy" close-text="Cerrar" clear-text="Borrar" alt-input-formats="altInputFormats"/>
+                    <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+                </span>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <span class="nput-group">
+                <button type="button" ng-click="submitAtraccion()" class="btn btn-primary">Cargar reporte</button>
+            </span>
+
+        </div>
         <div class="row">
             <div class="col-sm-6">
                 <div class="text-center" style="height:50px">

@@ -213,4 +213,32 @@ reportes.controller("Report3Controller", [ '$scope', function($scope) {
 
     createReport3(data, "#graficoReporte3", "pais", "number");
 
+    $scope.popup1 = {
+        opened: false
+    };
+
+    $scope.popup2 = {
+        opened: false
+    };
+
+    $scope.today = function() {
+        $scope.fechaInicio = new Date();
+        $scope.fechaFin = new Date();
+    };
+    $scope.today();
+
+    $scope.dateOptions = {
+        minMode: 'month'
+    };
+
+    $scope.format = "MM/yyyy";
+    $scope.altInputFormats = ['M/yyyy'];
+    $scope.open1 = function() {
+        $scope.popup1.opened = true;
+    };
+
+    $scope.open2 = function() {
+        $scope.popup2.opened = true;
+    };
+
 }]);
