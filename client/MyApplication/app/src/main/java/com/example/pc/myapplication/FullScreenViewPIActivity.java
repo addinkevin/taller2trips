@@ -1,5 +1,6 @@
 package com.example.pc.myapplication;
 
+import android.app.Activity;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,7 +10,7 @@ import com.example.pc.myapplication.adapters.DepthPageTransformer;
 import com.example.pc.myapplication.adapters.FullScreenImagePIAdapter;
 import com.example.pc.myapplication.singletons.ImagesSingletonPI;
 
-public class FullScreenViewPIActivity extends AppCompatActivity {
+public class FullScreenViewPIActivity extends Activity {
 
     private FullScreenImagePIAdapter adapter;
     private ViewPager viewPager;

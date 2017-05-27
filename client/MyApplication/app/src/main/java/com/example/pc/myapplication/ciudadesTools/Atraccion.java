@@ -47,6 +47,10 @@ public class Atraccion implements Parcelable{
     private List<PuntoInteres> puntosInteres = new ArrayList<>();
 
     public Atraccion(JSONObject jsonO) throws JSONException {
+        this(jsonO, false);
+    }
+
+    public Atraccion(JSONObject jsonO, boolean withPuntos) throws JSONException {
         this._id = jsonO.getString(Consts._ID);
         this.nombre = jsonO.getString(Consts.NOMBRE);
         fav = null;
@@ -100,7 +104,7 @@ public class Atraccion implements Parcelable{
             recorrible = false;
         }
 
-        if (recorrible) {
+        if (recorrible && withPuntos) {
             JSONArray jsonP = jsonO.getJSONArray(Consts.IDS_PUNTOS_INTERES);
             for(int i = 0; i < jsonP.length(); i++) {
                 this.puntosInteres.add(new PuntoInteres(jsonP.getJSONObject(i)));

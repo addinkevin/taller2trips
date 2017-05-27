@@ -88,7 +88,6 @@ public class PuntoInteresTab extends Fragment implements View.OnClickListener, M
     private PuntoInteres puntoInteres;
     private long lastPressTime;
 
-    private ComentariosPITab comentariosTab;
     private TripTP tripTP;
 
 
@@ -107,8 +106,6 @@ public class PuntoInteresTab extends Fragment implements View.OnClickListener, M
         if ( _id == null || _id.isEmpty()) {
             _id = activity.getIntent().getStringExtra(Consts._ID);
         }
-
-        disponible = true;
 
         fragView.findViewById(R.id.nextAtr).setVisibility(View.GONE);
         fragView.findViewById(R.id.prevAtr).setVisibility(View.GONE);
@@ -274,7 +271,6 @@ public class PuntoInteresTab extends Fragment implements View.OnClickListener, M
 
     public void attachPuntoInteres(final PuntoInteres puntoInteres) {
         this.puntoInteres = puntoInteres;
-        comentariosTab.attachPuntoInteres(puntoInteres);
 
         PAGES = puntoInteres.fotosPath.size();
         adapter.notifyDataSetChanged();
@@ -295,32 +291,8 @@ public class PuntoInteresTab extends Fragment implements View.OnClickListener, M
         TextView atrInfo = (TextView) fragView.findViewById(R.id.infoText);
         atrInfo.setText(puntoInteres.descripcion);
 
-        TextView atrClassf = (TextView) fragView.findViewById(R.id.clasifica);
-        atrClassf.setText( fillFields(atrClassf.getText().toString(), puntoInteres.clasificacion));
-
-        TextView atrCosto = (TextView) fragView.findViewById(R.id.costo);
-        atrCosto.setText( fillFields(atrCosto.getText().toString(), "$" + String.valueOf(puntoInteres.costo)));
-
-        TextView atrMoneda = (TextView) fragView.findViewById(R.id.moneda);
-        atrMoneda.setText( fillFields(atrMoneda.getText().toString(), puntoInteres.moneda));
-
-        TextView atrAper = (TextView) fragView.findViewById(R.id.horaAp);
-        atrAper.setText( fillFields (atrAper.getText().toString(), puntoInteres.horaApert));
-
-        TextView atrCierre = (TextView) fragView.findViewById(R.id.horacierre);
-        atrCierre.setText(fillFields (atrCierre.getText().toString(), puntoInteres.horaCierre));
-
-        TextView atrDuracion = (TextView) fragView.findViewById(R.id.duracion);
-        atrDuracion.setText(fillFields(atrDuracion.getText().toString(), String.valueOf(puntoInteres.duracion)));
-
-        TextView atrVoteCount = (TextView) fragView.findViewById(R.id.votesCount);
-        atrVoteCount.setText(" "+  puntoInteres.cantVotos);
-
         TextView audioName = (TextView) fragView.findViewById(R.id.audio01);
         audioName.setText(Html.fromHtml( "<a href=>" + puntoInteres.nombre + " 01" + "</a> "));
-
-        RatingBar stars = (RatingBar) fragView.findViewById(R.id.ratingBar2);
-        stars.setRating(puntoInteres.rating);
 
         videoBtn.setOnClickListener(this);
 
@@ -488,9 +460,5 @@ public class PuntoInteresTab extends Fragment implements View.OnClickListener, M
                 }
             });
         }
-    }
-
-    public void setComentariosTab(ComentariosPITab comentariosTab) {
-        this.comentariosTab = comentariosTab;
     }
 }

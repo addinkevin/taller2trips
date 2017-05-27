@@ -35,13 +35,22 @@ public class VisitadoActivity extends AppCompatActivity implements AdapterView.O
     private ReceiverOnAtraccImg onAtraccImg;
 
     @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visitado);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.include);
-        toolbar.setTitle(R.string.atracciones);
+        toolbar.setTitle(R.string.visitados);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
 
         atraccionItems = new ArrayList<>();
         atraccionesAdp = new AtraccionesListAdp(this, atraccionItems);

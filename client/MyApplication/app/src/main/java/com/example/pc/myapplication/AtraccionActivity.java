@@ -32,6 +32,12 @@ public class AtraccionActivity extends AppCompatActivity{
     private boolean recorrible;
 
     @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -41,6 +47,9 @@ public class AtraccionActivity extends AppCompatActivity{
         Toolbar toolbar = (Toolbar) findViewById(R.id.include);
         toolbar.setTitle((R.string.atraccion));
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         tripTP = (TripTP) getApplication();
 
         recorrible = getIntent().getBooleanExtra(Consts.ATR_RECORRIBLE, false);

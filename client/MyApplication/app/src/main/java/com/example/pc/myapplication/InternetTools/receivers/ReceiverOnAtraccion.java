@@ -37,7 +37,7 @@ public class ReceiverOnAtraccion extends BroadcastReceiver {
             String jsonOut = intent.getStringExtra(Consts.JSON_OUT);
             if (jsonOut != null) {
                 try {
-                    Atraccion atraccion = new Atraccion(new JSONObject(jsonOut));
+                    Atraccion atraccion = new Atraccion(new JSONObject(jsonOut), true);
                     atrAct.attachAtraccion(atraccion);
                     List fotos = atraccion.fotosPath;
 

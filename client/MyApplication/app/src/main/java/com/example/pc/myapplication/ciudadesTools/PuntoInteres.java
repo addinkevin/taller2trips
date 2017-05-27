@@ -22,19 +22,10 @@ public class PuntoInteres implements Parcelable {
     public String _id;
     public String nombre;
     public String descripcion;
-    public float costo;
-    public float rating;
-    public int cantVotos;
-    public String horaApert;
-    public String horaCierre;
-    public float duracion;
-    public String clasificacion;
-    public String idCiudad;
+
     public List<String> fotosPath = new ArrayList<>();
     public List<Bitmap> fotosBitmap = new ArrayList<>();
-    public float latitud;
-    public float longitud;
-    public String moneda;
+
     private Boolean fav;
     private Boolean visit;
     private String id_fav;
@@ -70,23 +61,11 @@ public class PuntoInteres implements Parcelable {
             descripcion = "";
         }
 
-        this.moneda = jsonO.getString(Consts.MONEDA);
-        this.costo = (float) jsonO.getDouble(Consts.COSTO);
-        this.rating = (float) jsonO.getDouble(Consts.RATING);
-
-        this.cantVotos = jsonO.getInt(Consts.CANT_VOTOS);
-        this.horaApert = jsonO.getString(Consts.HS_APERTURA);
-        this.horaCierre = jsonO.getString(Consts.HS_CIERRE);
-        this.duracion = (float) jsonO.getDouble(Consts.DURACION);
-        this.clasificacion = jsonO.getString(Consts.CLASIFICACION);
-        this.idCiudad = jsonO.getString(Consts.ID_CIUDAD);
         JSONArray jsonA = jsonO.getJSONArray(Consts.FOTOS);
         for(int i = 0; i < jsonA.length(); i++) {
             this.fotosPath.add((String) jsonA.get(i));
         }
 
-        latitud = (float) jsonO.getDouble(Consts.LATITUD);
-        longitud = (float) jsonO.getDouble(Consts.LONGITUD);
     }
 
     public void setIsFav(Boolean fav) {
@@ -118,26 +97,16 @@ public class PuntoInteres implements Parcelable {
 
     protected PuntoInteres(Parcel in) {
 
-        String[] data = new String[9];
-        float[] position = new float[2];
-        boolean[] recorrible = new boolean[1];
+        String[] data = new String[4];
 
         in.readStringArray(data);
-        in.readFloatArray(position);
         in.readStringList(fotosPath);
-        in.readBooleanArray(recorrible);
         //en orden de write to parcel
         _id =  data[0];
         nombre =  data[1];
         descripcion =  data[2];
-        horaApert =  data[3];
-        horaCierre =  data[4];
-        clasificacion =  data[5];
-        idCiudad =  data[6];
-        moneda =  data[7];
-        id_fav =  data[8];
-        latitud = position[0];
-        longitud = position[1];
+        id_fav =  data[3];
+
     }
 
     public static final Creator<PuntoInteres> CREATOR = new Creator<PuntoInteres>() {
@@ -162,21 +131,10 @@ public class PuntoInteres implements Parcelable {
         dest.writeStringArray(new String[] {_id,
                 nombre,
                 descripcion,
-                horaApert,
-                horaCierre,
-                clasificacion,
-                idCiudad,
-                moneda,
                 id_fav,});
-        dest.writeFloatArray(new float[] {
-                latitud,
-                longitud});
         dest.writeStringList(fotosPath);
     }
 
-    public LatLng getLatLng() {
-        return new LatLng(latitud, longitud);
-    }
 
     public Boolean isVisit() {
         if (visit == null) {

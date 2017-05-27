@@ -1,14 +1,17 @@
 package com.example.pc.myapplication;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -18,6 +21,10 @@ import com.example.pc.myapplication.ciudadesTools.Recorrido;
 import com.example.pc.myapplication.commonfunctions.Consts;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import static android.view.View.TEXT_ALIGNMENT_CENTER;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 public class RecorridoTab  extends Fragment {
 
@@ -40,17 +47,34 @@ public class RecorridoTab  extends Fragment {
 
         ImageView imgRec = (ImageView) fragView.findViewById(R.id.imgRec);
         imgRec.setImageBitmap(recorrido.getFotoRecorrido());
+        LinearLayout linRec = (LinearLayout) fragView.findViewById(R.id.recorridosLin);
 
-        RecorridoAtraccionesAdp recorridoListAdp = new RecorridoAtraccionesAdp(getActivity(),recorrido.getAtracciones());
+        TextView text = (TextView) fragView.findViewById(R.id.nombreAtr);
+        ViewGroup.LayoutParams params = text.getLayoutParams();
+        linRec.removeView(text);
+        ViewGroup.LayoutParams dividerParams = linRec.getChildAt(0).getLayoutParams();
 
-        ListView recList = (ListView) fragView.findViewById(R.id.recList);
-        recList.setAdapter(recorridoListAdp);
-        recList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                empezarEn(position);
-            }
-        });
+        List<Atraccion> atracciones = recorrido.getAtracciones();
+
+        for (int i = 0; i < atracciones.size(); i++) {
+            TextView nombre = new TextView(getContext());
+            nombre.setLayoutParams(params);
+            nombre.setText(atracciones.get(i).nombre);
+            nombre.setGravity(Gravity.CENTER);
+
+            final int finalI = i;
+            nombre.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    empezarEn(finalI);
+                }
+            });
+            linRec.addView(nombre);
+            View divider = new View(getContext());
+            divider.setBackgroundColor(Color.parseColor("#706f6f"));
+            divider.setLayoutParams(dividerParams);
+            linRec.addView(divider);
+        }
 
         Button comenzar = (Button) fragView.findViewById(R.id.comenzar);
         comenzar.setOnClickListener(new View.OnClickListener() {

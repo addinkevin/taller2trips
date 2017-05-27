@@ -6,9 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.example.pc.myapplication.AtraccionTab;
-import com.example.pc.myapplication.ComentariosPITab;
-import com.example.pc.myapplication.ComentariosTab;
 import com.example.pc.myapplication.PuntoInteresTab;
 import com.example.pc.myapplication.R;
 
@@ -16,22 +13,17 @@ import com.example.pc.myapplication.R;
 public class PuntoInteresTabAdapter extends FragmentPagerAdapter {
     private final Context context;
     private final Fragment[] pagesLayout;
-    private final int commentIndex;
     private final String[] tabTitles;
 
     public PuntoInteresTabAdapter(FragmentManager fm, Context activity) {
         super(fm);
         this.context = activity;
         String info = context.getResources().getString(R.string.informacion);
-        String comments = context.getResources().getString(R.string.comments);
 
-        pagesLayout = new Fragment[2];
+        pagesLayout = new Fragment[1];
         pagesLayout[0] = new PuntoInteresTab();
-        pagesLayout[1] = new ComentariosPITab();
-        commentIndex = 1;
-        tabTitles = new String[] { info,comments };
+        tabTitles = new String[] { info };
 
-        ((PuntoInteresTab) pagesLayout[0]).setComentariosTab((ComentariosPITab) pagesLayout[commentIndex]);
     }
 
     @Override
@@ -65,9 +57,5 @@ public class PuntoInteresTabAdapter extends FragmentPagerAdapter {
 
     public void audioClick() {
         ((PuntoInteresTab)pagesLayout[0]).audioClick();
-    }
-
-    public void makeComment() {
-        ((ComentariosPITab)pagesLayout[commentIndex]).makeComment();
     }
 }
