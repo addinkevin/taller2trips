@@ -207,3 +207,12 @@ code {
     stroke: purple;
     stroke-width: 1.5px;
 }
+
+#reporte3 .arc text {
+    font: 10px sans-serif;
+    text-anchor: middle;
+}
+
+#reporte3 .arc path {
+    stroke: #fff;
+}

@@ -15,11 +15,22 @@
         <h3>Usuarios únicos por pais</h3>
         <div class="row">
             <div class="col-sm-6">
+                <div class="text-center" style="height:50px">
+                    <h3>Distribución por pais</h3>
+                    <p>Click en un pais para ver más detalles</p>
+                </div>
                 <div id="graficoReporte3">
                 </div>
             </div>
             <div class="col-sm-6">
-
+                <div ng-show="mostrarPais">
+                    <div class="text-center" style="height: 50px;">
+                        <h3>{{pais}}</h3>
+                        <p>Cantidad:{{cantidad}} </p>
+                    </div>
+                    <div id="graficoReporte3Pais">
+                    </div>
+                </div>
             </div>
         </div>
     </div>
