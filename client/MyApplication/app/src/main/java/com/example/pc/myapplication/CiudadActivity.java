@@ -17,6 +17,12 @@ public class CiudadActivity extends AppCompatActivity {
     ViewPager mViewPager;
 
     @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
@@ -30,6 +36,8 @@ public class CiudadActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.include);
         toolbar.setTitle("Taller2Trips");
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(new TabsAdapter(getSupportFragmentManager(),this, ciudad));

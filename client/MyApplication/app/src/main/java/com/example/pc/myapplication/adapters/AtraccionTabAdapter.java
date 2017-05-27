@@ -44,7 +44,7 @@ public class AtraccionTabAdapter extends FragmentPagerAdapter {
 
         ((AtraccionTab) pagesLayout[0]).setComentariosTab((ComentariosTab) pagesLayout[commentIndex]);
         if(recorrible)
-            ((AtraccionTab) pagesLayout[0]).setPuntoInteresesTab((PuntoInteresesTab) pagesLayout[2]);
+            ((AtraccionTab) pagesLayout[0]).setPuntoInteresesTab((PuntoInteresesTab) pagesLayout[1]);
 
     }
 

@@ -251,6 +251,8 @@ public class AtraccionTab extends Fragment implements View.OnClickListener, Medi
 
         tripTP = (TripTP)activity.getApplication();
 
+        String urlPopPuntos = tripTP.getUrl() + Consts.ATRACC_POP + "/" + _id;
+
         String urlConst = tripTP.getUrl() + Consts.ATRACC + "/" + _id;
 
         onAtraccion = new ReceiverOnAtraccion(this, view);
@@ -303,7 +305,7 @@ public class AtraccionTab extends Fragment implements View.OnClickListener, Medi
         Map<String,String> headerIdioma = Consts.getHeaderIdiomaCategoria();
 
         InternetClient client = new InfoClient(activity.getApplicationContext(),
-                Consts.GET_ATR, urlConst, headerIdioma, Consts.GET, null, true);
+                Consts.GET_ATR, urlPopPuntos, headerIdioma, Consts.GET, null, true);
         NetClientsSingleton.getInstance().add(client.createTask());
         client.runInBackground();
 

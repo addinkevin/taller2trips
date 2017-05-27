@@ -40,6 +40,12 @@ public class BuscaAtrCercaActivity extends AppCompatActivity implements AdapterV
     private ReceiverOnCiudadAtrVisitDelete onCiudadAtraccVisitDelete;
 
     @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_busca_atr_cerca);
@@ -47,6 +53,8 @@ public class BuscaAtrCercaActivity extends AppCompatActivity implements AdapterV
         Toolbar toolbar = (Toolbar) findViewById(R.id.include);
         toolbar.setTitle(R.string.cercanoTitle);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         View view = findViewById(R.id.buscaAtr);
 

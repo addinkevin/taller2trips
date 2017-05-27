@@ -144,6 +144,7 @@ public class Consts {
     public static final String AUDIO = "/audio";
     public static final String VIDEO = "/video";
     public static final String ATRACC = "/atraccion";
+    public static final String ATRACC_POP = "/atraccionPopulate";
     public static final String CERCANIA = "/cercania";
     public static final String PLANO = "/plano";
     public static final String RESENIA = "/resenia";
@@ -179,7 +180,7 @@ public class Consts {
     public static final String CLASIFICACION = "clasificacion";
     public static final String ID_CIUDAD = "id_ciudad";
     public static final String FOTOS = "imagenes";
-    public static final String IDS_PUNTOS_INTERES = "ids_puntos_interes";
+    public static final String IDS_PUNTOS_INTERES = "ids_puntos";
     public static final String IDIOMA = "idioma"; //tmb se usa como querry y header
     public static final String LATITUD = "latitud"; //tmb se usa como querry
     public static final String LONGITUD = "longitud";//tmb se usa como querry
@@ -215,7 +216,7 @@ public class Consts {
     public static final String GET_CHECK_VID_PI = "VIDPI";
     public static final String GET_ATR_IMG_S_PI = "IMGSPI";
     public static final String GET_VID_THU_PI = "THUVIDPI";
-    public static final String PI = "/puntoInteres";
+    public static final String PI = "/punto";
 
     public static Map<String, String> getSplexHeader(Application secret) {
        return getSplexHeader(secret, false);

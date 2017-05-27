@@ -18,6 +18,12 @@ public class PuntoInteresActivity extends AppCompatActivity {
     private PuntoInteresTabAdapter puntoInteresTabAdp;
 
     @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -27,6 +33,9 @@ public class PuntoInteresActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.include);
         toolbar.setTitle((R.string.atraccion));
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         tripTP = (TripTP) getApplication();
 
         ViewPager mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -54,13 +63,5 @@ public class PuntoInteresActivity extends AppCompatActivity {
 
     public void audioClick(View view) {
         puntoInteresTabAdp.audioClick();
-    }
-
-    public void makeComment(View view) {
-        if (tripTP.isLogin()) {
-            puntoInteresTabAdp.makeComment();
-        } else {
-            AlertDialog.show(this,R.string.login_alert);
-        }
     }
 }

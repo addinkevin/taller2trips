@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 
 import com.example.pc.myapplication.AtraccionTab;
 import com.example.pc.myapplication.FullScreenViewActivity;
+import com.example.pc.myapplication.FullScreenViewPIActivity;
 import com.example.pc.myapplication.PuntoInteresTab;
 import com.example.pc.myapplication.R;
 import com.example.pc.myapplication.commonfunctions.Consts;
@@ -54,7 +55,7 @@ public class CarruselPIFragment  extends Fragment{
                 @Override
                 public void onClick(View v) {
                     ImagesSingletonPI.getInstance().setCurrent(pos);
-                    Intent fullScreen = new Intent(getActivity(), FullScreenViewActivity.class);
+                    Intent fullScreen = new Intent(getActivity(), FullScreenViewPIActivity.class);
                     fullScreen.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(fullScreen);
                 }
