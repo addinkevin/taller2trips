@@ -8,5 +8,8 @@ module.exports = {
     dirVideosAtracciones: "./contenido/videosAtracciones/",
     dirAudiosAtracciones: "./contenido/audiosAtracciones/",
     dirImagenesAtracciones: "./contenido/imagenesAtracciones/",
-    dirImagenesNotificacionesPush: "./contenido/imagenesNotificacionesPush/"
+    dirImagenesNotificacionesPush: "./contenido/imagenesNotificacionesPush/",
+    dirVideosPuntos: "./contenido/videosPuntos/",
+    dirAudiosPuntos: "./contenido/audiosPuntos/",
+    dirImagenesPuntos: "./contenido/imagenesPuntos/"
 };

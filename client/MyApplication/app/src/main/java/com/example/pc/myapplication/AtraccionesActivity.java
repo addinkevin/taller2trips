@@ -38,12 +38,20 @@ public class AtraccionesActivity extends AppCompatActivity implements AdapterVie
     private ReceiverOnCiudadAtrVisitDelete onCiudadAtraccVisitDelete;
 
     @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_atracciones);
         Toolbar toolbar = (Toolbar) findViewById(R.id.include);
         toolbar.setTitle(R.string.atracciones);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         View view = findViewById(R.id.buscaAtr);
 

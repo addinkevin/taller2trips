@@ -350,39 +350,7 @@
                 android:text="@string/noAudio"
                 android:visibility="gone"/>
 
-            <TextView
-                android:id="@+id/plano"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/plano"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textStyle="bold" />
 
-            <ImageView
-                android:id="@+id/planoIMG"
-                android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:scaleType="fitCenter"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginStart="5dp"/>
-
-            <TextView
-                android:id="@+id/noPlano"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/noPlano"
-                android:visibility="gone"/>
         </LinearLayout>
     </ScrollView>
 

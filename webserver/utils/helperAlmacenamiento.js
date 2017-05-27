@@ -4,6 +4,29 @@ var mkdirp = require('mkdirp');
 var fs = require('fs');
 var glob = require('glob');
 
+exports.crearDirectorioVideosPuntos = function() {
+    mkdirp(constants.dirVideosPuntos, function(err) {
+        if (err) {
+            console.log(err);
+        }
+    });
+};
+
+exports.crearDirectorioAudiosPuntos = function() {
+    mkdirp(constants.dirAudiosPuntos, function(err) {
+        if (err) {
+            console.log(err);
+        }
+    });
+};
+
+exports.crearDirectorioImagenesPuntos = function() {
+    mkdirp(constants.dirImagenesPuntos, function(err) {
+        if (err) {
+            console.log(err);
+        }
+    });
+};
 exports.crearDirectorioPlanosAtracciones = function() {
     mkdirp(constants.dirPlanosAtracciones, function(err) {
         if (err) {
@@ -61,6 +84,33 @@ var storagePlanosAtracciones = multer.diskStorage({
     }
 });
 
+var storageVideosPuntos = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null, constants.dirVideosPuntos)
+    },
+    filename: function(req, file, cb) {
+        cb(null, req.params.id_punto + "_video.mp4")
+    }
+});
+
+var storageAudiosPuntos = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null, constants.dirAudiosPuntos)
+    },
+    filename: function(req, file, cb) {
+        cb(null, req.params.id_punto + "_audio_" + req.body.idioma + ".mp3")
+    }
+});
+
+var storageImagenesPuntos = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null, constants.dirImagenesPuntos)
+    },
+    filename: function(req, file, cb) {
+        cb(null, req.params.id_punto + "_imagen_" + Date.now() + ".png")
+    }
+});
+
 var storageVideosAtracciones = multer.diskStorage({
     destination: function(req, file, cb) {
         cb(null, constants.dirVideosAtracciones)
@@ -75,7 +125,6 @@ var storageAudiosAtracciones = multer.diskStorage({
         cb(null, constants.dirAudiosAtracciones)
     },
     filename: function(req, file, cb) {
-        console.log(req.body);
         cb(null, req.params.id_atraccion + "_audio_" + req.body.idioma + ".mp3")
     }
 });
@@ -85,7 +134,6 @@ var storageImagenesAtracciones = multer.diskStorage({
         cb(null, constants.dirImagenesAtracciones)
     },
     filename: function(req, file, cb) {
-        console.log(req.body);
         cb(null, req.params.id_atraccion + "_imagen_" + Date.now() + ".png")
     }
 });
@@ -124,6 +172,18 @@ exports.uploadImagenesAtracciones = multer({
     storage: storageImagenesAtracciones
 });
 
+exports.uploadVideosPuntos = multer({
+    storage: storageVideosPuntos
+});
+
+exports.uploadAudiosPuntos = multer({
+    storage: storageAudiosPuntos
+});
+
+exports.uploadImagenesPuntos = multer({
+    storage: storageImagenesPuntos
+});
+
 exports.uploadImagenesCiudad = multer({
     storage: storageImagenesCiudad
 });
@@ -131,6 +191,23 @@ exports.uploadImagenesCiudad = multer({
 exports.uploadImagenesNotificacionesPush = multer({
     storage: storageImagenesNotificacionesPush
 });
+
+exports.borrarMediaPuntos = function(idPunto) {
+    fs.unlink(constants.dirVideosPuntos + idPunto + "_video.mp4", function(err) {
+             if (err) console.log(err)} );
+    glob.glob(constants.dirAudiosPuntos + idPunto + "*", function(err, files) {
+        for (var i = 0; i < files.length; i++) {
+            fs.unlink(files[i], function(err) {
+                if (err) console.log(err)} );
+        }
+    });
+    glob.glob(constants.dirImagenesPuntos + idPunto + "*", function(err, files) {
+        for (var i = 0; i < files.length; i++) {
+            fs.unlink(files[i], function(err) {
+                     if (err) console.log(err)} );
+        }
+    });
+};
 
 exports.borrarMediaAtracciones = function(idAtraccion) {
     fs.unlink(constants.dirVideosAtracciones + idAtraccion + "_video.mp4", function(err) {

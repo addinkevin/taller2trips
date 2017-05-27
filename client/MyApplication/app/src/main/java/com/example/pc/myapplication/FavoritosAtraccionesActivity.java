@@ -35,6 +35,12 @@ public class FavoritosAtraccionesActivity extends AppCompatActivity implements A
     private ReceiverOnCiudadAtraccFavDelete onCiudadAtraccFavDelete;
 
     @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favaoritos_atracciones);
@@ -42,6 +48,8 @@ public class FavoritosAtraccionesActivity extends AppCompatActivity implements A
         Toolbar toolbar = (Toolbar) findViewById(R.id.include);
         toolbar.setTitle(R.string.atracciones);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         atraccionItems = new ArrayList<>();
         atraccionesAdp = new AtraccionesListAdp(this, atraccionItems);
@@ -94,6 +102,7 @@ public class FavoritosAtraccionesActivity extends AppCompatActivity implements A
         Intent atraccion = new Intent(this, AtraccionActivity.class);
         atraccion.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         atraccion.putExtra(Consts._ID, atraccionItems.get(position)._id);
+        atraccion.putExtra(Consts.ATR_RECORRIBLE, atraccionItems.get(position).isRecorrible());
         this.startActivity(atraccion);
     }
 

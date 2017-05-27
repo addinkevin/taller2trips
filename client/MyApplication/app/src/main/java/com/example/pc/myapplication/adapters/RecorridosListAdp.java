@@ -13,6 +13,7 @@ import com.example.pc.myapplication.InternetTools.InfoClient;
 import com.example.pc.myapplication.InternetTools.InternetClient;
 import com.example.pc.myapplication.R;
 import com.example.pc.myapplication.application.TripTP;
+import com.example.pc.myapplication.ciudadesTools.Atraccion;
 import com.example.pc.myapplication.ciudadesTools.Recorrido;
 import com.example.pc.myapplication.commonfunctions.Consts;
 
@@ -163,6 +164,15 @@ public class RecorridosListAdp extends BaseAdapter {
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
+            Recorrido rowPos = atraccionItems.get(position);
+
+            if (tripTP.isLogin() && rowPos.isFavSetted()) {
+                if (rowPos.isFav()) {
+                    holder.favPic.setImageResource(R.drawable.heart);
+                } else {
+                    holder.favPic.setImageResource(R.drawable.heart_outline);
+                }
+            }
         }
 
         return view;
