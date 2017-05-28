@@ -21,6 +21,7 @@ public class ConfigActivity extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_config);
+
         Button btn = (Button) findViewById(R.id.button2);
         btn.setOnClickListener(this);
         tripTP = (TripTP) getApplication();

@@ -43,8 +43,14 @@ public class Atraccion implements Parcelable{
     private Boolean visit;
     private String id_fav;
     private String id_visit;
+    private boolean recorrible;
+    private List<PuntoInteres> puntosInteres = new ArrayList<>();
 
     public Atraccion(JSONObject jsonO) throws JSONException {
+        this(jsonO, false);
+    }
+
+    public Atraccion(JSONObject jsonO, boolean withPuntos) throws JSONException {
         this._id = jsonO.getString(Consts._ID);
         this.nombre = jsonO.getString(Consts.NOMBRE);
         fav = null;
@@ -91,6 +97,19 @@ public class Atraccion implements Parcelable{
 
         latitud = (float) jsonO.getDouble(Consts.LATITUD);
         longitud = (float) jsonO.getDouble(Consts.LONGITUD);
+
+        try {
+            recorrible = jsonO.getBoolean(Consts.RECORRIBLE);
+        } catch (JSONException e) {
+            recorrible = false;
+        }
+
+        if (recorrible && withPuntos) {
+            JSONArray jsonP = jsonO.getJSONArray(Consts.IDS_PUNTOS_INTERES);
+            for(int i = 0; i < jsonP.length(); i++) {
+                this.puntosInteres.add(new PuntoInteres(jsonP.getJSONObject(i)));
+            }
+        }
     }
 
     public void setIsFav(Boolean fav) {
@@ -124,9 +143,12 @@ public class Atraccion implements Parcelable{
 
         String[] data = new String[9];
         float[] position = new float[2];
+        boolean[] recorrible = new boolean[1];
 
         in.readStringArray(data);
         in.readFloatArray(position);
+        in.readStringList(fotosPath);
+        in.readBooleanArray(recorrible);
         //en orden de write to parcel
         _id =  data[0];
         nombre =  data[1];
@@ -135,11 +157,11 @@ public class Atraccion implements Parcelable{
         horaCierre =  data[4];
         clasificacion =  data[5];
         idCiudad =  data[6];
-        in.readStringList(fotosPath);
         moneda =  data[7];
         id_fav =  data[8];
         latitud = position[0];
         longitud = position[1];
+        this.recorrible = recorrible[0];
     }
 
     public static final Creator<Atraccion> CREATOR = new Creator<Atraccion>() {
@@ -174,6 +196,7 @@ public class Atraccion implements Parcelable{
                         latitud,
                         longitud});
         dest.writeStringList(fotosPath);
+        dest.writeBooleanArray(new boolean[]{recorrible});
     }
 
     public LatLng getLatLng() {
@@ -197,5 +220,17 @@ public class Atraccion implements Parcelable{
 
     public void setId_visit(String id_visit) {
         this.id_visit = id_visit;
+    }
+
+    public boolean isRecorrible() {
+        return recorrible;
+    }
+
+    public void setRecorrible(boolean recorrible) {
+        this.recorrible = recorrible;
+    }
+
+    public List<PuntoInteres> getPuntosInteres() {
+        return puntosInteres;
     }
 }

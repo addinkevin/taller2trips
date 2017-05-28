@@ -40,6 +40,12 @@ public class BuscaAtrCercaActivity extends AppCompatActivity implements AdapterV
     private ReceiverOnCiudadAtrVisitDelete onCiudadAtraccVisitDelete;
 
     @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_busca_atr_cerca);
@@ -47,6 +53,8 @@ public class BuscaAtrCercaActivity extends AppCompatActivity implements AdapterV
         Toolbar toolbar = (Toolbar) findViewById(R.id.include);
         toolbar.setTitle(R.string.cercanoTitle);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         View view = findViewById(R.id.buscaAtr);
 
@@ -82,6 +90,7 @@ public class BuscaAtrCercaActivity extends AppCompatActivity implements AdapterV
         Intent atraccion = new Intent(this, AtraccionActivity.class);
         atraccion.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         atraccion.putExtra(Consts._ID, atraccionItems.get(position)._id);
+        atraccion.putExtra(Consts.ATR_RECORRIBLE, atraccionItems.get(position).isRecorrible());
         this.startActivity(atraccion);
     }
 

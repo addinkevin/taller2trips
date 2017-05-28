@@ -29,16 +29,14 @@ public class ReceiverOnAtraccionPlano extends BroadcastReceiver {
         if (succes) {
             Bitmap imagePlano = intent.getParcelableExtra(Consts.IMG_OUT);
             if (imagePlano != null) {
-                img.setImageBitmap(imagePlano);;
+                img.setImageBitmap(imagePlano);
             } else {
                 img.setVisibility(View.GONE);
                 noPlano.setVisibility(View.VISIBLE);
-                //Toast.makeText(context,"Error Bitmap", Toast.LENGTH_LONG).show();
             }
         } else {
             img.setVisibility(View.GONE);
             noPlano.setVisibility(View.VISIBLE);
-            //Toast.makeText(context,"Error conexión", Toast.LENGTH_LONG).show();
         }
     }
 }
