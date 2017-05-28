@@ -69,7 +69,8 @@ router.get('/reporte/usuariosUnicosGlobales', function(req, res) {
                     },
                     value: {$sum: 1}
                 }
-            }
+            },
+            {$sort: {"_id.anio": 1, "_id.mes": 1}}
         ], function(err, resultados) {
             if (err) {
                 res.send(err);
