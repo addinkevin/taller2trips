@@ -16,7 +16,8 @@ router.get('/reporte/atraccionesFavoritas', function(req, res) {
                     value: {$sum: 1}
                 }
             },
-            {$sort: {value: -1}}
+            {$sort: {value: -1}},
+            {$limit: 10}
         ], function(err, resultado) {
             if (err) {
                 res.send(err);
