@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var Favorito = require('../models/favoritos');
+var Login = require('../models/logins');
 
 router.get('/reporte/atraccionesFavoritas', function(req, res) {
     var doce_meses = 365*24*3600*1000;
@@ -34,6 +35,17 @@ router.get('/reporte/atraccionesFavoritas', function(req, res) {
             }
         }
     );
+});
+
+router.get('/reporte/usuariosUnicosGlobales', function(req, res) {
+    Login.find(function(err, logins) {
+        if (err) {
+            res.send(err);
+        }
+        else {
+            res.status(200).json(logins);
+        }
+    });
 });
 
 module.exports = router;

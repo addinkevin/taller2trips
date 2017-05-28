@@ -1,4 +1,5 @@
 var request = require('request');
+var Login = require('../models/logins');
 
 // TODO: Arreglar este infierno de funcion para que sea legible y soporte mas de un provider.
 // los puntos de mejora son pasar de callbacks a promises, cambiar el lookup asumiendo un 
@@ -53,3 +54,17 @@ exports.procesarLogin = function(auth_token, req, res) {
         };
     });
 }
+
+exports.registrarLogin = function(id_usuario, provider, pais) {
+    login = new Login({
+        id_usuario: id_usuario,
+        provider: provider,
+        pais: pais
+    });
+    login.save(function(err) {
+        if (err) {
+            console.log(err);
+        }
+    });
+}
+

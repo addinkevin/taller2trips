@@ -34,7 +34,7 @@ router.post('/signin', function(req, res) {
 });
 
 router.post('/signin/guest', function(req, res) {
-    //TODO: Perisistir info que permita reportear
+    login.registrarLogin(req.body.id_dispositivo, "Guest", req.body.pais);
     res.status(200).json({"msj": "exito"});
 });
 
