@@ -38,14 +38,47 @@ router.get('/reporte/atraccionesFavoritas', function(req, res) {
 });
 
 router.get('/reporte/usuariosUnicosGlobales', function(req, res) {
-    Login.find(function(err, logins) {
-        if (err) {
-            res.send(err);
+    var fecha_inicio = new Date(req.query.anio_inicio, req.query.mes_inicioi - 1, req.query.dia_inicio);
+    var fecha_fin = new Date(req.query.anio_fin, req.query.mes_fin - 1, req.query.dia_fin);
+    Login.aggregate(
+        [
+            {$match: {fecha: {$gte: fecha_inicio, $lt: fecha_fin}}},
+            {$project:
+                {
+                    "id_usuario": 1,
+                    "provider": 1,
+                    "pais": 1,
+                    "mes": {"$month": "$fecha"},
+                    "anio": {"$year": "$fecha"}
+                }
+            },
+            {$group:
+                {
+                    _id: {
+                        "mes": "$mes",
+                        "anio": "$anio",
+                        "id_usuario": "$id_usuario"
+                    }
+                }
+            },
+            {$group:
+                {
+                    _id: {
+                        "mes": "$_id.mes",
+                        "anio": "$_id.anio"
+                    },
+                    value: {$sum: 1}
+                }
+            }
+        ], function(err, resultados) {
+            if (err) {
+                res.send(err);
+            }
+            else {
+                res.status(200).json(resultados);
+            }
         }
-        else {
-            res.status(200).json(logins);
-        }
-    });
+    )
 });
 
 module.exports = router;
