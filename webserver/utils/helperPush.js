@@ -1,7 +1,7 @@
 var admin = require('firebase-admin');
 var User = require('../models/users');
 var Favorito = require('../models/favoritos');
-
+var NotificacionPush = require('../models/notificaciones_push');
 
 exports.inicializarMensajeriaGoogle = function() {
     var serviceAccount = require("../config/secrets/taller-trips-firebase-adminsdk-4jvcd-fc574636c1.json");
@@ -71,4 +71,11 @@ exports.mandarNotificaciones = function(push) {
         );
 };
 
+exports.borrarPushesAsociadaCiudad = function(ciudad) {
+    NotificacionPush.remove({id_ciudad: ciudad}, function(err) {
+        if (err) {
+            console.log(err);
+        }
+    });
+};
 

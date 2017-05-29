@@ -5,9 +5,6 @@ exports.borrarReseniasAsociadaAtraccion = function(atraccion) {
         if (err) {
             console.log(err);
         }
-        else {
-            console.log("BORRADA");
-        }
     });
 };
 
