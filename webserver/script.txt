@@ -17,7 +17,7 @@ function generateProviderRandom() {
 
 function generatePaisRandom() {
 	var random = Math.random();
-	var paises = ["Argentina", "Argentina", ""Chile", "Brasil", "Portugal"];
+	var paises = ["Argentina", "Argentina", "Chile", "Brasil", "Portugal"];
 	var index = Math.floor(Math.random()*paises.length);
 	return paises[index];
 }
