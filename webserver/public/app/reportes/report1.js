@@ -1,6 +1,6 @@
 var reportes = angular.module("tripsApp.reportes");
 
-reportes.controller("Report1Controller", [ '$scope', function($scope) {
+reportes.controller("Report1Controller", [ '$scope', '$http', function($scope, $http) {
     var m = {top: 50, right: 50, bottom: 50, left: 50}
         , h = 500 - m.top - m.bottom
         , w = 960 - m.left - m.right;
@@ -126,6 +126,8 @@ reportes.controller("Report1Controller", [ '$scope', function($scope) {
             value: 10
         }
     ];
+
+
 
     createReport1(data, "#graficoReporte1", "label", "value");
 
