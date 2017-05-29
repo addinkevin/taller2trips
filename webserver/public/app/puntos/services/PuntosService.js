@@ -10,6 +10,7 @@ puntos.service('PuntosService', ['$http', 'IdiomaService', '$q', function ($http
         punto.audios = {};
         punto.videos = [];
         punto.deleteRequests = [];
+        punto.cargado = false;
         return punto;
     };
 
