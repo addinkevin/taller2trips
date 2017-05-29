@@ -83,7 +83,7 @@ router.get('/reporte/usuariosUnicosGlobales', function(req, res) {
 });
 
 router.get('/reporte/usuariosUnicosPaisProvider', function(req, res) {
-    var fecha_inicio = new Date(req.query.anio_inicio, req.query.mes_inicioi - 1, req.query.dia_inicio);
+    var fecha_inicio = new Date(req.query.anio_inicio, req.query.mes_inicio - 1, req.query.dia_inicio);
     var fecha_fin = new Date(req.query.anio_fin, req.query.mes_fin - 1, req.query.dia_fin);
     Login.aggregate(
         [
