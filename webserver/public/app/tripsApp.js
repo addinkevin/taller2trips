@@ -1,6 +1,6 @@
 var tripsApp = angular.module('tripsApp', [
     "ngRoute", 'ui.bootstrap', 'tripsApp.ciudades', 'tripsApp.atracciones', 'tripsApp.resenias',
-    'tripsApp.recorridos', 'tripsApp.push'
+    'tripsApp.recorridos', 'tripsApp.push', 'tripsApp.puntos', 'tripsApp.reportes'
 ]);
 
 tripsApp.config(function config($routeProvider, $locationProvider) {
@@ -156,6 +156,15 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
             });
     };
 
+    this.obtenerIdsPuntos = function(puntos) {
+        var ids = [];
+        for (var i = 0; i < puntos.length; i++) {
+            ids.push(puntos[i]._id);
+        }
+
+        return ids;
+    };
+
     this.addAtraccion = function(atraccion, callback) {
         var data = {
             "nombre": atraccion.nombre,
@@ -168,7 +177,9 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
             "clasificacion": atraccion.clasificacionSelected,
             "id_ciudad": atraccion.ciudadSelected._id,
             "latitud": atraccion.lat,
-            "longitud": atraccion.lng
+            "longitud": atraccion.lng,
+            "recorrible": atraccion.recorrible,
+            "ids_puntos": ""
         };
 
         return $http({
@@ -198,7 +209,9 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
             "clasificacion": atraccion.clasificacionSelected,
             "id_ciudad": atraccion.ciudadSelected._id,
             "latitud": atraccion.lat,
-            "longitud": atraccion.lng
+            "longitud": atraccion.lng,
+            "recorrible": atraccion.recorrible,
+            "ids_puntos": this.obtenerIdsPuntos(atraccion.ids_puntos).join()
         };
 
         return $http({
@@ -227,7 +240,7 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
     };
 
     this.getAtraccion = function(atraccionId, callback) {
-        return $http.get('/api/atraccion/'+atraccionId).then(
+        return $http.get('/api/atraccionPopulate/'+atraccionId).then(
             function success(res) {
                 callback(res.data, null);
             },
@@ -292,7 +305,6 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
 
         for (var i = 0; i < atraccion.videos.length; i++) {
             var vidFile = atraccion.videos[i].vidFile;
-            console.log(vidFile);
             if (vidFile) {
                 requests.push(this._uploadFormData(url, {
                     video: vidFile
@@ -368,7 +380,6 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
 
     this.deleteVideoAtraccion = function(atraccion, atraccionVideo, callback) {
         var vidUrl = atraccionVideo.vidSrc;
-        console.log(vidUrl);
         return $http.delete(vidUrl).then(
             function success() {
                 callback(null, null);

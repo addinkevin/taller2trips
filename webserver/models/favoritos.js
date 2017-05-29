@@ -5,7 +5,11 @@ var favoritoSchema = mongoose.Schema({
     id_usuario: {type: Schema.Types.ObjectId, ref: 'User'},
     id_ciudad: {type: Schema.Types.ObjectId, ref: 'Ciudad'},
     id_atraccion: {type: Schema.Types.ObjectId, ref: 'Atraccion'},
-    id_recorrido: {type: Schema.Types.ObjectId, ref: 'Recorrido'}
+    id_recorrido: {type: Schema.Types.ObjectId, ref: 'Recorrido'},
+    fecha: {
+        type: Date,
+        default: Date.now
+    }
 });
 
 module.exports = mongoose.model('Favorito', favoritoSchema);

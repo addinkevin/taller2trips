@@ -26,6 +26,8 @@
     <!-- Error header -->
     <div id="infoContainer">
     </div>
+    <div id="errorContainer">
+    </div>
 
     <div class="panel-custom" ng-show="ciudades.length == 0">
         <h3 class="subheader">No hay ciudades agregadas. Agrega una ciudad primero.</h3>
@@ -33,7 +35,7 @@
 
     <div class="panel panel-default" ng-show="ciudades.length > 0">
         <div class="panel-body">
-            <form ng-submit="submitAtraccion()">
+            <form>
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Nombre de atracción</label>
                     <div class="col-sm-10">
@@ -85,11 +87,19 @@
                     </div>
                 </div>
 
-                <!-- Plano -->
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Plano</label>
+                    <label class="col-sm-2 col-form-label">Recorrible</label>
                     <div class="col-sm-10">
-                        <h4>Información</h4>
+                        <p>¿La atracción es recorrible? Si es recorrible, entonces deberá subir un plano y al menos un punto de interés.</p>
+                        <input type="checkbox" ng-model="atraccion.recorrible"> Recorrible
+                    </div>
+                </div>
+
+                <!-- Plano -->
+                <div class="form-group row" ng-show="atraccion.recorrible">
+                    <label class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-10">
+                        <h4>Información sobre el plano a subir</h4>
                         <p>El formato de la imagen debe ser png.</p>
                         <p>El tamaño de la imagen debería ser 1920x1080 para una mejor visualización en la aplicación móvil.</p>
                         <label class="btn btn-primary">
@@ -101,6 +111,30 @@
                             <div class="imagenPreview" ng-repeat="(id,atraccionPlano) in atraccion.planos">
                                 <img ng-src="{{atraccionPlano.imgSrc}}" class="img-responsive"/>
                                 <button type='button' class="btn btn-default btn-block" ng-click="deletePlano(id,atraccionPlano)">Borrar plano</button>
+                            </div>
+                        </div>
+
+                        <div ng-show="atraccion.planos.length >0" style="margin-top:1%">
+                            <div ng-controller="ModalPuntos">
+                                <button type="button" class="btn btn-default" ng-click="agregarPunto(atraccion)">Agregar punto de interes</button>
+                                <ul class="list-group" style="margin-top:1%">
+                                    <li class="list-group-item clearfix" ng-repeat="(id,punto) in atraccion.ids_puntos">
+                                        {{punto.nombre}}
+                                        <span class="pull-right">
+                                            <span class="btn btn-xs btn-default" ng-click="editarPunto(atraccion,punto, id)">Editar</span>
+
+                                            <span class="btn btn-xs btn-default" ng-click="listadoMoveUp(id)">
+                                                <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+                                            </span>
+                                            <span class="btn btn-xs btn-default" ng-click="listadoMoveDown(id)">
+                                                <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+                                            </span>
+                                            <span class="btn btn-xs btn-default" ng-click="listadoRemove(id,punto)">
+                                                <span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                            </span>
+                                        </span>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -212,13 +246,12 @@
                     </div>
                 </div>
 
-                <div class="alert alert-danger {{alert.class}}">
-                    {{alert.msg}}
+                <!-- Error header -->
+                <div id="error-en-formulario">
                 </div>
 
-
                 <div class="form-group row">
-                    <button type="submit" class="btn btn-primary center-block">{{submitButton}}</button>
+                    <button type="button" ng-click="submitAtraccion()" class="btn btn-primary center-block">{{submitButton}}</button>
                 </div>
             </form>
 

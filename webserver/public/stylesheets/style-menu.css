@@ -189,3 +189,48 @@ code {
 }
 
 .link { background:none;border:none; }
+
+#reporte1 svg {
+    font: 10px sans-serif;
+}
+#reporte1 .bar rect {
+    fill: steelblue;
+    shape-rendering: crispEdges;
+}
+#reporte1 .axis path, .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+#reporte1 .line {
+    fill: none;
+    stroke: purple;
+    stroke-width: 1.5px;
+}
+
+#reporte2 svg {
+    font: 10px sans-serif;
+}
+#reporte2 .bar rect {
+    fill: steelblue;
+    shape-rendering: crispEdges;
+}
+#reporte2 .axis path, .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+#reporte2 .line {
+    fill: none;
+    stroke: purple;
+    stroke-width: 1.5px;
+}
+
+#reporte3 .arc text {
+    font: 10px sans-serif;
+    text-anchor: middle;
+}
+
+#reporte3 .arc path {
+    stroke: #fff;
+}

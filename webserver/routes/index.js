@@ -1,13 +1,15 @@
 var express = require('express');
 var constants = require('../config/constants');
 var ciudadesRoute = require('./ciudadesRoute');
-var atraccionesRoute = require('./atraccionesRoute');
 var reseniasRoute = require('./reseniasRoute');
+var atraccionesRoute = require('./atraccionesRoute');
+var puntosRoute = require('./puntosRoute');
 var usuariosRoute = require('./usuariosRoute');
 var favoritosRoute = require('./favoritosRoute');
 var recorridosRoute = require('./recorridosRoute');
 var notificacionesPushRoute = require('./notificacionesPushRoute');
 var visitadosRoute = require('./visitadosRoute');
+var reportesRoute = require('./reportesRoute');
 
 
 module.exports = function(app, passport) {
@@ -49,4 +51,6 @@ module.exports = function(app, passport) {
     app.use('/api', recorridosRoute);
     app.use('/api', notificacionesPushRoute);
     app.use('/api', visitadosRoute);
+    app.use('/api', puntosRoute);
+    app.use('/api', reportesRoute);
 };

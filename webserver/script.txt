@@ -1,0 +1,33 @@
+function generarFechaRandom() {
+	var mes = Math.floor(Math.random()*12);
+	var dia = Math.floor(Math.random()*28)+1;
+	return new Date(2017,mes,dia);
+}
+
+function generateUsuarioRandom() {
+	return "" + Math.floor(Math.random()*100000);
+}
+
+function generateProviderRandom() {
+	var random = Math.random();
+	if (random < 2/5) return "Facebook";
+	if (random < 4/5) return "Twitter";
+	return "Invitado";
+}
+
+function generatePaisRandom() {
+	var random = Math.random();
+	var paises = ["Argentina", "Argentina", "Chile", "Brasil", "Portugal"];
+	var index = Math.floor(Math.random()*paises.length);
+	return paises[index];
+}
+
+
+for (var i = 0; i < 1000; i++) {
+	fechaRandom = generarFechaRandom();
+	usuarioRandom = generateUsuarioRandom();
+	providerRandom = generateProviderRandom();
+	paisRandom = generatePaisRandom();
+	db.logins.save({"id_usuario": usuarioRandom, "provider": providerRandom, "pais": paisRandom, "fecha":fechaRandom});
+
+}

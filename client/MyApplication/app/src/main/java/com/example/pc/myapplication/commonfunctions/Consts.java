@@ -1,6 +1,7 @@
 package com.example.pc.myapplication.commonfunctions;
 
 import android.app.Application;
+import android.content.IntentFilter;
 
 import com.example.pc.myapplication.application.TripTP;
 
@@ -134,7 +135,9 @@ public class Consts {
     public static final String DELETE_REC_FAV = "DELRECFAV";
     public static final String GET_CITY_REC = "RECCITY";
     public static final String GET_REC_FIRST_ATR_IMG = "FIRTATRREC";
+    public static final String GET_REC_FIRST_ATR_IMG_2 = "2FIRTATRREC";
     public static final String GET_PUBLI_IMG = "PUBLIGET";
+    public static final String VACIO = "VACIO";
 
 
     //path
@@ -143,6 +146,7 @@ public class Consts {
     public static final String AUDIO = "/audio";
     public static final String VIDEO = "/video";
     public static final String ATRACC = "/atraccion";
+    public static final String ATRACC_POP = "/atraccionPopulate";
     public static final String CERCANIA = "/cercania";
     public static final String PLANO = "/plano";
     public static final String RESENIA = "/resenia";
@@ -156,6 +160,7 @@ public class Consts {
     public static final String TOKEN = "/token";
     public static final String USUARIO = "/usuario";
     public static final String PUSH = "/push";
+    public static final String GUEST = "/guest";
 
     //Json Keys
     public static final String NOMBRE = "nombre";
@@ -178,6 +183,7 @@ public class Consts {
     public static final String CLASIFICACION = "clasificacion";
     public static final String ID_CIUDAD = "id_ciudad";
     public static final String FOTOS = "imagenes";
+    public static final String IDS_PUNTOS_INTERES = "ids_puntos";
     public static final String IDIOMA = "idioma"; //tmb se usa como querry y header
     public static final String LATITUD = "latitud"; //tmb se usa como querry
     public static final String LONGITUD = "longitud";//tmb se usa como querry
@@ -189,6 +195,8 @@ public class Consts {
     public static final String LINK = "link";
     public static final String HAS_PUBLICIDAD = "hasPubli";
     public static final String PUBLICIDAD = "publicidad";
+    public static final String RECORRIBLE = "recorrible";
+    public static final String ID_DEVICE = "id_dispositivo";
 
 
     //querry param
@@ -206,6 +214,13 @@ public class Consts {
     public static final int CANT_STARS = 5;
     public static final int DEF_RADIO = 25;
     public static final String DEF_IDIOMA = "en";
+    public static final String ATR_RECORRIBLE = "recatr";
+    public static final String GET_CHECK_AUD_PI = "AUDP";
+    public static final String GET_PI = "PI";
+    public static final String GET_CHECK_VID_PI = "VIDPI";
+    public static final String GET_ATR_IMG_S_PI = "IMGSPI";
+    public static final String GET_VID_THU_PI = "THUVIDPI";
+    public static final String PI = "/punto";
 
     public static Map<String, String> getSplexHeader(Application secret) {
        return getSplexHeader(secret, false);
@@ -213,7 +228,7 @@ public class Consts {
 
     public static Map<String,String> getSplexHeader(Application secret, boolean isLogin) {
         Map<String,String> header = getHeaderJSON ();
-        if(isLogin) {
+        if(isLogin) {//para cuando se esta logueando
             header.put(Consts.AUTHORIZATION, "Bearer " + Consts.SPLEX_SECRET);
         } else {
             header.put(Consts.AUTHORIZATION, "Bearer " + ((TripTP) secret).getSplexSecret());

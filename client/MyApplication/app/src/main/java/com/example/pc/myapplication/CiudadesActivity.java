@@ -4,6 +4,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.widget.AutoCompleteTextView;
 
 import com.example.pc.myapplication.InternetTools.InfoClient;
@@ -21,9 +22,21 @@ public class CiudadesActivity extends AppCompatActivity {
     private ReceiverOnCiudades onCiudades;
 
     @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ciudades);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.include);
+        toolbar.setTitle(R.string.ciudades);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         AutoCompleteTextView autoTxtV = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
         List<Ciudad> ciudades = new ArrayList<>();

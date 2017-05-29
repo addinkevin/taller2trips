@@ -5,6 +5,7 @@ var Ciudad = require('../models/ciudades');
 var Atraccion = require('../models/atracciones');
 var almacen = require('../utils/helperAlmacenamiento');
 var normalizar = require('../utils/normalizar');
+var helperPush = require('../utils/helperPush');
 
 router.get('/ciudad', function(req, res) {
     Ciudad.find(function (err, ciudades) {
@@ -87,6 +88,7 @@ router.delete('/ciudad/:id_ciudad', function(req,res) {
                 }
                 else {
                     res.status(200).json({"msj": "exito"});
+                    helperPush.borrarPushesAsociadaCiudad(req.params.id_ciudad);
                 }
             });
         }

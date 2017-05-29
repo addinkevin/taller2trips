@@ -14,8 +14,10 @@ push.controller('pushListadoController',
 
             function setInfoMsg(msgInfo) {
                 var msg = "<div class='alert alert-info alert-fixed text-center'>" +
+                    "<button type='button' class='close' data-dismiss='alert'>&times;</button>" +
                     msgInfo +
                     "</div>";
+
                 $("#infoContainer").html(msg);
             }
 
