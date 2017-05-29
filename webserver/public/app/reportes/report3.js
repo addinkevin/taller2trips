@@ -211,6 +211,8 @@ reportes.controller("Report3Controller", [ '$scope', function($scope) {
         $scope.$digest();
     }
 
+    $scope.hayDatos = false;
+    data = [];
     createReport3(data, "#graficoReporte3", "pais", "number");
 
     $scope.popup1 = {
