@@ -136,6 +136,7 @@ public class Consts {
     public static final String GET_CITY_REC = "RECCITY";
     public static final String GET_REC_FIRST_ATR_IMG = "FIRTATRREC";
     public static final String GET_PUBLI_IMG = "PUBLIGET";
+    public static final String VACIO = "VACIO";
 
 
     //path
@@ -158,6 +159,7 @@ public class Consts {
     public static final String TOKEN = "/token";
     public static final String USUARIO = "/usuario";
     public static final String PUSH = "/push";
+    public static final String GUEST = "/guest";
 
     //Json Keys
     public static final String NOMBRE = "nombre";
@@ -193,6 +195,7 @@ public class Consts {
     public static final String HAS_PUBLICIDAD = "hasPubli";
     public static final String PUBLICIDAD = "publicidad";
     public static final String RECORRIBLE = "recorrible";
+    public static final String ID_DEVICE = "id_dispositivo";
 
 
     //querry param
