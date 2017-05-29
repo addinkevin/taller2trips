@@ -50,7 +50,8 @@ public class ReceiverOnFavRecorrido extends BroadcastReceiver {
                         recorridoAdp.setId_fav(i, favorito.getString(Consts._ID));
 
                         Atraccion atraccion = recorrido.getFirstAtraccion();
-                        if (!atraccion.fotosPath.isEmpty()) {
+
+                        if (atraccion != null && !atraccion.fotosPath.isEmpty()) {
                             String firstImg = atraccion.fotosPath.get(0); //primer imagen para mostrar
                             String urlImg = urlConstImg + atraccion._id + Consts.IMAGEN +
                                     "?" + Consts.FILENAME + "=" + firstImg;
