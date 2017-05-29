@@ -37,29 +37,22 @@ public class ReceiverOnAtraccion extends BroadcastReceiver {
             String jsonOut = intent.getStringExtra(Consts.JSON_OUT);
             if (jsonOut != null) {
                 try {
-                    Atraccion atraccion = new Atraccion(new JSONObject(jsonOut));
+                    Atraccion atraccion = new Atraccion(new JSONObject(jsonOut), true);
                     atrAct.attachAtraccion(atraccion);
                     List fotos = atraccion.fotosPath;
 
-                    TripTP app = ((TripTP) atrAct.getActivity().getApplication());
+                    TripTP app =  atrAct.getAplicacion();
                     String urlConst = app.getUrl() + Consts.ATRACC + "/" + atraccion._id
                             + Consts.IMAGEN + "?" + Consts.FILENAME + "=";
 
                     for(int i = 0; i < fotos.size(); i++) {
                         String urlIMG = urlConst  + fotos.get(i);
 
-                        InternetClient client = new ImageClient(atrAct.getActivity().getApplicationContext(),
+                        InternetClient client = new ImageClient(atrAct.getAplicationContext(),
                                 Consts.GET_ATR_IMG_S, urlIMG, null, Consts.GET, null, true, -1);
                         NetClientsSingleton.getInstance().add(client.createTask());
                         client.runInBackground();
                     }
-
-                    String urlPlano = app.getUrl() + Consts.ATRACC + "/" + atraccion._id + Consts.PLANO;
-                    Log.i("IMGConn", "Comienza descarga imagen Plano");
-                    InternetClient client = new ImageClient(atrAct.getActivity().getApplicationContext(),
-                            Consts.GET_ATR_PLANO, urlPlano, null, Consts.GET, null, true, -1);
-                    NetClientsSingleton.getInstance().add(client.createTask());
-                    client.runInBackground();
 
                 } catch (JSONException e) {
                     e.printStackTrace();

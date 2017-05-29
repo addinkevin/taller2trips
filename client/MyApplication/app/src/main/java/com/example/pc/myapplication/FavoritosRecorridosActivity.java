@@ -34,6 +34,12 @@ public class FavoritosRecorridosActivity extends AppCompatActivity implements Ad
     private ReceiverOnCiudadRecFavDelete onCiudadRecFavDel;
 
     @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorito_recorrido);
@@ -41,6 +47,8 @@ public class FavoritosRecorridosActivity extends AppCompatActivity implements Ad
         Toolbar toolbar = (Toolbar) findViewById(R.id.include);
         toolbar.setTitle(R.string.recorridos);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         recorridoList = new ArrayList<>();
         RecorridosListAdp recorridosAdp = new RecorridosListAdp(this, recorridoList);

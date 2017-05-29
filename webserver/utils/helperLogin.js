@@ -1,4 +1,5 @@
 var request = require('request');
+var Login = require('../models/logins');
 
 // TODO: Arreglar este infierno de funcion para que sea legible y soporte mas de un provider.
 // los puntos de mejora son pasar de callbacks a promises, cambiar el lookup asumiendo un 
@@ -17,7 +18,6 @@ exports.procesarLogin = function(auth_token, req, res) {
         }
         else {
             body = JSON.parse(body);
-            console.log(body.data.socialAccounts[0].data);
             User.findOne(
                 {
                     'ids_sociales': {$elemMatch: {
@@ -43,9 +43,11 @@ exports.procesarLogin = function(auth_token, req, res) {
                             });
                             nuevo_usuario.save();
                             res.status(201).json(nuevo_usuario);
+                            registrarLogin(nuevo_usuario._id, req.body.provider, req.body.pais);
                         }
                         else {
                             res.status(200).json(usuario);
+                            registrarLogin(usuario._id, req.body.provider, req.body.pais);
                         }
                     }
                 }
@@ -53,3 +55,21 @@ exports.procesarLogin = function(auth_token, req, res) {
         };
     });
 }
+
+var registrarLogin = function(id_usuario, provider, pais) {
+    login = new Login({
+        id_usuario: id_usuario,
+        provider: provider,
+        pais: pais
+    });
+    login.save(function(err) {
+        if (err) {
+            console.log(err);
+        }
+    });
+}
+
+exports.registrarLogin = function(id_usuario, provider, pais) {
+    registrarLogin(id_usuario, provider, pais);
+};
+

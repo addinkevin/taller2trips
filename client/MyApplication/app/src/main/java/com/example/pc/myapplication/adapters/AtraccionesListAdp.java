@@ -229,6 +229,22 @@ public class AtraccionesListAdp extends BaseAdapter {
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
+
+            Atraccion rowPos = atraccionItems.get(position);
+
+            if (tripTP.isLogin() && (rowPos.isFavSetted() || rowPos.isVisitSetted())) {
+                if (rowPos.isFav()) {
+                    holder.favPic.setImageResource(R.drawable.heart);
+                } else {
+                    holder.favPic.setImageResource(R.drawable.heart_outline);
+                }
+
+                if (rowPos.isVisit()) {
+                    holder.visitPic.setImageResource(R.drawable.star);
+                } else {
+                    holder.visitPic.setImageResource(R.drawable.star_outline);
+                }
+            }
         }
 
         return view;

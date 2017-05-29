@@ -13,6 +13,7 @@
     <string name="atracciones">Atracciones</string>
     <string name="atraccion">Atracción</string>
     <string name="recorridos">Recorridos</string>
+    <string name="recorrido">Recorrido</string>
     <string name="ciudades">Ciudades</string>
     <string name="ubicarme">Ubicarme</string>
     <string name="favoritos">Favoritos</string>
@@ -66,6 +67,7 @@
     <string name="fav_post_succ">Guardado en favoritos.</string>
     <string name="back">Volver</string>
     <string name="mapa">Mapa</string>
+    <string name="interest">Interes</string>
     <string name="addToFavs">Agregado a Favoritos.</string>
     <string name="addToVisit">Agregado a Visitados.</string>
     <string name="please_wait">Por favor espere…</string>
