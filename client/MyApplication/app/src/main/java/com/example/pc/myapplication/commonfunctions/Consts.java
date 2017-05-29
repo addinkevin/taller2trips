@@ -135,6 +135,7 @@ public class Consts {
     public static final String DELETE_REC_FAV = "DELRECFAV";
     public static final String GET_CITY_REC = "RECCITY";
     public static final String GET_REC_FIRST_ATR_IMG = "FIRTATRREC";
+    public static final String GET_REC_FIRST_ATR_IMG_2 = "2FIRTATRREC";
     public static final String GET_PUBLI_IMG = "PUBLIGET";
     public static final String VACIO = "VACIO";
 
