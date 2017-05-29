@@ -49,13 +49,15 @@ public class ReceiverOnCiudadRecorrido extends BroadcastReceiver {
                         Recorrido recorrido = new Recorrido(rec.getJSONObject(i));
                         recorridoAdp.add(recorrido);
                         Atraccion atraccion = recorrido.getFirstAtraccion();
-                        String firstImg = atraccion.fotosPath.get(0); //primer imagen para mostrar
-                        String urlImg = urlConstImg + atraccion._id + Consts.IMAGEN +
-                                "?" + Consts.FILENAME + "=" + firstImg;
+                        if (atraccion != null) {
+                            String firstImg = atraccion.fotosPath.get(0); //primer imagen para mostrar
+                            String urlImg = urlConstImg + atraccion._id + Consts.IMAGEN +
+                                    "?" + Consts.FILENAME + "=" + firstImg;
 
-                        InternetClient client = new ImageClient(activity.getApplicationContext(),
-                                Consts.GET_REC_FIRST_ATR_IMG, urlImg, null, Consts.GET, null, true, i);
-                        client.createAndRunInBackground();
+                            InternetClient client = new ImageClient(activity.getApplicationContext(),
+                                    Consts.GET_REC_FIRST_ATR_IMG, urlImg, null, Consts.GET, null, true, i);
+                            client.createAndRunInBackground();
+                        }
 
                         if (tripTP.isLogin()) {
                             String urlAtrFav = urlConstFav + recorrido.get_id();

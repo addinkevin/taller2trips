@@ -94,6 +94,9 @@ public class Recorrido implements Parcelable{
     }
 
     public Atraccion getFirstAtraccion() {
+        if (atracciones.isEmpty()) {
+            return null;
+        }
         return atracciones.get(0);
     }
 

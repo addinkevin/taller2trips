@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.telephony.TelephonyManager;
 import android.widget.Toast;
 
 import com.example.pc.myapplication.InternetTools.ImageClient;
@@ -15,6 +16,7 @@ import com.example.pc.myapplication.commonfunctions.Consts;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Locale;
 import java.util.Map;
 
 public class ReceiverOnUserInfo extends BroadcastReceiver {
@@ -51,6 +53,11 @@ public class ReceiverOnUserInfo extends BroadcastReceiver {
                     if (reqServ.has(Consts.EMAIL))
                         reqServ.put(Consts.EMAIL, jsonData.getString(Consts.EMAIL));
                     reqServ.put(Consts.PROVIDER, tripTP.getSocialDef());
+                    TelephonyManager tm = (TelephonyManager)activity.getSystemService(Context.TELEPHONY_SERVICE);
+                    String countryCode = tm.getSimCountryIso();
+                    Locale loc = new Locale("",countryCode);
+                    String countryName = loc.getDisplayCountry();
+                    reqServ.put(Consts.PAIS,countryName);
 
                     String ulrServ = tripTP.getUrl() + Consts.SIGNIN;
                     Map<String,String> header = Consts.getSplexHeader(tripTP);

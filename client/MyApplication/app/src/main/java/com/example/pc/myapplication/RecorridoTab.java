@@ -1,9 +1,11 @@
 package com.example.pc.myapplication;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +17,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.pc.myapplication.InternetTools.ImageClient;
+import com.example.pc.myapplication.InternetTools.InternetClient;
+import com.example.pc.myapplication.InternetTools.receivers.ReceiverOnRecImg;
 import com.example.pc.myapplication.adapters.RecorridoAtraccionesAdp;
+import com.example.pc.myapplication.application.TripTP;
 import com.example.pc.myapplication.ciudadesTools.Atraccion;
 import com.example.pc.myapplication.ciudadesTools.Recorrido;
 import com.example.pc.myapplication.commonfunctions.Consts;
@@ -30,6 +36,8 @@ public class RecorridoTab  extends Fragment {
 
     private View fragView;
     private Recorrido recorrido;
+    private TripTP tripTP;
+    private ReceiverOnRecImg onRecImg;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -39,14 +47,30 @@ public class RecorridoTab  extends Fragment {
             recorrido = getActivity().getIntent().getParcelableExtra(Consts.ID_RECORRIDO);
         }
 
+        onRecImg = new ReceiverOnRecImg(fragView);
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(onRecImg,
+                new IntentFilter(Consts.GET_REC_FIRST_ATR_IMG_2));
+
+        tripTP = (TripTP) getActivity().getApplication();
+
         TextView nombreRec = (TextView) fragView.findViewById(R.id.nombreRec);
         nombreRec.setText(recorrido.getNombre());
 
         TextView descripRec = (TextView) fragView.findViewById(R.id.infoText);
         descripRec.setText(recorrido.getDescripcion());
 
-        ImageView imgRec = (ImageView) fragView.findViewById(R.id.imgRec);
-        imgRec.setImageBitmap(recorrido.getFotoRecorrido());
+        Atraccion atraccion = recorrido.getFirstAtraccion();
+        if (atraccion != null) {
+            String urlConstImg = tripTP.getUrl() + Consts.ATRACC + "/";
+            String firstImg = atraccion.fotosPath.get(0); //primer imagen para mostrar
+            String urlImg = urlConstImg + atraccion._id + Consts.IMAGEN +
+                    "?" + Consts.FILENAME + "=" + firstImg;
+
+            InternetClient client = new ImageClient( getActivity().getApplicationContext(),
+                    Consts.GET_REC_FIRST_ATR_IMG_2, urlImg, null, Consts.GET, null, true, -1);
+            client.createAndRunInBackground();
+        }
+
         LinearLayout linRec = (LinearLayout) fragView.findViewById(R.id.recorridosLin);
 
         TextView text = (TextView) fragView.findViewById(R.id.nombreAtr);
@@ -96,6 +120,11 @@ public class RecorridoTab  extends Fragment {
         atrAct.putExtra(Consts.POS, index);
         atrAct.putParcelableArrayListExtra(Consts.ATRACC, (ArrayList<Atraccion>) recorrido.getAtracciones());
         startActivity(atrAct);
+    }
+
+    public void onDestroy() {
+        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(onRecImg);
+        super.onDestroy();
     }
 
 
