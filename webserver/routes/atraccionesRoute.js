@@ -5,6 +5,7 @@ var router = express.Router();
 var Atraccion = require('../models/atracciones');
 var almacen = require('../utils/helperAlmacenamiento');
 var helperAtracciones = require('../utils/helperAtracciones');
+var helperResenias = require('../utils/helperResenias');
 var haversine = require('../utils/haversine');
 
 router.get('/atraccion', function(req, res) {
@@ -160,6 +161,7 @@ router.delete('/atraccion/:id_atraccion', function(req,res) {
         }
         else {
             res.status(200).json({"msj": "exito"});
+            helperResenias.borrarReseniasAsociadaAtraccion(req.params.id_atraccion);
             almacen.borrarMediaAtracciones(req.params.id_atraccion);
         }
     });
