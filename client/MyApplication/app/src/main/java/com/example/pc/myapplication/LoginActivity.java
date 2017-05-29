@@ -1,11 +1,14 @@
 package com.example.pc.myapplication;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.provider.Settings;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 
@@ -36,6 +39,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -224,9 +228,34 @@ public class LoginActivity extends AppCompatActivity implements FacebookCallback
     public void tryIt(View view) {
         tripTP.setSocialDef("");
         tripTP.setLogin(false);
-        Intent i = new Intent(this, MainActivity.class);
-        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        this.startActivity(i);
-        this.finish();
+
+        String android_id = Settings.Secure.getString(getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+
+        String urlServ = tripTP.getUrl() + Consts.SIGNIN + Consts.GUEST;
+
+        JSONObject reqServ = new JSONObject();
+        try {
+            reqServ.put(Consts.ID_DEVICE, android_id);
+            TelephonyManager tm = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+            String countryCode = tm.getSimCountryIso();
+            Locale loc = new Locale("",countryCode);
+            String countryName = loc.getDisplayCountry();
+            reqServ.put(Consts.PAIS,countryName);
+
+            Map<String,String> header = Consts.getHeaderJSON();
+
+            InternetClient client = new InfoClient(getApplicationContext(),
+                    Consts.VACIO, urlServ, header, Consts.POST, reqServ.toString(), false);
+            client.createAndRunInBackground();
+
+            Intent i = new Intent(this, MainActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            this.startActivity(i);
+            this.finish();
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }
