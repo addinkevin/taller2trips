@@ -34,7 +34,7 @@ router.post('/signin', function(req, res) {
 });
 
 router.post('/signin/guest', function(req, res) {
-    login.registrarLogin(req.body.id_dispositivo, "Guest", req.body.pais);
+    login.registrarLogin(req.body.id_dispositivo, "Invitado", req.body.pais);
     res.status(200).json({"msj": "exito"});
 });
 
