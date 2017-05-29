@@ -2,9 +2,11 @@
     <h1 class="text-center">Bienvenidos</h1>
     <div id="reporte1" ng-controller="Report1Controller">
         <div class="row">
-            <h3>Atracciones más visitadas en los últimos 12 meses</h3>
+            <h3>Atracciones con más favoritos en los últimos 12 meses</h3>
+            <div ng-show="mostrarMsg" style="margin-top:50px;margin-bottom:50px;" class="text-center">
+                <h4>{{msg}}</h4>
+            </div>
             <div id="graficoReporte1">
-
             </div>
         </div>
     </div>
@@ -39,7 +41,7 @@
 
         <div class="form-group row">
             <span class="nput-group">
-                <button type="button" ng-click="submitAtraccion()" class="btn btn-primary">Cargar reporte</button>
+                <button type="button" ng-click="cargarGrafico2()" class="btn btn-primary">Cargar reporte</button>
             </span>
 
         </div>
@@ -81,16 +83,16 @@
 
         <div class="form-group row">
             <span class="nput-group">
-                <button type="button" ng-click="submitAtraccion()" class="btn btn-primary">Cargar reporte</button>
+                <button type="button" ng-click="cargarGrafico3()" class="btn btn-primary">Cargar reporte</button>
             </span>
 
         </div>
 
-        <div ng-show="!hayDatos" style="margin-top:50px;margin-bottom:50px;">
-            <h3>No hay datos</h3>
+        <div ng-show="mostrarMsg" style="margin-top:50px;margin-bottom:50px;" class="text-center">
+            <h4>{{msg}}</h4>
         </div>
 
-        <div class="row" ng-show="hayDatos">
+        <div class="row" ng-show="mostrarGrafico">
             <div class="col-sm-6">
                 <div class="text-center" style="height:50px">
                     <h3>Distribución por pais</h3>

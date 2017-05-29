@@ -74,7 +74,7 @@ reportes.controller("Report1Controller", [ '$scope', '$http', function($scope, $
             .attr("x",0 - (h / 2))
             .attr("dy", "1em")
             .style("text-anchor", "middle")
-            .text("Visitas");
+            .text("Favoritos");
 
         svg.append("text")
             .attr("transform",
@@ -84,51 +84,30 @@ reportes.controller("Report1Controller", [ '$scope', '$http', function($scope, $
             .text("Atracciones");
     }
 
-    var data = [
-        {
-            label: "Bariloche",
-            value: 1200
-        },
-        {
-            label: "Obelisco",
-            value: 800
-        },
-        {
-            label: "Chocolates",
-            value: 400
-        },
-        {
-            label: "A",
-            value: 200
-        },
-        {
-            label: "B",
-            value: 100
-        },
-        {
-            label: "C",
-            value: 90
-        },
-        {
-            label: "D",
-            value: 80
-        },
-        {
-            label: "E",
-            value: 50
-        },
-        {
-            label: "F",
-            value: 20
-        },
-        {
-            label: "G",
-            value: 10
-        }
-    ];
+    var data = [ ];
 
+    $scope.mostrarMsg = false;
+    $scope.msg = "No hubo favoritos agregados en ninguna atracción en los ultimos 12 meses.";
 
+    function init() {
+        $http.get('/api/reporte/atraccionesFavoritas').then(function success(res) {
+            data = res.data;
+            data.forEach(function(x) {
+                x.nombre = x.id_atraccion.nombre;
+            });
+            if (data.length == 0) {
+                $scope.mostrarMsg = true;
+                $scope.msg = "No hubo favoritos agregados en ninguna atracción en los ultimos 12 meses.";
+            } else {
+                $scope.mostrarMsg = false;
+                createReport1(data, "#graficoReporte1", "nombre", "value");
+            }
+        }, function error() {
+            $scope.mostrarMsg = true;
+            $scope.msg = "Error al cargar los datos";
+        });
+    }
 
-    createReport1(data, "#graficoReporte1", "label", "value");
+    init();
 
 }]);
