@@ -224,7 +224,7 @@ public class Consts {
 
     public static Map<String,String> getSplexHeader(Application secret, boolean isLogin) {
         Map<String,String> header = getHeaderJSON ();
-        if(isLogin) {
+        if(isLogin) {//para cuando se esta logueando
             header.put(Consts.AUTHORIZATION, "Bearer " + Consts.SPLEX_SECRET);
         } else {
             header.put(Consts.AUTHORIZATION, "Bearer " + ((TripTP) secret).getSplexSecret());
