@@ -82,4 +82,51 @@ router.get('/reporte/usuariosUnicosGlobales', function(req, res) {
     )
 });
 
+router.get('/reporte/usuariosUnicosPaisProvider', function(req, res) {
+    var fecha_inicio = new Date(req.query.anio_inicio, req.query.mes_inicioi - 1, req.query.dia_inicio);
+    var fecha_fin = new Date(req.query.anio_fin, req.query.mes_fin - 1, req.query.dia_fin);
+    Login.aggregate(
+        [
+            {$match: {fecha: {$gte: fecha_inicio, $lt: fecha_fin}}},
+            {
+                $group: {
+                    _id: {
+                        "id_usuario": "$id_usuario",
+                        "pais": "$pais",
+                    },
+                    provider: {$addToSet: "$provider"}
+                }
+            },
+            {$unwind: "$provider"},
+            {
+                $group: {
+                    _id: {
+                        "pais": "$_id.pais",
+                        "provider": "$provider"
+                    },
+                    value: {$sum: 1}
+                }
+            },
+            {
+                $group: {
+                    _id: {
+                        "pais": "$_id.pais"
+                    },
+                    redes: {$push: {label: "$_id.provider", value: "$value"}},
+                    value: {$sum: "$value"} 
+                }
+            },
+            {$sort: {"_id.pais": 1}} 
+        ], function(err, resultado) {
+            if (err) {
+                res.send(err);
+            }
+            else {
+                res.status(200).json(resultado);
+            }
+        }
+    );
+});
+
 module.exports = router;
+
