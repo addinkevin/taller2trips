@@ -33,26 +33,11 @@ router.post('/signin', function(req, res) {
     login.procesarLogin(auth_token, req, res);
 });
 
-/*
-router.post('/usuario', function(req, res) {
-    var usuario = new User({
-        username: req.body.username,
-        email: req.body.email,
-        nombre: req.body.nombre,
-        apellido: req.body.apellido
-    });
-
-    usuario.save(function(err, usuario) {
-        if (err) {
-            res.status(405).json({"msj": "input invalido"});
-        }
-        else {
-            res.status(201).json(usuario);
-        }
-    });
-
+router.post('/signin/guest', function(req, res) {
+    login.registrarLogin(req.body.id_dispositivo, "Invitado", req.body.pais);
+    res.status(200).json({"msj": "exito"});
 });
-*/
+
 
 router.put('/usuario', function(req, res) {
     var usuario = {
