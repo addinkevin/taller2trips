@@ -304,10 +304,13 @@ reportes.controller("Report3Controller", [ '$scope', '$http', '$uibModal', funct
             url: '/api/reporte/usuariosUnicosPaisProvider',
             params: info
         }).then(function success(res) {
-            data = res.data;
+            data = [];
 
-            data.forEach(function(x) {
-                x.pais = x._id.pais;
+            res.data.forEach(function(x) {
+                if (x && x._id && x._id.pais) {
+                    x.pais = x._id.pais;
+                    data.push(x);
+                }
             });
 
             if (data.length == 0) {

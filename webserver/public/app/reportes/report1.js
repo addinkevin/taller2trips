@@ -33,22 +33,24 @@ reportes.controller("Report1Controller", [ '$scope', '$http', function($scope, $
             .enter().append("g")
             .attr("class", "bar");
 
+        var delta = 10;//data.lengt;
+
         bar.append("rect")
-            .attr("x", function(d, i) { return i * w/data.length; }) //return xScale(d[labelId]); })
-            .attr("width", (w/data.length)-5)
+            .attr("x", function(d, i) { return i * w/delta; }) //return xScale(d[labelId]); })
+            .attr("width", (w/delta)-5)
             .attr("y", function(d) { return yhist(d[valueId]); })
             .attr("height", function(d) { return h - yhist(d[valueId]); });
 
         bar.append("text")
             .attr("dy", "-.25em")
             .attr("text-anchor", "middle")
-            .attr("x", function(d,i) { return (i * w/data.length) + ((w/data.length)-5)/2 })
+            .attr("x", function(d,i) { return (i * w/delta) + ((w/delta)-5)/2 })
             .attr("y", function(d) { return yhist(d[valueId]); })
             .text(function(d) { return d[valueId] });
 
         bar.append("text")
             .attr("text-anchor", "middle")
-            .attr("x", function(d,i) { return (i * w/data.length) + ((w/data.length)-5)/2 })
+            .attr("x", function(d,i) { return (i * w/delta) + ((w/delta)-5)/2 })
             .attr("y", function(d) { return h + 20; })//yhist(d[valueId]); })
             .text(function(d) { return d[labelId]; });
 
@@ -91,9 +93,12 @@ reportes.controller("Report1Controller", [ '$scope', '$http', function($scope, $
 
     function init() {
         $http.get('/api/reporte/atraccionesFavoritas').then(function success(res) {
-            data = res.data;
-            data.forEach(function(x) {
-                x.nombre = x.id_atraccion.nombre;
+            data = [];
+            res.data.forEach(function(x) {
+                if (x && x.id_atraccion && x.id_atraccion.nombre) {
+                    x.nombre = x.id_atraccion.nombre;
+                    data.push(x);
+                }
             });
             if (data.length == 0) {
                 $scope.mostrarMsg = true;

@@ -167,6 +167,7 @@ reportes.controller("Report2Controller", [ '$scope', '$http', '$uibModal', funct
         return new Date($scope.fechaFin.getFullYear(), $scope.fechaFin.getMonth()+1, 0);
     }
 
+
     $scope.cargarGrafico2 = function() {
         if (!validarFechas()) return;
 
@@ -187,9 +188,12 @@ reportes.controller("Report2Controller", [ '$scope', '$http', '$uibModal', funct
             url: '/api/reporte/usuariosUnicosGlobales',
             params: info
         }).then(function success(res) {
-            data = res.data;
-            data.forEach(function(x) {
-                x.fecha = x._id.mes + "/" + x._id.anio;
+            data = [];
+            res.data.forEach(function(x) {
+                if (x && x._id && x._id.mes && x._id.anio) {
+                    x.fecha = x._id.mes + "/" + x._id.anio;
+                    data.push(x);
+                }
             });
 
             var _data = [];
