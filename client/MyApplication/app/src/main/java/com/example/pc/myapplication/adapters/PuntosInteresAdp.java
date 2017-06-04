@@ -89,7 +89,7 @@ public class PuntosInteresAdp  extends BaseAdapter {
 
             needUpdate.set(position, false);
 
-            holder.puntoInteresName.setText(rowPos.nombre);
+            holder.puntoInteresName.setText(position + ".- " + rowPos.nombre);
             holder.position = position;
         } else {
             holder = (ViewHolder) view.getTag();
