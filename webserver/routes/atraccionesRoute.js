@@ -137,11 +137,13 @@ router.put('/atraccion', function(req, res) {
         clasificacion: req.body.clasificacion,
         latitud: req.body.latitud,
         longitud: req.body.longitud,
-        recorrible: req.body.recorrible,
+        recorrible: req.body.recorrible
     };
 
     if (req.body.ids_puntos != "") {
         atraccion.ids_puntos = puntos;
+    } else {
+        atraccion.ids_puntos = [];
     }
 
     Atraccion.update({_id: req.body._id}, atraccion, function (err) {

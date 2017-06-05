@@ -241,7 +241,7 @@ puntos.service('PuntosService', ['$http', 'IdiomaService', '$q', function ($http
                 return req.then(function() {
                     return self.uploadRecursosPunto(p);
                 });
-            }(punto))
+            }(punto));
 
             requests.push(reqThen);
         }

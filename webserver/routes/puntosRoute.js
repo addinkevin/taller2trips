@@ -59,7 +59,7 @@ router.put('/punto', function(req, res) {
         nombre: normalizar.nombre(req.body.nombre),
         descripcion: req.body.descripcion,
         id_atraccion: req.body.id_atraccion
-    }
+    };
 
     Punto.update({_id: req.body._id}, punto, function (err) {
         if (err) {

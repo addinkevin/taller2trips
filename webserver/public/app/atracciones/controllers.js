@@ -449,13 +449,14 @@ atraccionesApp.controller('atraccionesAddEditController',
             $scope.borrarPlanosYPuntosDeInteres = function() {
                 for (var i = 0; i < $scope.atraccion.ids_puntos.length; i++) {
                     var punto = $scope.atraccion.ids_puntos[i];
-                    (function(p) {
-                        if (p._id !== undefined) {
-                            $scope.deleteRequests.push(function() {
-                                return PuntosService.deletePunto(p);
-                            });
-                        }
-                    })(punto);
+                    //MB BQJ OP WBMJEB OBEB
+                    //(function(p) {
+                    //    if (p._id !== undefined) {
+                    //        $scope.deleteRequests.push(function() {
+                    //            return PuntosService.deletePunto(p);
+                    //        });
+                    //    }
+                    //})(punto);
                 }
 
                 $scope.atraccion.ids_puntos = [];
@@ -826,9 +827,10 @@ atraccionesApp.controller('atraccionesAddEditController',
 
                 if (punto._id === undefined) return;
 
-                $scope.deleteRequests.push(function() {
-                    return PuntosService.deletePunto(punto);
-                });
+                // MB BQJ OP WBMJEB OBEB
+                //$scope.deleteRequests.push(function() {
+                //    return PuntosService.deletePunto(punto);
+                //});
             };
 
 

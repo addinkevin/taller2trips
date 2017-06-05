@@ -28,7 +28,7 @@ var atraccionSchema = mongoose.Schema({
     longitud: Number,
     idiomas_audio: [String],
     imagenes: [String],
-    ids_puntos: [{ type: Schema.Types.ObjectId, ref: 'Punto'}],
+    ids_puntos: [{ type: Schema.Types.ObjectId, ref: 'Punto', default: []}],
     recorrible: Boolean
 });
 
