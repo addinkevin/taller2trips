@@ -14,11 +14,20 @@ puntos.service('PuntosService', ['$http', 'IdiomaService', '$q', function ($http
         return punto;
     };
 
+    function cargarAudio(audUrl, idioma, punto) {
+        $http.get(audUrl).then(function() {
+            punto.audios[idioma] = [{audSrc:audUrl, idiomaAudio:idioma}];
+        }, function() {
+
+        });
+    }
+
     this.loadPuntoAudios = function(punto) {
         for (var i = 0; i < punto.idiomas_audio.length; i++) {
             var idioma = punto.idiomas_audio[i];
             var audUrl = '/api/punto/'+ punto._id + '/audio?idioma=' + idioma + '&date=' + new Date().getTime();
-            punto.audios[idioma] = [{audSrc:audUrl, idiomaAudio:idioma}];
+            //punto.audios[idioma] = [{audSrc:audUrl, idiomaAudio:idioma}];
+            cargarAudio(audUrl, idioma, punto);
         }
     };
 
@@ -34,14 +43,22 @@ puntos.service('PuntosService', ['$http', 'IdiomaService', '$q', function ($http
         );
     };
 
-    this.loadPuntoImagenes = function(punto) {
-        var imagenes = [];
-        for (var i = 0; i < punto.imagenes.length; i++) {
-            var imgUrl = '/api/punto/'+ punto._id + '/imagen?filename='+punto.imagenes[i];
-            imagenes.push({imgSrc:imgUrl});
-        }
+    function cargarImagen(imgUrl, punto) {
+        $http.get(imgUrl).then(function() {
+            punto.imagenes.push({imgSrc:imgUrl});
+        }, function() {
 
-        punto.imagenes = imagenes;
+        });
+    }
+
+    this.loadPuntoImagenes = function(punto) {
+        var imagenesListado = punto.imagenes;
+        punto.imagenes = [];
+        for (var i = 0; i < imagenesListado.length; i++) {
+            var imgUrl = '/api/punto/'+ punto._id + '/imagen?filename='+imagenesListado[i];
+            //imagenes.push({imgSrc:imgUrl});
+            cargarImagen(imgUrl, punto);
+        }
     };
 
 

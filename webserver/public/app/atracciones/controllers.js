@@ -312,11 +312,19 @@ atraccionesApp.controller('atraccionesAddEditController',
                 $scope.addAtraccion($scope.atraccion);
             };
 
+            function cargarAudio(audUrl, idioma) {
+                $http.get(audUrl).then(function() {
+                    $scope.atraccion.audios[idioma] = [{audSrc:audUrl, idiomaAudio:idioma}];
+                }, function() {
+
+                });
+            }
+
             $scope.loadAtraccionAudios = function(data) {
                 for (var i = 0; i < data.idiomas_audio.length; i++) {
                     var idioma = data.idiomas_audio[i];
                     var audUrl = '/api/atraccion/'+ $scope.atraccion._id + '/audio?idioma=' + idioma + '&date=' + new Date().getTime();
-                    $scope.atraccion.audios[idioma] = [{audSrc:audUrl, idiomaAudio:idioma}];
+                    cargarAudio(audUrl, idioma);
                 }
             };
 
@@ -345,10 +353,21 @@ atraccionesApp.controller('atraccionesAddEditController',
                 );
             };
 
+            function cargarImagen(imgUrl) {
+                $http.get(imgUrl).then(
+                    function() {
+                        $scope.atraccion.imagenes.push({imgSrc:imgUrl});
+                    }, function() {
+
+                    }
+                )
+            }
+
             $scope.loadAtraccionImagenes = function(data) {
                 for (var i = 0; i < data.imagenes.length; i++) {
                     var imgUrl = '/api/atraccion/'+ $scope.atraccion._id + '/imagen?filename='+data.imagenes[i];
-                    $scope.atraccion.imagenes.push({imgSrc:imgUrl});
+                    //$scope.atraccion.imagenes.push({imgSrc:imgUrl});
+                    cargarImagen(imgUrl);
                 }
             };
 
