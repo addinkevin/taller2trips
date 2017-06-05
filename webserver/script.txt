@@ -28,6 +28,5 @@ for (var i = 0; i < 1000; i++) {
 	usuarioRandom = generateUsuarioRandom();
 	providerRandom = generateProviderRandom();
 	paisRandom = generatePaisRandom();
-	db.logins.save({"id_usuario": usuarioRandom, "provider": providerRandom, "pais": paisRandom, "fecha":fechaRandom});
-
+	db.logins.save({"id_usuario": ""+i, "provider": providerRandom, "pais": paisRandom, "fecha":fechaRandom});
 }

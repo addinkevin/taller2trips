@@ -214,6 +214,8 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
             "ids_puntos": this.obtenerIdsPuntos(atraccion.ids_puntos).join()
         };
 
+        console.log(data);
+
         return $http({
             method: 'PUT',
             url : '/api/atraccion',

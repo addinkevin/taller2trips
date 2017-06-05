@@ -447,11 +447,18 @@ atraccionesApp.controller('atraccionesAddEditController',
             };
 
             $scope.borrarPlanosYPuntosDeInteres = function() {
-
                 for (var i = 0; i < $scope.atraccion.ids_puntos.length; i++) {
                     var punto = $scope.atraccion.ids_puntos[i];
-                    $scope.listadoRemove(i, punto);
+                    (function(p) {
+                        if (p._id !== undefined) {
+                            $scope.deleteRequests.push(function() {
+                                return PuntosService.deletePunto(p);
+                            });
+                        }
+                    })(punto);
                 }
+
+                $scope.atraccion.ids_puntos = [];
 
                 if ($scope.atraccion.planos.length > 0) {
                     $scope.deletePlano(0, $scope.atraccion.planos[0]);
