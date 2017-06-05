@@ -14,20 +14,11 @@ puntos.service('PuntosService', ['$http', 'IdiomaService', '$q', function ($http
         return punto;
     };
 
-    function cargarAudio(audUrl, idioma, punto) {
-        $http.get(audUrl).then(function() {
-            punto.audios[idioma] = [{audSrc:audUrl, idiomaAudio:idioma}];
-        }, function() {
-
-        });
-    }
-
     this.loadPuntoAudios = function(punto) {
         for (var i = 0; i < punto.idiomas_audio.length; i++) {
             var idioma = punto.idiomas_audio[i];
             var audUrl = '/api/punto/'+ punto._id + '/audio?idioma=' + idioma + '&date=' + new Date().getTime();
-            //punto.audios[idioma] = [{audSrc:audUrl, idiomaAudio:idioma}];
-            cargarAudio(audUrl, idioma, punto);
+            punto.audios[idioma] = [{audSrc:audUrl, idiomaAudio:idioma}];
         }
     };
 
@@ -43,24 +34,15 @@ puntos.service('PuntosService', ['$http', 'IdiomaService', '$q', function ($http
         );
     };
 
-    function cargarImagen(imgUrl, punto) {
-        $http.get(imgUrl).then(function() {
-            punto.imagenes.push({imgSrc:imgUrl});
-        }, function() {
-
-        });
-    }
-
     this.loadPuntoImagenes = function(punto) {
-        var imagenesListado = punto.imagenes;
-        punto.imagenes = [];
-        for (var i = 0; i < imagenesListado.length; i++) {
-            var imgUrl = '/api/punto/'+ punto._id + '/imagen?filename='+imagenesListado[i];
-            //imagenes.push({imgSrc:imgUrl});
-            cargarImagen(imgUrl, punto);
+        var imagenes = [];
+        for (var i = 0; i < punto.imagenes.length; i++) {
+            var imgUrl = '/api/punto/'+ punto._id + '/imagen?filename='+punto.imagenes[i];
+            imagenes.push({imgSrc:imgUrl});
         }
-    };
 
+        punto.imagenes = imagenes;
+    };
 
     this.loadRecursosPunto = function(punto) {
         if (punto.cargado) return;
@@ -183,18 +165,21 @@ puntos.service('PuntosService', ['$http', 'IdiomaService', '$q', function ($http
 
     this.uploadImagenesPunto = function(punto) {
         var url = '/api/punto/' + punto._id + '/imagen';
-        var requests = [];
+        var self = this;
+        var sequence = Promise.resolve();
 
-        for (var i = 0; i < punto.imagenes.length; i++) {
-            var imgFile = punto.imagenes[i].imgFile;
+        punto.imagenes.forEach(function(imagenPunto) {
+            var imgFile = imagenPunto.imgFile;
             if (imgFile) {
-                requests.push(this._uploadFormData(url, {
-                    imagen: imgFile
-                }));
+                sequence = sequence.then(function() {
+                    return self._uploadFormData(url, {
+                        imagen: imgFile
+                    })
+                });
             }
-        }
+        });
 
-        return $q.all(requests);
+        return sequence;
     };
 
     this.addPunto = function(atraccion, punto) {
