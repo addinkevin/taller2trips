@@ -214,6 +214,8 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
             "ids_puntos": this.obtenerIdsPuntos(atraccion.ids_puntos).join()
         };
 
+        console.log(data);
+
         return $http({
             method: 'PUT',
             url : '/api/atraccion',
@@ -324,19 +326,21 @@ tripsApp.service('ServerService', [ '$http', '$q', function($http, $q) {
     this.uploadImagesAtraccion = function(atraccion, callback) {
 
         var url = '/api/atraccion/' + atraccion._id + '/imagen';
-        var requests = [];
+        var self = this;
+        var sequence = Promise.resolve();
 
-        for (var i = 0; i < atraccion.imagenes.length; i++) {
-            var imgFile = atraccion.imagenes[i].imgFile;
+        atraccion.imagenes.forEach(function(imagenAtraccion) {
+            var imgFile = imagenAtraccion.imgFile;
             if (imgFile) {
-                requests.push(this._uploadFormData(url, {
-                    imagen: imgFile
-                }));
+                sequence = sequence.then(function() {
+                    return self._uploadFormData(url, {
+                        imagen:imgFile
+                    })
+                })
             }
-        }
+        });
 
-        return $q
-            .all(requests)
+        return sequence
             .then(function success(values) {
                 callback(null,null);
             }, function error() {

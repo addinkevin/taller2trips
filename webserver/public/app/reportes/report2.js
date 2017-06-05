@@ -131,6 +131,13 @@ reportes.controller("Report2Controller", [ '$scope', '$http', '$uibModal', funct
             return false;
         }
 
+        var delta = getMesesDelta($scope.fechaInicio, $scope.fechaFin);
+        console.log(delta);
+        if ( delta > 25) {
+            $scope.showModal("Error!", "Solo se permite un rango de consulta de hasta 2 años.");
+            return false;
+        }
+
         return true;
     }
 
@@ -167,6 +174,26 @@ reportes.controller("Report2Controller", [ '$scope', '$http', '$uibModal', funct
         return new Date($scope.fechaFin.getFullYear(), $scope.fechaFin.getMonth()+1, 0);
     }
 
+    function getMesesDelta(fechaInicio, fechaFin) {
+        var mesInicio = fechaInicio.getMonth() + 1;
+        var anioInicio = fechaInicio.getFullYear();
+
+        var mesFin = fechaFin.getMonth() + 1;
+        var anioFin = fechaFin.getFullYear();
+
+        var delta = 0;
+
+        if (anioFin == anioInicio) {
+            delta = mesFin - mesInicio + 1;
+        } else {
+            delta = 12 - mesInicio + 1;
+            delta = delta + 12 * (anioFin - anioInicio - 1);
+            delta = delta + mesFin;
+        }
+
+        return delta;
+    }
+
     $scope.cargarGrafico2 = function() {
         if (!validarFechas()) return;
 
@@ -187,9 +214,12 @@ reportes.controller("Report2Controller", [ '$scope', '$http', '$uibModal', funct
             url: '/api/reporte/usuariosUnicosGlobales',
             params: info
         }).then(function success(res) {
-            data = res.data;
-            data.forEach(function(x) {
-                x.fecha = x._id.mes + "/" + x._id.anio;
+            data = [];
+            res.data.forEach(function(x) {
+                if (x && x._id && x._id.mes && x._id.anio) {
+                    x.fecha = x._id.mes + "/" + x._id.anio;
+                    data.push(x);
+                }
             });
 
             var _data = [];

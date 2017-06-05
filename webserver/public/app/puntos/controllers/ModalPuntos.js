@@ -158,7 +158,7 @@ puntos.controller('ModalInstanceCtrl', ['$scope', '$uibModalInstance', 'PuntosSe
         };
 
         $scope.deleteAudio = function(id, puntoAudio) {
-            $scope.punto.audios[$scope.idiomaFormulario.code].splice(id,1);
+            $scope.punto.audios[$scope.idiomaModalSelected.code].splice(id,1);
             if (!puntoAudio.audFile) { // Alojada en el server hay que mandar el request de delete.
                 $scope.punto.deleteRequests.push(
                     function() {

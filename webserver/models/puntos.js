@@ -14,6 +14,4 @@ var puntoSchema = mongoose.Schema({
     imagenes: [String]
 });
 
-puntoSchema.index({nombre: 1, id_atraccion: 1}, {unique: true});
-
 module.exports = mongoose.model('Punto', puntoSchema);

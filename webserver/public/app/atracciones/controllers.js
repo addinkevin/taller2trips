@@ -410,9 +410,12 @@ atraccionesApp.controller('atraccionesAddEditController',
                 if ($scope.sendingInformation) return;
                 setInfoMsg("Enviando información al servidor");
                 $scope.sendingInformation = true;
-                var promiseDeleteRecursos = $scope.sendDeleteRequests();
-                var promiseAddRecursos = $scope.addRecursos(atraccion);
-                $q.all([promiseDeleteRecursos, promiseAddRecursos]).then(
+                var promiseDeleteRecursos = $scope.sendDeleteRequests().then(function(){
+                    return $scope.addRecursos(atraccion);
+                });
+                //var promiseAddRecursos = $scope.addRecursos(atraccion);
+                //$q.all([promiseDeleteRecursos, promiseAddRecursos]).then(
+                $q.all([promiseDeleteRecursos]).then(
                     function success() {
                         ServerService.editAtraccion(atraccion, function(data, err) {
                             if (err) {
@@ -447,11 +450,19 @@ atraccionesApp.controller('atraccionesAddEditController',
             };
 
             $scope.borrarPlanosYPuntosDeInteres = function() {
-
                 for (var i = 0; i < $scope.atraccion.ids_puntos.length; i++) {
                     var punto = $scope.atraccion.ids_puntos[i];
-                    $scope.listadoRemove(i, punto);
+                    //MB BQJ OP WBMJEB OBEB
+                    //(function(p) {
+                    //    if (p._id !== undefined) {
+                    //        $scope.deleteRequests.push(function() {
+                    //            return PuntosService.deletePunto(p);
+                    //        });
+                    //    }
+                    //})(punto);
                 }
+
+                $scope.atraccion.ids_puntos = [];
 
                 if ($scope.atraccion.planos.length > 0) {
                     $scope.deletePlano(0, $scope.atraccion.planos[0]);
@@ -486,13 +497,15 @@ atraccionesApp.controller('atraccionesAddEditController',
             };
 
             $scope.sendDeleteRequests = function() {
-                var requests = [];
+                var sequence = Promise.resolve();
 
-                for (var i = 0; i < $scope.deleteRequests.length; i++) {
-                    requests.push($scope.deleteRequests[i]());
-                }
+                $scope.deleteRequests.forEach(function(deleteRequest) {
+                    sequence = sequence.then(function() {
+                        return deleteRequest();
+                    })
+                });
 
-                return $q.all(requests);
+                return sequence;
             };
 
             $scope.deleteAudio = function(id, atraccionAudio) {
@@ -819,9 +832,10 @@ atraccionesApp.controller('atraccionesAddEditController',
 
                 if (punto._id === undefined) return;
 
-                $scope.deleteRequests.push(function() {
-                    return PuntosService.deletePunto(punto);
-                });
+                // MB BQJ OP WBMJEB OBEB
+                //$scope.deleteRequests.push(function() {
+                //    return PuntosService.deletePunto(punto);
+                //});
             };
 
 

@@ -44,7 +44,6 @@ puntos.service('PuntosService', ['$http', 'IdiomaService', '$q', function ($http
         punto.imagenes = imagenes;
     };
 
-
     this.loadRecursosPunto = function(punto) {
         if (punto.cargado) return;
         punto.audios = {};
@@ -166,18 +165,21 @@ puntos.service('PuntosService', ['$http', 'IdiomaService', '$q', function ($http
 
     this.uploadImagenesPunto = function(punto) {
         var url = '/api/punto/' + punto._id + '/imagen';
-        var requests = [];
+        var self = this;
+        var sequence = Promise.resolve();
 
-        for (var i = 0; i < punto.imagenes.length; i++) {
-            var imgFile = punto.imagenes[i].imgFile;
+        punto.imagenes.forEach(function(imagenPunto) {
+            var imgFile = imagenPunto.imgFile;
             if (imgFile) {
-                requests.push(this._uploadFormData(url, {
-                    imagen: imgFile
-                }));
+                sequence = sequence.then(function() {
+                    return self._uploadFormData(url, {
+                        imagen: imgFile
+                    })
+                });
             }
-        }
+        });
 
-        return $q.all(requests);
+        return sequence;
     };
 
     this.addPunto = function(atraccion, punto) {
@@ -241,7 +243,7 @@ puntos.service('PuntosService', ['$http', 'IdiomaService', '$q', function ($http
                 return req.then(function() {
                     return self.uploadRecursosPunto(p);
                 });
-            }(punto))
+            }(punto));
 
             requests.push(reqThen);
         }
