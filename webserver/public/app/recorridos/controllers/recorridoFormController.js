@@ -68,8 +68,16 @@ recorridos.controller('recorridoFormController', [ '$scope', '$http', '$routePar
             return true;
         }
 
+        function checkCiudad() {
+            if (!$scope.recorrido.ciudad || $scope.recorrido.ciudad._id) {
+                setFormularioErrorMsg("Se debe ingresar la ciudad del recorrido. Primero debe crear una.");
+                return false;
+            }
+            return true;
+        }
+
         function estaFormularioOk() {
-            return  !(!checkNombre() || !checkDescripcion() || !checkListado());
+            return  !(!checkNombre() || !checkDescripcion() || !checkCiudad() || !checkListado());
         }
 
         $scope.submitAddRecorrido = function () {

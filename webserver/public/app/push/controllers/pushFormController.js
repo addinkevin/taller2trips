@@ -92,9 +92,17 @@ push.controller('pushFormController',
             return true;
         }
 
+        function checkCiudad() {
+            if (!$scope.push.ciudad || $scope.push.ciudad._id) {
+                setFormularioErrorMsg("Se debe ingresar la ciudad del push. Primero debe crear una.");
+                return false;
+            }
+            return true;
+        }
+
 
         function estaFormularioOk() {
-            return  !(!checkNombre() || !checkLink() || !checkDescripcion() || !checkFecha() || !checkImagen());
+            return  !(!checkNombre() || !checkLink() || !checkDescripcion() || !checkCiudad() || !checkFecha() || !checkImagen());
         }
 
         function submitAddPush() {
