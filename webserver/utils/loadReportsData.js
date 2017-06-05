@@ -22,6 +22,7 @@ function generatePaisRandom() {
 	return paises[index];
 }
 
+use dbtaller2;
 
 for (var i = 0; i < 1000; i++) {
 	fechaRandom = generarFechaRandom();
