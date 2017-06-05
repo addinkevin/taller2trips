@@ -69,7 +69,7 @@ recorridos.controller('recorridoFormController', [ '$scope', '$http', '$routePar
         }
 
         function checkCiudad() {
-            if (!$scope.recorrido.ciudad || $scope.recorrido.ciudad._id) {
+            if (!$scope.recorrido.ciudad || !$scope.recorrido.ciudad._id) {
                 setFormularioErrorMsg("Se debe ingresar la ciudad del recorrido. Primero debe crear una.");
                 return false;
             }

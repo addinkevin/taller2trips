@@ -93,7 +93,7 @@ push.controller('pushFormController',
         }
 
         function checkCiudad() {
-            if (!$scope.push.ciudad || $scope.push.ciudad._id) {
+            if (!$scope.push.ciudad || !$scope.push.ciudad._id) {
                 setFormularioErrorMsg("Se debe ingresar la ciudad del push. Primero debe crear una.");
                 return false;
             }
